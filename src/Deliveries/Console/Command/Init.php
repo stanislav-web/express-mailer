@@ -1,15 +1,12 @@
 <?php
 namespace Deliveries\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Deliveries\Aware\Console\Command\BaseCommandAware;
 use Deliveries\Aware\Helpers\FileSysTrait;
 use Deliveries\Aware\Helpers\FormatTrait;
 use Deliveries\Aware\Helpers\ProgressTrait;
@@ -26,7 +23,7 @@ use Deliveries\Aware\Helpers\TestTrait;
  * @copyright Stanislav WEB
  * @filesource /Deliveries/Console/Command/Init.php
  */
-class Init extends Command {
+class Init extends BaseCommandAware {
 
     /**
      * Default config filename
@@ -36,31 +33,30 @@ class Init extends Command {
     const CONFIG_FILENAME = '/delivery.json';
 
     /**
+     * Command logo
+     *
+     * @const NAME
+     */
+    const LOGO = "###################\nInitialize Tools ##\n###################\n";
+
+    /**
+     * Command name
+     *
+     * @const NAME
+     */
+    const NAME = 'init';
+
+    /**
      * Command description
      *
      * @const CONFIG_FILENAME
      */
     const DESCRIPTION = 'Create default package configurations';
 
+    /**
+     * Assign CLI helpers
+     */
     use FileSysTrait, ProgressTrait, TestTrait, FormatTrait;
-
-    /**
-     * Configure bootstrap by default (assign -path to create config file)
-     */
-    protected function configure() {
-
-        $this->setName('init')
-            ->setDescription($this->getDescription());
-    }
-
-    /**
-     * Command description
-     *
-     * @return string
-     */
-    public function getDescription() {
-        return self::DESCRIPTION;
-    }
 
     /**
      * Execute command
@@ -68,8 +64,9 @@ class Init extends Command {
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    public function execute(InputInterface $input, OutputInterface $output)
-    {
+    public function execute(InputInterface $input, OutputInterface $output) {
+
+        $this->logo();
 
         // checkout configuration file
         $configFile = $this->configFile($input, $output);
@@ -148,43 +145,6 @@ class Init extends Command {
     private function createConfigFile($file, $content = '') {
 
         return file_put_contents($file, json_encode($content));
-    }
-
-    /**
-     * Get user command prompt
-     *
-     * @param string $string
-     * @param string  $string
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @param callable $validator
-     * @param boolean $skipEmpty
-     * @throws \RuntimeException
-     * @return string
-     */
-    private function getPrompt($string, InputInterface $input, OutputInterface $output,
-                               $validator = null, $skipEmpty = false) {
-
-        $helper = $this->getHelper('question');
-
-        $question = new Question($string);
-
-        if($skipEmpty === false) {
-            $question->setValidator(function ($answer) {
-
-                if(empty($answer) === true) {
-                    throw new \RuntimeException(
-                        'Please, fill out the entry!'
-                    );
-                }
-                return $answer;
-            });
-        }
-
-        if(is_null($validator) === false) {
-            $question->setValidator($validator);
-        }
-        return $helper->ask($input, $output, $question);
     }
 
     /**
