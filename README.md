@@ -1,7 +1,7 @@
-# Phalcon Deliveries
+# Express Mailer
 ### _(currently under development)_
 
-This system is designed for large-scale mailings, which is activated only built-in web server.
+This system is designed for large-scale mailings, which is activated on built-in web servers.
 
 ## ChangeLog
 
