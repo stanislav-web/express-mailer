@@ -22,7 +22,7 @@ foreach ($paths as $file) {
 unset($file);
 
 /**
- * Phalcon delivery CLI
+ * Command Line launcher
  */
 use Symfony\Component\Console\Application;
 use Deliveries\Console\Application as App;

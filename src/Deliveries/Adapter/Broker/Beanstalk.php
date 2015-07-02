@@ -40,7 +40,7 @@ class Beanstalk implements QueueProviderInterface {
     /**
      * Broker connection
      *
-     * @var \Phalcon\Queue\Beanstalk $broker
+     * @var \Pheanstalk\Pheanstalk $broker
      */
     protected $broker;
 

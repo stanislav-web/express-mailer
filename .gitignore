@@ -48,3 +48,4 @@ composer.lock
 /nbproject/private/
 vendor/
 delivery.json
+composer.phar

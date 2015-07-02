@@ -1,6 +1,6 @@
 <?php
 /**
- * MailService class. Mailer service
+ * MigrationService class. Storage Migration service
  *
  * @package Deliveries
  * @subpackage Deliveries\Service
@@ -8,10 +8,10 @@
  * @version 1.0
  * @author Stanislav WEB | Lugansk <stanisov@gmail.com>
  * @copyright Stanislav WEB
- * @filesource /Deliveries/Service/MailService.php
+ * @filesource /Deliveries/Service/MigrationService.php
  */
 namespace Deliveries\Service;
 
-class MailService {
+class MigrationService {
 
 }

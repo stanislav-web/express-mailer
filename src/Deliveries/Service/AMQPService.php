@@ -1,6 +1,6 @@
 <?php
 /**
- * MailService class. Mailer service
+ * AMQPService class. Queue service
  *
  * @package Deliveries
  * @subpackage Deliveries\Service
@@ -8,10 +8,10 @@
  * @version 1.0
  * @author Stanislav WEB | Lugansk <stanisov@gmail.com>
  * @copyright Stanislav WEB
- * @filesource /Deliveries/Service/MailService.php
+ * @filesource /Deliveries/Service/AMQPService.php
  */
 namespace Deliveries\Service;
 
-class MailService {
+class AMQPService {
 
 }
