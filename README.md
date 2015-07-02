@@ -13,6 +13,6 @@ This system is designed for large-scale mailings, which is activated on built-in
 
 ## Usage
 
-##[Issues](https://github.com/stanislav-web/phalcon-deliveries/issues "Issues")
+##[Issues](https://github.com/stanislav-web/express-mailer/issues "Issues")
 
 
