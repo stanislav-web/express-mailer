@@ -1,0 +1,42 @@
+#!/usr/bin/env php
+<?php
+if (PHP_SAPI !== 'cli') {
+    echo 'Warning: Script should be invoked via the CLI version of PHP, not the '.PHP_SAPI.' SAPI'.PHP_EOL;
+}
+
+$paths = [
+    getcwd().'/../vendor/autoload.php',
+    getcwd().'/vendor/autoload.php',
+    dirname(__FILE__).'/../vendor/autoload.php',
+    __DIR__ . '/../../autoload.php',
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/vendor/autoload.php',
+    __DIR__ . 'vendor/autoload.php'
+];
+foreach ($paths as $file) {
+    if (file_exists($file)) {
+        define('AUTOLOADER', $file);
+        break;
+    }
+}
+unset($file);
+
+/**
+ * Phalcon delivery CLI
+ */
+use Symfony\Component\Console\Application;
+use Deliveries\Console\Application as App;
+use Deliveries\Console\Command;
+
+
+if(file_exists(AUTOLOADER) === true) {
+
+    include AUTOLOADER;
+    $console = new Application(App::NAME, App::VERSION);
+    $console->add(new Command\Init('init'));
+    $console->add(new Command\Migrations('migrations'));
+    $console->run();
+}
+else {
+    exit('Can not find autoloader');
+}
