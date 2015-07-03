@@ -1,4 +1,4 @@
-CREATE TABLE `__PREFIX__mailing_lists` (
+CREATE TABLE `__PREFIX__xmail_lists` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'List ID',
   `subject` varchar(255) NOT NULL DEFAULT '' COMMENT 'List subject',
   `message` text COMMENT 'List message',

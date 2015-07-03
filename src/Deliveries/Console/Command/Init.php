@@ -26,13 +26,6 @@ use Deliveries\Aware\Helpers\TestTrait;
 class Init extends BaseCommandAware {
 
     /**
-     * Default config filename
-     *
-     * @const CONFIG_FILENAME
-     */
-    const CONFIG_FILENAME = '/delivery.json';
-
-    /**
      * Command logo
      *
      * @const NAME
@@ -49,7 +42,7 @@ class Init extends BaseCommandAware {
     /**
      * Command description
      *
-     * @const CONFIG_FILENAME
+     * @const DESCRIPTION
      */
     const DESCRIPTION = 'Create default package configurations';
 

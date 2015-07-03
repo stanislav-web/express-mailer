@@ -21,6 +21,13 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 class BaseCommandAware extends Command {
 
     /**
+     * Default config filename
+     *
+     * @const CONFIG_FILENAME
+     */
+    const CONFIG_FILENAME = '/delivery.json';
+
+    /**
      * Command logo
      *
      * @uses latest static bindings
@@ -89,5 +96,14 @@ class BaseCommandAware extends Command {
             $question->setValidator($validator);
         }
         return $helper->ask($input, $output, $question);
+    }
+
+    /**
+     * Check configuration exist
+     *
+     * @return bool
+     */
+    public function isConfigExist() {
+        return file_exists(getcwd().self::CONFIG_FILENAME);
     }
 }

@@ -34,9 +34,16 @@ class Migrations extends BaseCommandAware {
     /**
      * Command description
      *
-     * @const CONFIG_FILENAME
+     * @const DESCRIPTION
      */
     const DESCRIPTION = 'Storage migrations tool';
+
+    /**
+     * Default storage prefix
+     *
+     * @const DEFAULT_PREFIX
+     */
+    const DEFAULT_PREFIX = '';
 
     /**
      * Execute command
@@ -47,7 +54,12 @@ class Migrations extends BaseCommandAware {
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->logo();
-        exit('Migration tool');
+        if($this->isConfigExist() === false) {
+            throw new \RuntimeException(
+                'Configuration file does not exist! Run `xmail init`'
+            );
+        }
+
         return;
     }
 }
