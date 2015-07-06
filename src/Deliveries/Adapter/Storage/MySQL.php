@@ -79,4 +79,17 @@ class MySQL implements DataProviderInterface {
         }
     }
 
+    /**
+     * Get structure tables list
+     *
+     * @return array
+     */
+    public function getTablesList()
+    {
+
+        $query = $this->getInstance()->query("SHOW TABLES");
+
+        return $query->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
 }

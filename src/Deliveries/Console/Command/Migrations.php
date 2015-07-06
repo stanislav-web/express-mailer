@@ -1,6 +1,7 @@
 <?php
 namespace Deliveries\Console\Command;
 
+use Deliveries\Aware\Helpers\TestTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Deliveries\Aware\Console\Command\BaseCommandAware;
@@ -45,6 +46,17 @@ class Migrations extends BaseCommandAware {
      */
     const DEFAULT_PREFIX = '';
 
+    use TestTrait;
+
+    /**
+     * Get Storage configurations
+     *
+     * @return array
+     */
+    public function getConfig() {
+        return parent::getConfig()->Storage;
+    }
+
     /**
      * Execute command
      *
@@ -54,10 +66,25 @@ class Migrations extends BaseCommandAware {
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->logo();
+
+        // checking config
         if($this->isConfigExist() === false) {
             throw new \RuntimeException(
                 'Configuration file does not exist! Run `xmail init`'
             );
+        }
+
+        // checking connection
+        if($this->isStorageConnectSuccess($this->getConfig())) {
+
+            $prefix = $this->getPrompt('<info>Please type import '.$this->getConfig()['adapter'].' tables prefix (default `'.self::DEFAULT_PREFIX.'`):</info> ', $input, $output,
+                function($answer) {
+
+                    if(empty($answer) === true) {
+                        return self::DEFAULT_PREFIX;
+                    }
+                    return $answer;
+            });
         }
 
         return;

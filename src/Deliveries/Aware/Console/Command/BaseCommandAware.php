@@ -103,7 +103,16 @@ class BaseCommandAware extends Command {
      *
      * @return bool
      */
-    public function isConfigExist() {
+    protected function isConfigExist() {
         return file_exists(getcwd().self::CONFIG_FILENAME);
+    }
+
+    /**
+     * Get configuration
+     *
+     * @return object
+     */
+    protected function getConfig() {
+        return (object)json_decode(file_get_contents(getcwd().self::CONFIG_FILENAME), true);
     }
 }

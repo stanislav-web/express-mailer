@@ -15,6 +15,28 @@ namespace Deliveries\Aware\Helpers;
 trait TestTrait {
 
     /**
+     * Mail Adapter instance
+     *
+     * @var object $mailInstance
+     */
+    public $mailInstance;
+
+    /**
+     * Queue Adapter instance
+     *
+     * @var object $queueInstance
+     */
+    public $queueInstance;
+
+    /**
+     * Storage Adapter instance
+     *
+     * @var object $storageInstance
+     */
+    public $storageInstance;
+
+
+    /**
      * Testing for connect to Mail Server
      *
      * @return boolean

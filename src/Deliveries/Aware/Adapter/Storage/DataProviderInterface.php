@@ -32,4 +32,12 @@ interface DataProviderInterface {
      * @param array $config
      */
     public function connect(array $config);
+
+    /**
+     * Get structure tables list
+     *
+     * @return mixed
+     */
+    public function getTablesList();
+
 }
