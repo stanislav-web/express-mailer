@@ -90,4 +90,14 @@ class MySQL implements DataProviderInterface {
 
         return $query->fetchAll(\PDO::FETCH_COLUMN);
     }
+
+    /**
+     * Execute query
+     *
+     * @return boolean
+     */
+    public function exec($query)
+    {
+        return $this->getInstance()->exec($query);
+    }
 }

@@ -39,8 +39,12 @@
     "bin": ["bin/xmail"],
     "scripts": {
       "post-install-cmd": [
-        "chmod +x ./vendor/bin/xmail",
-        "ln -s -f ./vendor/bin/xmail /usr/local/bin/xmail"
+        "chmod +x vendor/bin/xmail",
+        "ln -s -f vendor/bin/xmail /usr/local/bin/xmail"
+      ],
+      "post-update-cmd": [
+        "chmod +x vendor/bin/xmail",
+        "ln -s -f vendor/bin/xmail /usr/local/bin/xmail"
       ]
     },
     "suggest": {

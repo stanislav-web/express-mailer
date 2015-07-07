@@ -40,4 +40,10 @@ interface DataProviderInterface {
      */
     public function getTablesList();
 
+    /**
+     * Execute query
+     *
+     * @return boolean
+     */
+    public function exec($query);
 }

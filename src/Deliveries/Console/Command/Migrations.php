@@ -185,7 +185,7 @@ class Migrations extends BaseCommandAware {
         if(empty($this->migrationFiles) === false) {
 
             try {
-                $db = $this->getStorageInstance()->getInstance();
+                $db = $this->getStorageInstance();
 
                 foreach($this->migrationFiles as $file) {
 
