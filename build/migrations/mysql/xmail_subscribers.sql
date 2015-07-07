@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS `__PREFIX__xmail_subscribers`;
+
 CREATE TABLE `__PREFIX__xmail_subscribers` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Subscriber ID',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Subscriber name',

@@ -96,10 +96,7 @@ class Init extends BaseCommandAware {
 
                             // Create config file
                             $this->createConfigFile($configFile, $configContent);
-
-                            //@TODO prepare to running migrations
-                            //$this->migrationRunner();
-
+                            $this->migrationRunner();
                         }
                 }
             }

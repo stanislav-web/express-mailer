@@ -1,3 +1,7 @@
+ALTER TABLE `__PREFIX__xmail_stats` DROP FOREIGN KEY  `fk_list_id`;
+
+DROP TABLE IF EXISTS `__PREFIX__xmail_lists`;
+
 CREATE TABLE `__PREFIX__xmail_lists` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'List ID',
   `subject` varchar(255) NOT NULL DEFAULT '' COMMENT 'List subject',

@@ -35,6 +35,29 @@ trait TestTrait {
      */
     public $storageInstance;
 
+    /**
+     * @return object
+     */
+    public function getMailInstance()
+    {
+        return $this->mailInstance;
+    }
+
+    /**
+     * @return object
+     */
+    public function getStorageInstance()
+    {
+        return $this->storageInstance;
+    }
+
+    /**
+     * @return object
+     */
+    public function getQueueInstance()
+    {
+        return $this->queueInstance;
+    }
 
     /**
      * Testing for connect to Mail Server
@@ -49,12 +72,12 @@ trait TestTrait {
 
             if(true === class_exists($Mail)) {
 
-                $connect = (new $Mail())->connect($config);
+                $this->mailInstance = (new $Mail())->connect($config);
 
-                if($connect === false) {
+                if($this->mailInstance === false) {
                     throw new \RuntimeException('Connection to mail server: '.$config["adapter"].' is not allow. Check configurations');
                 }
-                return $connect;
+                return $this->mailInstance;
             }
             throw new \RuntimeException($config["adapter"]. ' mail adapter is not exist');
         }
@@ -74,12 +97,12 @@ trait TestTrait {
 
             if(true === class_exists($Broker)) {
 
-                $connect = (new $Broker())->connect($config);
+                $this->queueInstance = (new $Broker())->connect($config);
 
-                if($connect === false) {
+                if($this->queueInstance === false) {
                     throw new \RuntimeException('Connection to AMQP server: '.$config["adapter"].' is not allow. Check configurations');
                 }
-                return $connect;
+                return $this->queueInstance;
             }
             throw new \RuntimeException($config["adapter"]. ' broker adapter is not exist');
         }
@@ -99,10 +122,10 @@ trait TestTrait {
 
         if(true === class_exists($Storage)) {
 
-            $dsn = new $Storage();
+            $this->storageInstance = new $Storage();
 
-            if($dsn->isSupport()) {
-                return $dsn->connect($config);
+            if($this->storageInstance->isSupport()) {
+                return $this->storageInstance->connect($config);
             }
             throw new \RuntimeException($config["adapter"]. ' is not supported');
         }
