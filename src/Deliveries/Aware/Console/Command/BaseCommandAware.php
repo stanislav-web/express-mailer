@@ -53,6 +53,13 @@ class BaseCommandAware extends Command {
 
         $this->setName(static::NAME)
             ->setDescription($this->getDescription());
+
+        if(method_exists($this,'getOptions')) {
+            foreach(static::getOptions() as $command => $option) {
+                $this->addOption($option['name'], $option['shortcut'], $option['mode'], $option['description']);
+
+            }
+        }
     }
 
     /**

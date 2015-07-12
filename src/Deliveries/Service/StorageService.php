@@ -31,4 +31,8 @@ class StorageService {
     public function __construct(DataProviderInterface $storage) {
         $this->storage = $storage;
     }
+
+    public function getSubscribersStat() {
+
+    }
 }

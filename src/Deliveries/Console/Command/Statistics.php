@@ -1,6 +1,7 @@
 <?php
 namespace Deliveries\Console\Command;
 
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Deliveries\Aware\Console\Command\BaseCommandAware;
@@ -37,6 +38,29 @@ class Statistics extends BaseCommandAware {
      * @const DESCRIPTION
      */
     const DESCRIPTION = 'Statistics tool';
+
+    /**
+     * Get command additional options
+     *
+     * @return array
+     */
+    public static function getOptions() {
+
+        return [
+            'subscribers' => [
+                'name'          => 'subscribers',
+                'shortcut'      => 's',
+                'mode'          => InputOption::VALUE_NONE,
+                'description'   => 'Show subscribers statistics'
+            ],
+            'deliveries' => [
+                'name'          => 'deliveries',
+                'shortcut'      => 'd',
+                'mode'          => InputOption::VALUE_NONE,
+                'description'   => 'Show deliveries statistics'
+            ]
+        ];
+    }
 
     /**
      * Get Storage configurations
