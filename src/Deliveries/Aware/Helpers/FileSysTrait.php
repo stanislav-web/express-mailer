@@ -66,5 +66,4 @@ trait FileSysTrait {
 
         return $files;
     }
-
 }

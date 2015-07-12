@@ -116,6 +116,9 @@ class Migrations extends BaseCommandAware {
                 return ;
             }
         }
+
+        // add to config
+        $this->addToConfig(null, ['Storage' => ['prefix' => $prefix]]);
         $this->import($output, $prefix);
 
         return;
@@ -186,6 +189,7 @@ class Migrations extends BaseCommandAware {
 
             try {
                 $db = $this->getStorageInstance();
+                asort($this->migrationFiles);
 
                 foreach($this->migrationFiles as $file) {
 

@@ -70,7 +70,7 @@ class MySQL implements DataProviderInterface {
             $this->pdo = new \PDO($dsn, $config['username'], $config['password']);
             $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-            return true;
+            return $this;
 
         } catch(\PDOException $e) {
             throw new \RuntimeException(

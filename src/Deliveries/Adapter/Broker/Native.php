@@ -2,10 +2,9 @@
 namespace Deliveries\Adapter\Broker;
 
 use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
-use Pheanstalk\Pheanstalk as QueueBroker;
 
 /**
- * Beanstalk class. Beanstalk Connection broker
+ * Native class. Native PHP Connection broker
  *
  * @package Deliveries
  * @subpackage Deliveries\Adapter\Broker
@@ -13,9 +12,9 @@ use Pheanstalk\Pheanstalk as QueueBroker;
  * @version 1.0
  * @author Stanislav WEB | Lugansk <stanisov@gmail.com>
  * @copyright Stanislav WEB
- * @filesource /Deliveries/Adapter/Broker/Beanstalk.php
+ * @filesource /Deliveries/Adapter/Broker/Native.php
  */
-class Beanstalk implements QueueProviderInterface {
+class Native implements QueueProviderInterface {
 
     /**
      * Default broker host
@@ -25,7 +24,7 @@ class Beanstalk implements QueueProviderInterface {
     /**
      * Default broker port
      */
-    const DEFAULT_PORT = 11300;
+    const DEFAULT_PORT = 9000;
 
     /**
      * Default connection timeout
@@ -61,7 +60,7 @@ class Beanstalk implements QueueProviderInterface {
      */
     public function connect(array $config)
     {
-
+        
         $host = (empty($config['host']) === true) ? self::DEFAULT_HOST : $config['host'];
         $port = (empty($config['port']) === true) ? self::DEFAULT_PORT : $config['port'];
         $timeout = (empty($config['timeout']) === true) ? self::DEFAULT_TIMEOUT : $config['timeout'];

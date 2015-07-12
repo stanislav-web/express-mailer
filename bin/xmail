@@ -35,6 +35,7 @@ if(file_exists(AUTOLOADER) === true) {
     $console = new Application(App::NAME, App::VERSION);
     $console->add(new Command\Init('init'));
     $console->add(new Command\Migrations('migrations'));
+    $console->add(new Command\Statistics('statistics'));
     $console->run();
 }
 else {

@@ -1,4 +1,6 @@
 <?php
+namespace Deliveries\Service;
+
 /**
  * MigrationService class. Storage Migration service
  *
@@ -10,8 +12,6 @@
  * @copyright Stanislav WEB
  * @filesource /Deliveries/Service/MigrationService.php
  */
-namespace Deliveries\Service;
-
 class MigrationService {
 
 }
