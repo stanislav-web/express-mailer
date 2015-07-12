@@ -4,7 +4,6 @@ namespace Deliveries\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Deliveries\Aware\Helpers\TestTrait;
 use Deliveries\Aware\Console\Command\BaseCommandAware;
 
 /**
@@ -67,8 +66,6 @@ class Migrations extends BaseCommandAware {
      * @var array $migrationFiles
      */
     private $migrationFiles = [];
-
-    use TestTrait;
 
     /**
      * Get Storage configurations

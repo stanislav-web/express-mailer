@@ -136,8 +136,10 @@ class BaseCommandAware extends Command {
         $file = ($file === null) ? getcwd().self::CONFIG_FILENAME : $file;
 
         $config = (array)self::getConfig();
-        $config = array_merge_recursive($config, $content);
 
+        foreach($content as $key => $values) {
+            $config[$key] = array_merge($config[$key], $values);
+        }
         return file_put_contents($file, json_encode($config));
     }
 

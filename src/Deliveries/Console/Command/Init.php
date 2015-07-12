@@ -10,7 +10,6 @@ use Deliveries\Aware\Console\Command\BaseCommandAware;
 use Deliveries\Aware\Helpers\FileSysTrait;
 use Deliveries\Aware\Helpers\FormatTrait;
 use Deliveries\Aware\Helpers\ProgressTrait;
-use Deliveries\Aware\Helpers\TestTrait;
 
 /**
  * Init class. Application Init command
@@ -49,7 +48,7 @@ class Init extends BaseCommandAware {
     /**
      * Assign CLI helpers
      */
-    use FileSysTrait, ProgressTrait, TestTrait, FormatTrait;
+    use FileSysTrait, ProgressTrait, FormatTrait;
 
     /**
      * Execute command
