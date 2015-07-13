@@ -100,4 +100,17 @@ class MySQL implements DataProviderInterface {
     {
         return $this->getInstance()->exec($query);
     }
+
+    /**
+     * Get result query
+     *
+     * @param string $query
+     * @return array|object
+     */
+    public function fetchAll($query) {
+
+        $stmt = $this->getInstance()->query($query);
+
+        return $stmt->fetchAll(\PDO::FETCH_OBJ);
+    }
 }

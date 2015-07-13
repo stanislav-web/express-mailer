@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Input\InputDefinition;
 use Deliveries\Aware\Helpers\TestTrait;
 use Deliveries\Service\StorageService;
 
@@ -39,7 +40,7 @@ class BaseCommandAware extends Command {
      */
     protected function logo() {
         echo (new ConsoleOutput())->writeln(
-            "\n<fg=cyan;options=bold>" . static::LOGO . "</fg=cyan;options=bold>"
+            "\n<info>" . static::LOGO . "</info>"
         );
     }
 
@@ -55,10 +56,9 @@ class BaseCommandAware extends Command {
             ->setDescription($this->getDescription());
 
         if(method_exists($this,'getOptions')) {
-            foreach(static::getOptions() as $command => $option) {
-                $this->addOption($option['name'], $option['shortcut'], $option['mode'], $option['description']);
-
-            }
+            $this->setDefinition(
+                    new InputDefinition($this->getOptions())
+            );
         }
     }
 

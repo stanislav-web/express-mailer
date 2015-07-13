@@ -46,4 +46,11 @@ interface DataProviderInterface {
      * @return boolean
      */
     public function exec($query);
+
+    /**
+     * Get result query
+     *
+     * @return array|object
+     */
+    public function fetchAll($query);
 }

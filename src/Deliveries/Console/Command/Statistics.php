@@ -40,6 +40,13 @@ class Statistics extends BaseCommandAware {
     const DESCRIPTION = 'Statistics tool';
 
     /**
+     * Default statistics representation
+     *
+     * @const DEFAULT_SHOW
+     */
+    const DEFAULT_SHOW = 'subscribers';
+
+    /**
      * Get command additional options
      *
      * @return array
@@ -47,18 +54,8 @@ class Statistics extends BaseCommandAware {
     public static function getOptions() {
 
         return [
-            'subscribers' => [
-                'name'          => 'subscribers',
-                'shortcut'      => 's',
-                'mode'          => InputOption::VALUE_NONE,
-                'description'   => 'Show subscribers statistics'
-            ],
-            'deliveries' => [
-                'name'          => 'deliveries',
-                'shortcut'      => 'd',
-                'mode'          => InputOption::VALUE_NONE,
-                'description'   => 'Show deliveries statistics'
-            ]
+            new InputOption('subscribers', 's', InputOption::VALUE_NONE, 'Show subscribers statistics'),
+            new InputOption('deliveries', 'd', InputOption::VALUE_NONE, 'Show deliveries statistics')
         ];
     }
 
@@ -88,6 +85,14 @@ class Statistics extends BaseCommandAware {
             );
         }
 
-        $this->getStorage();
+        if ($input->getOption('subscribers')) {
+            $this->getStorage()->getSubscribersStatistics();
+
+        }
+        if ($input->getOption('deliveries')) {
+            $this->getStorage()->getDeliveriesStatistics();
+
+        }
+
     }
 }

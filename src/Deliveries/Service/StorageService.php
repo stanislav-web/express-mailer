@@ -32,7 +32,9 @@ class StorageService {
         $this->storage = $storage;
     }
 
-    public function getSubscribersStat() {
+    public function getSubscribersStatistics() {
 
+        $sql = "";
+        $this->storage->fetchAll()
     }
 }
