@@ -35,6 +35,6 @@ class StorageService {
     public function getSubscribersStatistics() {
 
         $sql = "";
-        $this->storage->fetchAll()
+        $this->storage->fetchAll($sql);
     }
 }
