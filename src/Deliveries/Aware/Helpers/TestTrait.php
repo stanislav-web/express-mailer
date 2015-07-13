@@ -46,9 +46,11 @@ trait TestTrait {
     /**
      * @return object
      */
-    public function getStorageInstance()
+    public function getStorageInstance($config = null)
     {
-        return $this->storageInstance;
+        return (null === $this->storageInstance) ?
+            $this->isStorageConnectSuccess($config)->setTables($config['prefix'])
+            : $this->storageInstance;
     }
 
     /**

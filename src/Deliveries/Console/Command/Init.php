@@ -10,7 +10,6 @@ use Deliveries\Aware\Console\Command\BaseCommandAware;
 use Deliveries\Aware\Helpers\FileSysTrait;
 use Deliveries\Aware\Helpers\FormatTrait;
 use Deliveries\Aware\Helpers\ProgressTrait;
-use Deliveries\Aware\Helpers\TestTrait;
 
 /**
  * Init class. Application Init command
@@ -49,7 +48,7 @@ class Init extends BaseCommandAware {
     /**
      * Assign CLI helpers
      */
-    use FileSysTrait, ProgressTrait, TestTrait, FormatTrait;
+    use FileSysTrait, ProgressTrait, FormatTrait;
 
     /**
      * Execute command
@@ -96,6 +95,8 @@ class Init extends BaseCommandAware {
 
                             // Create config file
                             $this->createConfigFile($configFile, $configContent);
+
+                            // Run migration command
                             $this->migrationRunner();
                         }
                 }
@@ -124,17 +125,6 @@ class Init extends BaseCommandAware {
             $inputForJob,
             new ConsoleOutput()
         );
-    }
-    /**
-     * Create config file
-     *
-     * @param string $file
-     * @param mixed $content
-     * @return int
-     */
-    private function createConfigFile($file, $content = '') {
-
-        return file_put_contents($file, json_encode($content));
     }
 
     /**

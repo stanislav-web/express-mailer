@@ -6,6 +6,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Input\InputDefinition;
+use Deliveries\Aware\Helpers\TestTrait;
+use Deliveries\Service\StorageService;
 
 /**
  * BaseCommandAware class. BaseCommand aware interface
@@ -27,6 +30,8 @@ class BaseCommandAware extends Command {
      */
     const CONFIG_FILENAME = '/delivery.json';
 
+    use TestTrait;
+
     /**
      * Command logo
      *
@@ -35,7 +40,7 @@ class BaseCommandAware extends Command {
      */
     protected function logo() {
         echo (new ConsoleOutput())->writeln(
-            "\n<fg=cyan;options=bold>" . static::LOGO . "</fg=cyan;options=bold>"
+            "\n<info>" . static::LOGO . "</info>"
         );
     }
 
@@ -49,6 +54,12 @@ class BaseCommandAware extends Command {
 
         $this->setName(static::NAME)
             ->setDescription($this->getDescription());
+
+        if(method_exists($this,'getOptions')) {
+            $this->setDefinition(
+                    new InputDefinition($this->getOptions())
+            );
+        }
     }
 
     /**
@@ -108,11 +119,59 @@ class BaseCommandAware extends Command {
     }
 
     /**
+     * Create config file
+     *
+     * @param string $file
+     * @param mixed $content
+     * @return int
+     */
+    protected function createConfigFile($file = null, $content = '') {
+
+        $file = ($file === null) ? getcwd().self::CONFIG_FILENAME : $file;
+        return file_put_contents($file, json_encode($content));
+    }
+
+    /**
+     * Create config file
+     *
+     * @param string $file
+     * @param array $content
+     * @return int
+     */
+    protected function addToConfig($file = null, array $content) {
+
+        $file = ($file === null) ? getcwd().self::CONFIG_FILENAME : $file;
+
+        $config = (array)self::getConfig();
+
+        foreach($content as $key => $values) {
+            $config[$key] = array_merge($config[$key], $values);
+        }
+        return file_put_contents($file, json_encode($config));
+    }
+
+    /**
      * Get configuration
      *
      * @return object
+     * @throws \RuntimeException
      */
     protected function getConfig() {
-        return (object)json_decode(file_get_contents(getcwd().self::CONFIG_FILENAME), true);
+
+        $configFile = getcwd().self::CONFIG_FILENAME;
+
+        if(file_exists($configFile) === true) {
+            return (object)json_decode(file_get_contents($configFile), true);
+        }
+        throw new \RuntimeException('Configuration file '.$configFile.' does not exist');
+    }
+
+    /**
+     * Get Storage instance
+     *
+     * @return \Deliveries\Service\StorageService
+     */
+    protected function getStorage() {
+        return new StorageService($this->getStorageInstance(self::getConfig()->Storage));
     }
 }

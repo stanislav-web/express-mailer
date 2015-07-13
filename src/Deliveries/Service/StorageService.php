@@ -1,6 +1,10 @@
 <?php
+namespace Deliveries\Service;
+
+use Deliveries\Aware\Adapter\Storage\DataProviderInterface;
+
 /**
- * StorageService class. Storage service
+ * StorageService class. Storage Data Service
  *
  * @package Deliveries
  * @subpackage Deliveries\Service
@@ -10,8 +14,46 @@
  * @copyright Stanislav WEB
  * @filesource /Deliveries/Service/StorageService.php
  */
-namespace Deliveries\Service;
-
 class StorageService {
+
+    /**
+     * Data provider
+     *
+     * @var \Deliveries\Aware\Adapter\Storage\DataProviderInterface
+     */
+    private $storage;
+
+    /**
+     * Assign data provider
+     *
+     * @param \Deliveries\Aware\Adapter\Storage\DataProviderInterface $storage
+     */
+    public function __construct(DataProviderInterface $storage) {
+
+        $this->storage = $storage;
+    }
+
+    /**
+     * Get subscribers statistics
+     *
+     * @return array
+     */
+    public function getSubscribersStatistics() {
+
+        return [
+            'Subscribers stat' => $this->storage->countSubscribers()
+        ];
+    }
+
+    /**
+     * Get deliveries statistics
+     *
+     * @return array
+     */
+    public function getDeliveriesStatistics() {
+        return [
+            'Deliveries stat' => $this->storage->countDeliveries()
+        ];
+    }
 
 }

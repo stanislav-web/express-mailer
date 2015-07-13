@@ -34,12 +34,26 @@ class MySQL implements DataProviderInterface {
     protected $pdo;
 
     /**
+     * @vat string $subscribersTable
+     */
+    private $subscribersTable   = 'xmail_subscribers';
+
+    /**
+     * @vat string $listsTable
+     */
+    private $listsTable   = 'xmail_lists';
+
+    /**
+     * @vat string $statsTable
+     */
+    private $statsTable   = 'xmail_stats';
+
+    /**
      * Check if storage already support & available
      *
      * @return boolean
      */
-    public function isSupport()
-    {
+    public function isSupport() {
         if(extension_loaded('PDO') && extension_loaded('pdo_mysql')) {
             return true;
         }
@@ -62,15 +76,14 @@ class MySQL implements DataProviderInterface {
      * @throws \PDOException
      * @return boolean
      */
-    public function connect(array $config)
-    {
+    public function connect(array $config) {
         $dsn = "".strtolower($config['adapter']).":host=".$config['host'].";dbname=".$config['db'];
 
         try {
             $this->pdo = new \PDO($dsn, $config['username'], $config['password']);
             $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-            return true;
+            return $this;
 
         } catch(\PDOException $e) {
             throw new \RuntimeException(
@@ -84,20 +97,119 @@ class MySQL implements DataProviderInterface {
      *
      * @return array
      */
-    public function getTablesList()
-    {
+    public function getTablesList() {
+
         $query = $this->getInstance()->query("SHOW TABLES");
 
         return $query->fetchAll(\PDO::FETCH_COLUMN);
     }
 
     /**
+     * Set tables
+     *
+     * @param string $prefix
+     * @return \Deliveries\Aware\Adapter\Storage\DataProviderInterface
+     */
+    public function setTables($prefix) {
+
+        $this->subscribersTable = $this->quoteFiled($prefix.$this->subscribersTable);
+        $this->statsTable = $this->quoteFiled($prefix.$this->statsTable);
+        $this->listsTable = $this->quoteFiled($prefix.$this->listsTable);
+
+        return $this;
+    }
+
+    /**
      * Execute query
      *
+     * @param string $query
      * @return boolean
      */
-    public function exec($query)
-    {
+    public function exec($query) {
         return $this->getInstance()->exec($query);
+    }
+
+    /**
+     * Get result query for multiple rows
+     *
+     * @param string $query
+     * @return array
+     */
+    public function fetchAll($query) {
+        $stmt = $this->getInstance()->query($query);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get result query for row
+     *
+     * @param string $query
+     * @return array
+     */
+    public function fetchOne($query) {
+        $stmt = $this->getInstance()->query($query);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Escape value
+     *
+     * @param string $query
+     * @return string
+     */
+    public function quoteValue($value) {
+        return $this->getInstance()->quote($value);
+    }
+
+    /**
+     * Escape arguments
+     *
+     * @param string $field
+     * @return string
+     */
+    public function quoteFiled($field) {
+        return "`".str_replace(["'"], ["`"], $field)."`";
+    }
+
+    /**
+     * Prepare query statement
+     *
+     * @param string $query
+     * @return bool
+     */
+    public function prepare($query) {
+        return $this->getInstance()->prepare($query)->execute();
+    }
+
+    /**
+     * Count all subscribers
+     *
+     * @param $table
+     * @return array
+     */
+    public function countSubscribers() {
+
+        $query = "SELECT COUNT(1) AS total,
+                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'moderated') AS moderated,
+                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'disabled') AS disabled,
+                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'active') AS active
+                  FROM ".$this->subscribersTable;
+        return $this->fetchOne($query);
+    }
+
+    /**
+     * Count all subscribers
+     *
+     * @param $table
+     * @return array
+     */
+    public function countDeliveries() {
+
+        $query = "SELECT COUNT(1) AS total,
+                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'moderated') AS moderated,
+                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'disabled') AS disabled,
+                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'active') AS active
+                  FROM ".$table;
+        return $this->fetchOne($query);
     }
 }

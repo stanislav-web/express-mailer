@@ -41,9 +41,58 @@ interface DataProviderInterface {
     public function getTablesList();
 
     /**
+     * Set tables
+     *
+     * @param string $prefix
+     * @return \Deliveries\Aware\Adapter\Storage\DataProviderInterface
+     */
+    public function setTables($prefix);
+
+    /**
      * Execute query
      *
+     * @param string $query
      * @return boolean
      */
     public function exec($query);
+
+    /**
+     * Prepare query string
+     *
+     * @param string $query
+     * @return array|object
+     */
+    public function prepare($query);
+
+    /**
+     * Get result query for multiple rows
+     *
+     * @param string $query
+     * @return array
+     */
+    public function fetchAll($query);
+
+    /**
+     * Get result query for row
+     *
+     * @param string $query
+     * @return array
+     */
+    public function fetchOne($query);
+
+    /**
+     * Escape value
+     *
+     * @param string $value
+     * @return string
+     */
+    public function quoteValue($value);
+
+    /**
+     * Escape field
+     *
+     * @param string $field
+     * @return string
+     */
+    public function quoteFiled($field);
 }

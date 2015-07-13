@@ -1,4 +1,4 @@
-ALTER TABLE `__PREFIX__xmail_stats` DROP FOREIGN KEY  `fk_list_id`;
+SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `__PREFIX__xmail_lists`;
 
@@ -9,3 +9,5 @@ CREATE TABLE `__PREFIX__xmail_lists` (
   `date_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Default create date',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Mailing List\'s';
+
+SET FOREIGN_KEY_CHECKS = 1;
