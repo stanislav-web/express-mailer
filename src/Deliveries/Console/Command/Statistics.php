@@ -94,14 +94,7 @@ class Statistics extends BaseCommandAware {
         }
         if ($input->getOption('deliveries')) {
             // throw deliveries stats
-            //@TODO not complete
             $this->table($output, $this->getStorage()->getDeliveriesStatistics());
         }
-        if ($input->getOption('lists')) {
-            // throw lists stats
-            //@TODO not complete
-            $this->table($output, $this->getStorage()->getListsStatistics());
-        }
-
     }
 }

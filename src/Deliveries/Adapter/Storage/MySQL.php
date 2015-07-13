@@ -198,7 +198,7 @@ class MySQL implements DataProviderInterface {
     }
 
     /**
-     * Count all subscribers
+     * Count all statistics for deliveries messages
      *
      * @param $table
      * @return array
@@ -206,10 +206,12 @@ class MySQL implements DataProviderInterface {
     public function countDeliveries() {
 
         $query = "SELECT COUNT(1) AS total,
-                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'moderated') AS moderated,
-                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'disabled') AS disabled,
-                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'active') AS active
-                  FROM ".$table;
+                  (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'ok') AS send,
+                  (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'pending') AS pending,
+                  (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'failed') AS failed,
+                  (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'abort') AS abort
+                  FROM ".$this->statsTable;
+
         return $this->fetchOne($query);
     }
 }
