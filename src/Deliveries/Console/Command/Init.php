@@ -29,7 +29,7 @@ class Init extends BaseCommandAware {
      *
      * @const NAME
      */
-    const LOGO = "###################\nInitialize Tools ##\n###################\n";
+    const LOGO = "###################\nInitialize Tools ##\n###################";
 
     /**
      * Command name

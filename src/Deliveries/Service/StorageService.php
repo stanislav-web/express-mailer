@@ -62,6 +62,8 @@ class StorageService {
      * @return array
      */
     public function getActiveMailStatistics() {
-        return $this->storage->activeMailsStat();
+        return [
+            'Tail activity mail log' => $this->storage->activeMailsStat()
+        ];
     }
 }

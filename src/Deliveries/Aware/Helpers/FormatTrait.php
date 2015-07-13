@@ -24,7 +24,11 @@ trait FormatTrait {
     public function tableLong(\Symfony\Component\Console\Output\OutputInterface $output, array $content) {
 
         // write config table
+        $title = key($content);
+        $content = array_shift($content);
         $table = new Table($output);
+        $output->writeln("\n<comment>" . $title . "</comment>");
+
         $headers = array_keys($content[0]);
         $table->setHeaders($headers);
         $rows = [];

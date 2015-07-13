@@ -24,7 +24,7 @@ class Migrations extends BaseCommandAware {
      *
      * @const NAME
      */
-    const LOGO = "###################\nMigration Tools ###\n###################\n";
+    const LOGO = "###################\nMigration Tools ###\n###################";
     /**
      * Command name
      *

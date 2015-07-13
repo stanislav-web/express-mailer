@@ -25,7 +25,7 @@ class Statistics extends BaseCommandAware {
      *
      * @const NAME
      */
-    const LOGO = "###################\nStatistics Tools ##\n###################\n";
+    const LOGO = "###################\nStatistics Tools ##\n###################";
     /**
      * Command name
      *
@@ -39,13 +39,6 @@ class Statistics extends BaseCommandAware {
      * @const DESCRIPTION
      */
     const DESCRIPTION = 'Statistics tool';
-
-    /**
-     * Default statistics representation
-     *
-     * @const DEFAULT_SHOW
-     */
-    const DEFAULT_SHOW = 'subscribers';
 
     use FormatTrait;
 
@@ -93,11 +86,21 @@ class Statistics extends BaseCommandAware {
             // throw subscribers stats
             $this->table($output, $this->getStorage()->getSubscribersStatistics());
         }
-        if ($input->getOption('deliveries')) {
+        else if ($input->getOption('deliveries')) {
             // throw deliveries stats
             $this->table($output, $this->getStorage()->getDeliveriesStatistics());
         }
-        if ($input->getOption('active')) {
+        else if ($input->getOption('active')) {
+            // throw active mailing stats
+            $this->tableLong($output, $this->getStorage()->getActiveMailStatistics());
+        }
+
+        else {
+
+            // throw subscribers stats
+            $this->table($output, $this->getStorage()->getSubscribersStatistics());
+            // throw deliveries stats
+            $this->table($output, $this->getStorage()->getDeliveriesStatistics());
             // throw active mailing stats
             $this->tableLong($output, $this->getStorage()->getActiveMailStatistics());
         }
