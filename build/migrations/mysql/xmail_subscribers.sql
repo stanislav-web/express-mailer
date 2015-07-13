@@ -1,3 +1,5 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
 DROP TABLE IF EXISTS `__PREFIX__xmail_subscribers`;
 
 CREATE TABLE `__PREFIX__xmail_subscribers` (
@@ -10,3 +12,5 @@ CREATE TABLE `__PREFIX__xmail_subscribers` (
   UNIQUE KEY `uni_email` (`email`),
   KEY `idx_state` (`state`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Subscriber\'s list';
+
+SET FOREIGN_KEY_CHECKS = 1;

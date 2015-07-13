@@ -27,16 +27,18 @@ trait FormatTrait {
         $title = key($content);
         $content = array_shift($content);
         $table = new Table($output);
-        $output->writeln("\n<comment>" . $title . "</comment>");
+        $output->writeln("<fg=yellow;options=bold>" . $title . "</fg=yellow;options=bold>");
 
-        $headers = array_keys($content[0]);
-        $table->setHeaders($headers);
-        $rows = [];
-        foreach($content as $row) {
-            $rows[] = $row;
+        if(empty($content)  === false) {
+            $headers = array_keys($content[0]);
+            $table->setHeaders($headers);
+            $rows = [];
+            foreach($content as $row) {
+                $rows[] = $row;
+            }
+            $table->setRows($rows);
+            $table->render();
         }
-        $table->setRows($rows);
-        $table->render();
     }
 
     /**
@@ -54,7 +56,7 @@ trait FormatTrait {
 
             // multiple tables
             foreach($content as $header => $rows) {
-                $output->writeln("\n<comment>" . $header . "</comment>");
+                $output->writeln("<fg=yellow;options=bold>" . $header . "</fg=yellow;options=bold>");
 
                 $table->setHeaders(array_keys($rows))
                     ->setRows([$rows])
