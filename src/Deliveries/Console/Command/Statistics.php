@@ -99,7 +99,7 @@ class Statistics extends BaseCommandAware {
         }
         if ($input->getOption('active')) {
             // throw active mailing stats
-            $this->table($output, $this->getStorage()->getActiveMailStatistics());
+            $this->tableLong($output, $this->getStorage()->getActiveMailStatistics());
         }
     }
 }

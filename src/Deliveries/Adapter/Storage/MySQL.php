@@ -227,6 +227,13 @@ class MySQL implements DataProviderInterface {
      * @return array
      */
     public function activeMailsStat() {
-        //@TODO get active mails from logs
+
+        $query = "SELECT list.id AS listID, list.subject AS Subject, COUNT(log.subscriber_id) AS Sent
+	                FROM ".$this->listsTable." AS list
+                    INNER JOIN ".$this->activeLogTable." AS log ON(log.list_id = list.id)
+	                GROUP BY log.`list_id`
+	                ORDER BY log.`date_send` DESC";
+
+        return $this->fetchAll($query);
     }
 }

@@ -16,6 +16,26 @@ use Symfony\Component\Console\Helper\Table;
 trait FormatTrait {
 
     /**
+     * Draw console table multiple rows down
+     *
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param array                                             $content
+     */
+    public function tableLong(\Symfony\Component\Console\Output\OutputInterface $output, array $content) {
+
+        // write config table
+        $table = new Table($output);
+        $headers = array_keys($content[0]);
+        $table->setHeaders($headers);
+        $rows = [];
+        foreach($content as $row) {
+            $rows[] = $row;
+        }
+        $table->setRows($rows);
+        $table->render();
+    }
+
+    /**
      * Draw console table
      *
      * @param \Symfony\Component\Console\Output\OutputInterface $output

@@ -1,5 +1,8 @@
 #!/usr/bin/env php
 <?php
+date_default_timezone_set('UTC');
+set_time_limit(0);
+
 if (PHP_SAPI !== 'cli') {
     echo 'Warning: Script should be invoked via the CLI version of PHP, not the '.PHP_SAPI.' SAPI'.PHP_EOL;
 }
@@ -25,6 +28,7 @@ unset($file);
  * Command Line launcher
  */
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Deliveries\Console\Application as App;
 use Deliveries\Console\Command;
 
@@ -32,6 +36,7 @@ use Deliveries\Console\Command;
 if(file_exists(AUTOLOADER) === true) {
 
     include AUTOLOADER;
+
     $console = new Application(App::NAME, App::VERSION);
     $console->add(new Command\Init('init'));
     $console->add(new Command\Migrations('migrations'));
