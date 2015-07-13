@@ -56,4 +56,17 @@ class StorageService {
         ];
     }
 
+    /**
+     * Get active mail statistics
+     *
+     * @return array
+     */
+    public function getActiveMailStatistics() {
+        return [
+            'Active mail stat' => $this->storage->activeMailsStat()
+        ];
+    }
+
+
+
 }

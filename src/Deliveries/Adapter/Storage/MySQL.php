@@ -49,6 +49,11 @@ class MySQL implements DataProviderInterface {
     private $statsTable   = 'xmail_stats';
 
     /**
+     * @vat string $activeLogTable
+     */
+    private $activeLogTable   = 'xmail_active_log';
+
+    /**
      * Check if storage already support & available
      *
      * @return boolean
@@ -193,7 +198,7 @@ class MySQL implements DataProviderInterface {
                   (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'moderated') AS moderated,
                   (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'disabled') AS disabled,
                   (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'active') AS active
-                  FROM ".$this->subscribersTable;
+                  FROM ".$this->subscribersTable." USE INDEX(PRIMARY)";
         return $this->fetchOne($query);
     }
 
@@ -210,8 +215,18 @@ class MySQL implements DataProviderInterface {
                   (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'pending') AS pending,
                   (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'failed') AS failed,
                   (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'abort') AS abort
-                  FROM ".$this->statsTable;
+                  FROM ".$this->statsTable." USE INDEX(PRIMARY)";
 
         return $this->fetchOne($query);
+    }
+
+    /**
+     * Count all active mails stat
+     *
+     * @param $table
+     * @return array
+     */
+    public function activeMailsStat() {
+        //@TODO get active mails from logs
     }
 }

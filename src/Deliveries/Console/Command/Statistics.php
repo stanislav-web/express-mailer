@@ -58,7 +58,8 @@ class Statistics extends BaseCommandAware {
 
         return [
             new InputOption('subscribers', 's', InputOption::VALUE_NONE, 'Show subscribers statistics'),
-            new InputOption('deliveries', 'd', InputOption::VALUE_NONE, 'Show deliveries statistics')
+            new InputOption('deliveries', 'd', InputOption::VALUE_NONE, 'Show deliveries statistics'),
+            new InputOption('active', 'a', InputOption::VALUE_NONE, 'Show active mail stats'),
         ];
     }
 
@@ -95,6 +96,10 @@ class Statistics extends BaseCommandAware {
         if ($input->getOption('deliveries')) {
             // throw deliveries stats
             $this->table($output, $this->getStorage()->getDeliveriesStatistics());
+        }
+        if ($input->getOption('active')) {
+            // throw active mailing stats
+            $this->table($output, $this->getStorage()->getActiveMailStatistics());
         }
     }
 }
