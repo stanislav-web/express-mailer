@@ -61,7 +61,6 @@ class Beanstalk implements QueueProviderInterface {
      */
     public function connect(array $config)
     {
-
         $host = (empty($config['host']) === true) ? self::DEFAULT_HOST : $config['host'];
         $port = (empty($config['port']) === true) ? self::DEFAULT_PORT : $config['port'];
         $timeout = (empty($config['timeout']) === true) ? self::DEFAULT_TIMEOUT : $config['timeout'];

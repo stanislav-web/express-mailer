@@ -28,10 +28,8 @@ unset($file);
  * Command Line launcher
  */
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Deliveries\Console\Application as App;
 use Deliveries\Console\Command;
-
 
 if(file_exists(AUTOLOADER) === true) {
 

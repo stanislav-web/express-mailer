@@ -17,29 +17,7 @@ use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
 class Native implements QueueProviderInterface {
 
     /**
-     * Default broker host
-     */
-    const DEFAULT_HOST = 'localhost';
-
-    /**
-     * Default broker port
-     */
-    const DEFAULT_PORT = 9000;
-
-    /**
-     * Default connection timeout
-     */
-    const DEFAULT_TIMEOUT = 30;
-
-    /**
-     * Default connection type
-     */
-    const DEFAULT_IS_PERSISTENT = 'false';
-
-    /**
-     * Broker connection
-     *
-     * @var \Pheanstalk\Pheanstalk $broker
+     * Broker process
      */
     protected $broker;
 
@@ -53,23 +31,13 @@ class Native implements QueueProviderInterface {
     }
 
     /**
-     * Connect to AMQP server
+     * Connect server
      *
      * @param array $config
      * @return boolean $isConnect
      */
-    public function connect(array $config)
-    {
-        
-        $host = (empty($config['host']) === true) ? self::DEFAULT_HOST : $config['host'];
-        $port = (empty($config['port']) === true) ? self::DEFAULT_PORT : $config['port'];
-        $timeout = (empty($config['timeout']) === true) ? self::DEFAULT_TIMEOUT : $config['timeout'];
-        $persistent = (empty($config['persistent']) === true) ? self::DEFAULT_IS_PERSISTENT : $config['persistent'];
-
-        $this->broker = new QueueBroker($host, $port, $timeout, $persistent);
-        $isConnect = $this->broker->getConnection()->isServiceListening();
-
-        return $isConnect;
+    public function connect(array $config = []) {
+        $this->broker = pcntl_fork();
     }
 
     /**
