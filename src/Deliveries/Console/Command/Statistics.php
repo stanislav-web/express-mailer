@@ -97,11 +97,9 @@ class Statistics extends BaseCommandAware {
 
         else {
 
-            // throw subscribers stats
+            // throw all statistics
             $this->table($output, $this->getStorage()->getSubscribersStatistics());
-            // throw deliveries stats
             $this->table($output, $this->getStorage()->getDeliveriesStatistics());
-            // throw active mailing stats
             $this->tableLong($output, $this->getStorage()->getActiveMailStatistics());
         }
     }
