@@ -38,11 +38,9 @@ class StorageService {
      *
      * @return array
      */
-    public function getSubscribersStatistics() {
+    public function getSubscribersReports() {
 
-        return [
-            'Subscribers stat' => $this->storage->countSubscribers()
-        ];
+        return $this->storage->countSubscribers();
     }
 
     /**
@@ -50,10 +48,10 @@ class StorageService {
      *
      * @return array
      */
-    public function getDeliveriesStatistics() {
-        return [
-            'Deliveries stat' => $this->storage->countDeliveries()
-        ];
+    public function getMailingsReports() {
+
+        return $this->storage->countMailings();
+
     }
 
     /**
@@ -62,8 +60,8 @@ class StorageService {
      * @return array
      */
     public function getActiveMailStatistics() {
-        return [
-            'Tail activity mail log' => $this->storage->activeMailsStat()
-        ];
+
+        return $this->storage->activeMailsStat();
+
     }
 }

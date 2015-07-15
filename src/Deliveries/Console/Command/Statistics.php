@@ -50,8 +50,8 @@ class Statistics extends BaseCommandAware {
     public static function getOptions() {
 
         return [
-            new InputOption('subscribers', 's', InputOption::VALUE_NONE, 'Show subscribers statistics'),
-            new InputOption('deliveries', 'd', InputOption::VALUE_NONE, 'Show deliveries statistics'),
+            new InputOption('subscribers', 's', InputOption::VALUE_NONE, 'Show subscribers reports'),
+            new InputOption('mailings', 'm', InputOption::VALUE_NONE, 'Show mailings reports'),
             new InputOption('active', 'a', InputOption::VALUE_NONE, 'Show active mail stats'),
         ];
     }
@@ -84,23 +84,36 @@ class Statistics extends BaseCommandAware {
 
         if ($input->getOption('subscribers')) {
             // throw subscribers stats
-            $this->table($output, $this->getStorage()->getSubscribersStatistics());
+            $this->table($output,[
+                'Reports subscribers' => $this->getStorage()->getSubscribersReports()
+            ]);
         }
-        else if ($input->getOption('deliveries')) {
+        else if ($input->getOption('mailings')) {
             // throw deliveries stats
-            $this->table($output, $this->getStorage()->getDeliveriesStatistics());
+            $this->table($output,[
+                'Reports mailings' => $this->getStorage()->getMailingsReports()
+            ]);
         }
         else if ($input->getOption('active')) {
             // throw active mailing stats
-            $this->tableLong($output, $this->getStorage()->getActiveMailStatistics());
+            $this->tableLong($output,[
+                'Tail activity mail log' => $this->getStorage()->getActiveMailStatistics()
+            ]);
         }
-
         else {
 
-            // throw all statistics
-            $this->table($output, $this->getStorage()->getSubscribersStatistics());
-            $this->table($output, $this->getStorage()->getDeliveriesStatistics());
-            $this->tableLong($output, $this->getStorage()->getActiveMailStatistics());
+            // throw subscribers stats
+            $this->table($output,[
+                'Reports subscribers' => $this->getStorage()->getSubscribersReports()
+            ]);
+            // throw deliveries stats
+            $this->table($output,[
+                'Reports mailings' => $this->getStorage()->getMailingsReports()
+            ]);
+            // throw active mailing stats
+            $this->tableLong($output,[
+                'Tail activity mail log' => $this->getStorage()->getActiveMailStatistics()
+            ]);
         }
     }
 }

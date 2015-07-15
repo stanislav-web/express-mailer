@@ -203,12 +203,12 @@ class MySQL implements DataProviderInterface {
     }
 
     /**
-     * Count all statistics for deliveries messages
+     * Count all statistics for mailings
      *
      * @param $table
      * @return array
      */
-    public function countDeliveries() {
+    public function countMailings() {
 
         $query = "SELECT COUNT(1) AS total,
                   (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'ok') AS send,
@@ -232,7 +232,7 @@ class MySQL implements DataProviderInterface {
 	                FROM ".$this->listsTable." AS list
                     INNER JOIN ".$this->activeLogTable." AS log ON(log.list_id = list.id)
 	                GROUP BY log.`list_id`
-	                ORDER BY log.`date_send` DESC";
+	                ORDER BY log.`date_sent` DESC";
 
         return $this->fetchAll($query);
     }
