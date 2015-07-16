@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Deliveries\Aware\Helpers\TestTrait;
 use Deliveries\Service\StorageService;
+use Deliveries\Aware\Service\AppServiceManager;
 
 /**
  * BaseCommandAware class. BaseCommand aware interface
@@ -164,6 +165,19 @@ class BaseCommandAware extends Command {
             return (object)json_decode(file_get_contents($configFile), true);
         }
         throw new \RuntimeException('Configuration file '.$configFile.' does not exist');
+    }
+
+    /**
+     * Get ServiceManager
+     *
+     * @return \Deliveries\Aware\Service\AppServiceManager
+     */
+    protected function getAppServiceManager() {
+        return new AppServiceManager(
+            $this->getStorageInstance(self::getConfig()->Storage),
+            $this->getMailInstance(self::getConfig()->Mail),
+            $this->getQueueInstance(self::getConfig()->Broker)
+        );
     }
 
     /**

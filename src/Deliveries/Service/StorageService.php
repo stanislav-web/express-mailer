@@ -51,7 +51,6 @@ class StorageService {
     public function getMailingsReports() {
 
         return $this->storage->countMailings();
-
     }
 
     /**
@@ -62,6 +61,5 @@ class StorageService {
     public function getActiveMailStatistics() {
 
         return $this->storage->activeMailsStat();
-
     }
 }

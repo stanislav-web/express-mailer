@@ -37,17 +37,19 @@ trait TestTrait {
 
     /**
      * @return object
+     * @TODO
      */
-    public function getMailInstance()
-    {
+    private function getMailInstance() {
         return $this->mailInstance;
     }
 
     /**
+     * Get storage instance object
+     *
+     * @param array $config
      * @return object
      */
-    public function getStorageInstance($config = null)
-    {
+    private function getStorageInstance($config = null) {
         return (null === $this->storageInstance) ?
             $this->isStorageConnectSuccess($config)->setTables($config['prefix'])
             : $this->storageInstance;
@@ -55,9 +57,9 @@ trait TestTrait {
 
     /**
      * @return object
+     * @TODO
      */
-    public function getQueueInstance()
-    {
+    private function getQueueInstance() {
         return $this->queueInstance;
     }
 
@@ -132,7 +134,6 @@ trait TestTrait {
             throw new \RuntimeException($config["adapter"]. ' is not supported');
         }
         throw new \RuntimeException($config["adapter"]. ' is not exist');
-
     }
 
 }

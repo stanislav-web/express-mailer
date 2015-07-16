@@ -211,7 +211,7 @@ class MySQL implements DataProviderInterface {
     public function countMailings() {
 
         $query = "SELECT COUNT(1) AS total,
-                  (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'ok') AS send,
+                  (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'ok') AS sent,
                   (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'pending') AS pending,
                   (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'failed') AS failed,
                   (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'abort') AS abort
