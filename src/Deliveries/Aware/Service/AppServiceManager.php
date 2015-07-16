@@ -17,9 +17,48 @@ use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
  */
 class AppServiceManager {
 
-    public function __construct(DataProviderInterface $storage, MailProviderInterface $mail, QueueProviderInterface $q) {
+    /**
+     * Mail Adapter instance
+     *
+     * @var DataProviderInterface $mailInstance
+     */
+    private $mailInstance;
 
-        //@TODO
-        var_dump($storage, $mail, $q);
+    /**
+     * Queue Adapter instance
+     *
+     * @var DataProviderInterface $queueInstance
+     */
+    private $queueInstance;
+
+    /**
+     * Storage Adapter instance
+     *
+     * @var DataProviderInterface $storageInstance
+     */
+    private $storageInstance;
+
+    /**
+     * Initialize scopes of objects
+     *
+     * @param DataProviderInterface  $storage
+     * @param MailProviderInterface  $mail
+     * @param QueueProviderInterface $queue
+     */
+    public function __construct(DataProviderInterface $storage, MailProviderInterface $mail, QueueProviderInterface $queue) {
+
+        $this->queueInstance = $queue;
+        $this->mailInstance = $mail;
+        $this->storageInstance = $storage;
     }
+
+    /**
+     * Submit mailing by status only
+     *
+     * @param string $status
+     */
+    public function submit($status) {
+
+    }
+
 }

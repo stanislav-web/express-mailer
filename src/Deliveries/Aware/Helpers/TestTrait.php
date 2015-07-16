@@ -19,35 +19,40 @@ trait TestTrait {
      *
      * @var object $mailInstance
      */
-    public $mailInstance;
+    private $mailInstance;
 
     /**
      * Queue Adapter instance
      *
      * @var object $queueInstance
      */
-    public $queueInstance;
+    private $queueInstance;
 
     /**
      * Storage Adapter instance
      *
      * @var object $storageInstance
      */
-    public $storageInstance;
+    private $storageInstance;
 
     /**
-     * @return object
-     * @TODO
+     * Get mail instance object
+     *
+     * @param array $config
+     * @return \Deliveries\Aware\Adapter\Mail\MailProviderInterface
      */
-    private function getMailInstance() {
-        return $this->mailInstance;
+    private function getMailInstance($config = null) {
+
+        return (null === $this->mailInstance) ?
+            $this->isMailConnectSuccess($config)
+            : $this->mailInstance;
     }
 
     /**
      * Get storage instance object
      *
      * @param array $config
-     * @return object
+     * @return \Deliveries\Aware\Adapter\Storage\DataProviderInterface
      */
     private function getStorageInstance($config = null) {
         return (null === $this->storageInstance) ?
@@ -56,11 +61,15 @@ trait TestTrait {
     }
 
     /**
-     * @return object
-     * @TODO
+     * Get queue instance object
+     *
+     * @param array $config
+     * @return \Deliveries\Aware\Adapter\Broker\QueueProviderInterface
      */
-    private function getQueueInstance() {
-        return $this->queueInstance;
+    private function getQueueInstance($config = null) {
+        return (null === $this->queueInstance) ?
+            $this->isQueueConnectSuccess($config)
+            : $this->queueInstance;
     }
 
     /**
@@ -118,7 +127,7 @@ trait TestTrait {
      *
      * @param array $config
      * @throws \RuntimeException
-     * @return bool
+     * @return boolean
      */
     public function isStorageConnectSuccess(array $config) {
 

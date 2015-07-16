@@ -79,7 +79,7 @@ class MySQL implements DataProviderInterface {
      *
      * @param array $config
      * @throws \PDOException
-     * @return boolean
+     * @return \PDO
      */
     public function connect(array $config) {
         $dsn = "".strtolower($config['adapter']).":host=".$config['host'].";dbname=".$config['db'];

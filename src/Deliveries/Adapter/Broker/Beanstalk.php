@@ -57,7 +57,8 @@ class Beanstalk implements QueueProviderInterface {
      * Connect to AMQP server
      *
      * @param array $config
-     * @return boolean $isConnect
+     * @return \Pheanstalk\Pheanstalk
+     * @throws \RuntimeException
      */
     public function connect(array $config)
     {
@@ -69,7 +70,11 @@ class Beanstalk implements QueueProviderInterface {
         $this->broker = new QueueBroker($host, $port, $timeout, $persistent);
         $isConnect = $this->broker->getConnection()->isServiceListening();
 
-        return $isConnect;
+        if(!$isConnect) {
+            throw new \RuntimeException('Queue connection failed! Check configurations');
+        }
+
+        return $this;
     }
 
     /**

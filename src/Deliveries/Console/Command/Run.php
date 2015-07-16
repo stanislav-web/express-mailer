@@ -75,6 +75,21 @@ class Run extends BaseCommandAware {
             );
         }
 
-        $this->getAppServiceManager();
+        if ($input->getOption('pending')) {
+            // start to process pending mails
+            $this->getAppServiceManager()->submit('pending');
+        }
+        else if ($input->getOption('abort')) {
+            // start to process abort mails
+            $this->getAppServiceManager()->submit('abort');
+        }
+        else if ($input->getOption('sent')) {
+            // start to process sent mails
+            $this->getAppServiceManager()->submit('sent');
+        }
+        else if ($input->getOption('failed')) {
+            // start to process failed mails
+            $this->getAppServiceManager()->submit('failed');
+        }
     }
 }
