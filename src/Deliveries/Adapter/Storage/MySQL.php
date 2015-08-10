@@ -268,18 +268,20 @@ class MySQL implements DataProviderInterface {
      * @param int $pid
      * @param array $params additional insert params
      * @param datetime $date_activation
+     * @param int $priority
      * @throws \RuntimeException
      * @return int
      */
-    public function saveQueue($pid, array $params, $date_activation = null) {
+    public function saveQueue($pid, array $params, $date_activation = null, $priority = 0) {
 
-        $query = "INSERT INTO ".$this->queueTable." (pid, adapter, date_activation) VALUES (:pid, :storage, :broker, :mail, :date_activation)";
+        $query = "INSERT INTO `".$this->queueTable."` (pid, adapter, date_activation) VALUES (:pid, :storage, :broker, :mail, :date_activation)";
 
         try {
             // prepare bind & execute query
             return $this->exec($query, array_merge([
                 ':pid'               =>  (int)$pid,
                 ':date_activation'   =>  $date_activation,
+                ':priority'          =>  (int)$priority
             ], $params));
         }
         catch(\PDOException $e) {
@@ -287,5 +289,25 @@ class MySQL implements DataProviderInterface {
                 'Create queue failed: '.$e->getMessage()
             );
         }
+    }
+
+    /**
+     * Get queues process from storage
+     *
+     * @param string $date
+     * @param int $limit limit records
+     * @return array
+     */
+    public function getQueues($date = null, $limit = null) {
+
+        $query = "SELECT * FROM `".$this->queueTable."` queue
+                    WHERE `date_activation` >= '".$date."'
+	                ORDER BY queue.priority DESC";
+
+        if(is_null($limit) === false) {
+            $query .= " LIMIT ".(int)$limit;
+        }
+
+        return $this->fetchAll($query);
     }
 }

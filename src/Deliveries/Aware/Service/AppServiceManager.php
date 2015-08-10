@@ -63,7 +63,7 @@ class AppServiceManager {
     /**
      * Create queue mailing by status only
      *
-     * @param string $status
+     * @param array $options
      * @throws \RuntimeException
      * @return int $pid created process id
      */
@@ -93,7 +93,8 @@ class AppServiceManager {
                     ':storage'  =>  $this->getClassName($this->storageInstance),
                     ':broker'   =>  $this->getClassName($this->queueInstance),
                     ':mail'     =>  $this->getClassName($this->mailInstance),
-                ], $options['date']);
+                    ':priority' =>  $this->getClassName($this->mailInstance),
+                ], $options['date'], $options['priority']);
             }
             catch(\PDOException $e) {
 
@@ -114,4 +115,29 @@ class AppServiceManager {
         return $pid;
     }
 
+    /**
+     * Run mails queue
+     *
+     * @throws \RuntimeException
+     */
+    public function runQueue(array $options) {
+
+        try {
+
+            // date create verification
+            $this->verifyDate($options['date']);
+
+            // get queues
+            $queues = $this->storageInstance->getQueues($options['date'], $options['limit']);
+
+            //@todo parse queues pids
+            print_r($queues); exit;
+
+        }
+        catch(\Exception $e) {
+            throw new \RuntimeException(
+                'Get queue failed: '.$e->getMessage()
+            );
+        }
+    }
 }

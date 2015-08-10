@@ -111,7 +111,17 @@ interface DataProviderInterface {
      * @param int $pid
      * @param array $params additional insert params
      * @param datetime $date_activation
+     * @param int $priority
      * @return int
      */
-    public function saveQueue($pid, array $params, $date_activation = null);
+    public function saveQueue($pid, array $params, $date_activation = null, $priority = 0);
+
+    /**
+     * Get queues process from storage
+     *
+     * @param string $date
+     * @param int $limit limit records
+     * @return array
+     */
+    public function getQueues($date = null, $limit = null);
 }

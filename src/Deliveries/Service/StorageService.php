@@ -62,4 +62,14 @@ class StorageService {
 
         return $this->storage->activeMailsStat();
     }
+
+    /**
+     * Get queues by date
+     *
+     * @param string $date
+     */
+    public function getQueues($date) {
+
+        return $this->storage->getQueues($date);
+    }
 }
