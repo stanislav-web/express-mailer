@@ -74,30 +74,29 @@ class Native implements QueueProviderInterface {
     }
 
     /**
-     * Get message
+     * Read message
      *
-     * @return mixed
+     * @param int $pid
+     * @param callable $callback
      */
-    public function get()
+    public function read($pid = null, callable $callback)
     {
-        if(is_null($this->queuePid) === false) {
+        $this->queuePid = (is_null($pid) === false) ? $pid : $this->queuePid;
 
-            $queue = msg_get_queue($this->queuePid);
+        $queue = msg_get_queue($this->queuePid);
 
+        $msg_type = NULL;
+        $msg = NULL;
+        $max_msg_size = 512*512;
+
+        while(msg_receive($queue, 1, $msg_type, $max_msg_size, $msg)) {
+
+            // do business logic here and process this message!
+            $callback($msg);
+
+            //finally, reset our msg vars for when we loop and run again
             $msg_type = NULL;
             $msg = NULL;
-            $max_msg_size = 512;
-
-            while(msg_receive($queue, 1, $msg_type, $max_msg_size, $msg)) {
-
-                print_r($msg);
-
-                //do your business logic here and process this message!
-
-                //finally, reset our msg vars for when we loop and run again
-                $msg_type = NULL;
-                $msg = NULL;
-            }
         }
     }
 

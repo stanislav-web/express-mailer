@@ -35,11 +35,12 @@ interface QueueProviderInterface {
     public function push(array $data);
 
     /**
-     * Get message
+     * Read message
      *
-     * @return mixed
+     * @param int $pid
+     * @param callable $callback
      */
-    public function get();
+    public function read($pid = null, callable $callback);
 
     /**
      * Delete message from queue

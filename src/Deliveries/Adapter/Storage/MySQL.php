@@ -274,9 +274,12 @@ class MySQL implements DataProviderInterface {
      */
     public function saveQueue($pid, array $params, $date_activation = null, $priority = 0) {
 
-        $query = "INSERT INTO `".$this->queueTable."` (pid, adapter, date_activation) VALUES (:pid, :storage, :broker, :mail, :date_activation)";
+        $query = "INSERT INTO `".$this->queueTable."`
+                    (pid, storage, broker, mail, priority, date_activation)
+                        VALUES (:pid, :storage, :broker, :mail, :priority, :date_activation)";
 
         try {
+
             // prepare bind & execute query
             return $this->exec($query, array_merge([
                 ':pid'               =>  (int)$pid,

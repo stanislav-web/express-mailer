@@ -54,7 +54,7 @@ trait TestTrait {
      * @param array $config
      * @return \Deliveries\Aware\Adapter\Storage\DataProviderInterface
      */
-    private function getStorageInstance($config = null) {
+    protected function getStorageInstance($config = null) {
         return (null === $this->storageInstance) ?
             $this->isStorageConnectSuccess($config)->setTables($config['prefix'])
             : $this->storageInstance;
@@ -66,7 +66,7 @@ trait TestTrait {
      * @param array $config
      * @return \Deliveries\Aware\Adapter\Broker\QueueProviderInterface
      */
-    private function getQueueInstance($config = null) {
+    protected function getQueueInstance($config = null) {
         return (null === $this->queueInstance) ?
             $this->isQueueConnectSuccess($config)
             : $this->queueInstance;

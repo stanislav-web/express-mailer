@@ -14,6 +14,11 @@ namespace Deliveries\Exceptions;
  */
 class StorageException extends \RuntimeException {
 
+    /**
+     * Exception codes
+     *
+     * @var array $exceptions
+     */
     private $exceptions = [
 
     ];
@@ -22,13 +27,13 @@ class StorageException extends \RuntimeException {
      * Constructor
      *
      * @param array $data additional info
-     * @param string $message If no message is given 'Not Found' will be the message
-     * @param int $code Status code, defaults to 404
+     * @param string $message
+     * @param int $code Status code
      */
     public function __construct($code, $message = null) {
 
         if(is_null($message) === true) {
-            $message = self::MESSAGE;
+            $message = $this->exceptions[$code];
         }
 
         parent::__construct($message, $code);

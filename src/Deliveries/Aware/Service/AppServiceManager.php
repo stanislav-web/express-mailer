@@ -93,7 +93,6 @@ class AppServiceManager {
                     ':storage'  =>  $this->getClassName($this->storageInstance),
                     ':broker'   =>  $this->getClassName($this->queueInstance),
                     ':mail'     =>  $this->getClassName($this->mailInstance),
-                    ':priority' =>  $this->getClassName($this->mailInstance),
                 ], $options['date'], $options['priority']);
             }
             catch(\PDOException $e) {
@@ -130,9 +129,13 @@ class AppServiceManager {
             // get queues
             $queues = $this->storageInstance->getQueues($options['date'], $options['limit']);
 
-            //@todo parse queues pids
-            print_r($queues); exit;
-
+            if(count($queues) > 0) {
+                foreach($queues as $queue) {
+                    $this->queueInstance->read($queue['pid'], function($message) {
+                        //@TODO parse callback $message
+                    });
+                }
+            }
         }
         catch(\Exception $e) {
             throw new \RuntimeException(
