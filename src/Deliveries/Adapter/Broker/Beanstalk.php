@@ -81,6 +81,7 @@ class Beanstalk implements QueueProviderInterface {
      * Push message
      *
      * @param array $data
+     * @throws \RuntimeException
      * @return \Pheanstalk\Pheanstalk
      */
     public function push(array $data)
@@ -90,22 +91,23 @@ class Beanstalk implements QueueProviderInterface {
     }
 
     /**
-     * Get message
+     * Read message
      *
-     * @return mixed
+     * @param int $pid
+     * @param callable $callback
      */
-    public function get()
+    public function read($pid = null, callable $callback)
     {
-        // TODO: Implement get() method.
+        // TODO: Implement read() method.
     }
 
     /**
-     * Delete message
+     * Delete message from queue
      *
-     * @param array $data
+     * @param int $pid
      * @return boolean
      */
-    public function delete(array $data)
+    public function delete($pid = null)
     {
         // TODO: Implement delete() method.
     }
