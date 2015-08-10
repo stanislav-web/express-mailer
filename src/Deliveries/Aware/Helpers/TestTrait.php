@@ -19,49 +19,63 @@ trait TestTrait {
      *
      * @var object $mailInstance
      */
-    public $mailInstance;
+    private $mailInstance;
 
     /**
      * Queue Adapter instance
      *
      * @var object $queueInstance
      */
-    public $queueInstance;
+    private $queueInstance;
 
     /**
      * Storage Adapter instance
      *
      * @var object $storageInstance
      */
-    public $storageInstance;
+    private $storageInstance;
 
     /**
-     * @return object
+     * Get mail instance object
+     *
+     * @param array $config
+     * @return \Deliveries\Aware\Adapter\Mail\MailProviderInterface
      */
-    public function getMailInstance()
-    {
-        return $this->mailInstance;
+    private function getMailInstance($config = null) {
+
+        return (null === $this->mailInstance) ?
+            $this->isMailConnectSuccess($config)
+            : $this->mailInstance;
     }
 
     /**
-     * @return object
+     * Get storage instance object
+     *
+     * @param array $config
+     * @return \Deliveries\Aware\Adapter\Storage\DataProviderInterface
      */
-    public function getStorageInstance()
-    {
-        return $this->storageInstance;
+    private function getStorageInstance($config = null) {
+        return (null === $this->storageInstance) ?
+            $this->isStorageConnectSuccess($config)->setTables($config['prefix'])
+            : $this->storageInstance;
     }
 
     /**
-     * @return object
+     * Get queue instance object
+     *
+     * @param array $config
+     * @return \Deliveries\Aware\Adapter\Broker\QueueProviderInterface
      */
-    public function getQueueInstance()
-    {
-        return $this->queueInstance;
+    private function getQueueInstance($config = null) {
+        return (null === $this->queueInstance) ?
+            $this->isQueueConnectSuccess($config)
+            : $this->queueInstance;
     }
 
     /**
      * Testing for connect to Mail Server
      *
+     * @throws \RuntimeException
      * @return boolean
      */
     public function isMailConnectSuccess(array $config) {
@@ -87,6 +101,7 @@ trait TestTrait {
     /**
      * Testing for connect to Queue
      *
+     * @throws \RuntimeException
      * @return boolean
      */
     public function isQueueConnectSuccess(array $config) {
@@ -114,7 +129,7 @@ trait TestTrait {
      *
      * @param array $config
      * @throws \RuntimeException
-     * @return bool
+     * @return boolean
      */
     public function isStorageConnectSuccess(array $config) {
 
@@ -130,7 +145,6 @@ trait TestTrait {
             throw new \RuntimeException($config["adapter"]. ' is not supported');
         }
         throw new \RuntimeException($config["adapter"]. ' is not exist');
-
     }
 
 }

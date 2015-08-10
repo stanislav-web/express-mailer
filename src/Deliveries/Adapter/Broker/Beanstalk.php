@@ -25,7 +25,7 @@ class Beanstalk implements QueueProviderInterface {
     /**
      * Default broker port
      */
-    const DEFAULT_PORT = 9000;
+    const DEFAULT_PORT = 11300;
 
     /**
      * Default connection timeout
@@ -47,7 +47,7 @@ class Beanstalk implements QueueProviderInterface {
     /**
      * Get instance connection
      *
-     * @return QueueBroker
+     * @return \Pheanstalk\Pheanstalk
      */
     public function getInstance() {
         return $this->broker;
@@ -57,7 +57,8 @@ class Beanstalk implements QueueProviderInterface {
      * Connect to AMQP server
      *
      * @param array $config
-     * @return boolean $isConnect
+     * @return \Pheanstalk\Pheanstalk
+     * @throws \RuntimeException
      */
     public function connect(array $config)
     {
@@ -69,26 +70,31 @@ class Beanstalk implements QueueProviderInterface {
         $this->broker = new QueueBroker($host, $port, $timeout, $persistent);
         $isConnect = $this->broker->getConnection()->isServiceListening();
 
-        return $isConnect;
+        if(!$isConnect) {
+            throw new \RuntimeException('Queue connection failed! Check configurations');
+        }
+
+        return $this;
     }
 
     /**
      * Push message
      *
      * @param array $data
+     * @return \Pheanstalk\Pheanstalk
      */
-    public function post(array $data)
+    public function push(array $data)
     {
-        // TODO: Implement post() method.
+        $this->broker->useTube(mt_rand(00000, 99999))->put($data);
+        return $this->broker;
     }
 
     /**
      * Get message
      *
-     * @param array $data
      * @return mixed
      */
-    public function get(array $data)
+    public function get()
     {
         // TODO: Implement get() method.
     }

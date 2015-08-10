@@ -41,9 +41,87 @@ interface DataProviderInterface {
     public function getTablesList();
 
     /**
+     * Set tables
+     *
+     * @param string $prefix
+     * @return \Deliveries\Aware\Adapter\Storage\DataProviderInterface
+     */
+    public function setTables($prefix);
+
+    /**
      * Execute query
      *
-     * @return boolean
+     * @param string $query
+     * @param array $bindData
+     * @return boolean|int
      */
-    public function exec($query);
+    public function exec($query, array $bindData = []);
+
+    /**
+     * Prepare query string
+     *
+     * @param string $query
+     * @return array|object
+     */
+    public function prepare($query);
+
+    /**
+     * Get result query for multiple rows
+     *
+     * @param string $query
+     * @return array
+     */
+    public function fetchAll($query);
+
+    /**
+     * Get result query for row
+     *
+     * @param string $query
+     * @return array
+     */
+    public function fetchOne($query);
+
+    /**
+     * Escape value
+     *
+     * @param string $value
+     * @return string
+     */
+    public function quoteValue($value);
+
+    /**
+     * Escape field
+     *
+     * @param string $field
+     * @return string
+     */
+    public function quoteFiled($field);
+
+    /**
+     * Get lists for submissions
+     *
+     * @param string $status
+     * @return array
+     */
+    public function getLists($status);
+
+    /**
+     * Save queue process in storage
+     *
+     * @param int $pid
+     * @param array $params additional insert params
+     * @param datetime $date_activation
+     * @param int $priority
+     * @return int
+     */
+    public function saveQueue($pid, array $params, $date_activation = null, $priority = 0);
+
+    /**
+     * Get queues process from storage
+     *
+     * @param string $date
+     * @param int $limit limit records
+     * @return array
+     */
+    public function getQueues($date = null, $limit = null);
 }

@@ -34,12 +34,36 @@ class MySQL implements DataProviderInterface {
     protected $pdo;
 
     /**
+     * @vat string $subscribersTable
+     */
+    private $subscribersTable   = 'xmail_subscribers';
+
+    /**
+     * @vat string $listsTable
+     */
+    private $listsTable   = 'xmail_lists';
+
+    /**
+     * @vat string $statsTable
+     */
+    private $statsTable   = 'xmail_stats';
+
+    /**
+     * @vat string $activeLogTable
+     */
+    private $activeLogTable   = 'xmail_active_log';
+
+    /**
+     * @vat string $queueTable
+     */
+    private $queueTable   = 'xmail_queue';
+
+    /**
      * Check if storage already support & available
      *
      * @return boolean
      */
-    public function isSupport()
-    {
+    public function isSupport() {
         if(extension_loaded('PDO') && extension_loaded('pdo_mysql')) {
             return true;
         }
@@ -59,18 +83,17 @@ class MySQL implements DataProviderInterface {
      * Make a connect to storage
      *
      * @param array $config
-     * @throws \PDOException
-     * @return boolean
+     * @throws \RuntimeException
+     * @return \PDO
      */
-    public function connect(array $config)
-    {
+    public function connect(array $config) {
         $dsn = "".strtolower($config['adapter']).":host=".$config['host'].";dbname=".$config['db'];
 
         try {
             $this->pdo = new \PDO($dsn, $config['username'], $config['password']);
             $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-            return true;
+            return $this;
 
         } catch(\PDOException $e) {
             throw new \RuntimeException(
@@ -84,20 +107,207 @@ class MySQL implements DataProviderInterface {
      *
      * @return array
      */
-    public function getTablesList()
-    {
+    public function getTablesList() {
+
         $query = $this->getInstance()->query("SHOW TABLES");
 
         return $query->fetchAll(\PDO::FETCH_COLUMN);
     }
 
     /**
+     * Set tables
+     *
+     * @param string $prefix
+     * @return \Deliveries\Aware\Adapter\Storage\DataProviderInterface
+     */
+    public function setTables($prefix) {
+
+        $this->subscribersTable = $this->quoteFiled($prefix.$this->subscribersTable);
+        $this->statsTable = $this->quoteFiled($prefix.$this->statsTable);
+        $this->listsTable = $this->quoteFiled($prefix.$this->listsTable);
+
+        return $this;
+    }
+
+    /**
      * Execute query
      *
-     * @return boolean
+     * @param string $query
+     * @param array $bindData
+     * @return boolean|int
      */
-    public function exec($query)
-    {
+    public function exec($query, array $bindData = []) {
+        if(empty($bindData) === false) {
+            return $this->prepare($query)->execute($bindData);
+        }
         return $this->getInstance()->exec($query);
+    }
+
+    /**
+     * Get result query for multiple rows
+     *
+     * @param string $query
+     * @return array
+     */
+    public function fetchAll($query) {
+        $stmt = $this->getInstance()->query($query);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get result query for row
+     *
+     * @param string $query
+     * @return array
+     */
+    public function fetchOne($query) {
+        $stmt = $this->getInstance()->query($query);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Escape value
+     *
+     * @param string $query
+     * @return string
+     */
+    public function quoteValue($value) {
+        return $this->getInstance()->quote($value);
+    }
+
+    /**
+     * Escape arguments
+     *
+     * @param string $field
+     * @return string
+     */
+    public function quoteFiled($field) {
+        return "`".str_replace(["'"], ["`"], $field)."`";
+    }
+
+    /**
+     * Prepare query statement
+     *
+     * @param string $query
+     * @return \PDOStatement
+     */
+    public function prepare($query) {
+        return $this->getInstance()->prepare($query);
+    }
+
+    /**
+     * Count all subscribers
+     *
+     * @param $table
+     * @return array
+     */
+    public function countSubscribers() {
+
+        $query = "SELECT COUNT(1) AS total,
+                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'moderated') AS moderated,
+                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'disabled') AS disabled,
+                  (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'active') AS active
+                  FROM ".$this->subscribersTable." USE INDEX(PRIMARY)";
+        return $this->fetchOne($query);
+    }
+
+    /**
+     * Count all statistics for mailings
+     *
+     * @param $table
+     * @return array
+     */
+    public function countMailings() {
+
+        $query = "SELECT COUNT(1) AS total,
+                  (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'ok') AS sent,
+                  (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'pending') AS pending,
+                  (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'failed') AS failed,
+                  (SELECT COUNT(1) FROM ".$this->statsTable." WHERE status = 'abort') AS abort
+                  FROM ".$this->statsTable." USE INDEX(PRIMARY)";
+
+        return $this->fetchOne($query);
+    }
+
+    /**
+     * Count all active mails stat
+     *
+     * @param $table
+     * @return array
+     */
+    public function activeMailsStat() {
+
+        $query = "SELECT list.id AS listID, list.subject AS Subject, COUNT(log.subscriber_id) AS Sent
+	                FROM ".$this->listsTable." AS list
+                    INNER JOIN ".$this->activeLogTable." AS log ON(log.list_id = list.id)
+	                GROUP BY log.`list_id`
+	                ORDER BY log.`date_sent` DESC";
+
+        return $this->fetchAll($query);
+    }
+
+    /**
+     * Get lists for submissions
+     *
+     * @param string $status
+     * @return array
+     */
+    public function getLists($status) {
+
+        $query = "SELECT list.id AS list_id, list.subject, list.message FROM ".$this->statsTable." AS stats
+	                RIGHT JOIN ".$this->listsTable." AS list ON (list.`id` = stats.`list_id`)
+	                WHERE stats.`status` = ".$this->quoteValue($status)." AND stats.`date_finish` IS NULL
+	                ORDER BY stats.id";
+
+        return $this->fetchAll($query);
+    }
+
+    /**
+     * Save queue process in storage
+     *
+     * @param int $pid
+     * @param array $params additional insert params
+     * @param datetime $date_activation
+     * @param int $priority
+     * @throws \RuntimeException
+     * @return int
+     */
+    public function saveQueue($pid, array $params, $date_activation = null, $priority = 0) {
+
+        $query = "INSERT INTO `".$this->queueTable."` (pid, adapter, date_activation) VALUES (:pid, :storage, :broker, :mail, :date_activation)";
+
+        try {
+            // prepare bind & execute query
+            return $this->exec($query, array_merge([
+                ':pid'               =>  (int)$pid,
+                ':date_activation'   =>  $date_activation,
+                ':priority'          =>  (int)$priority
+            ], $params));
+        }
+        catch(\PDOException $e) {
+            throw new \RuntimeException(
+                'Create queue failed: '.$e->getMessage()
+            );
+        }
+    }
+
+    /**
+     * Get queues process from storage
+     *
+     * @param string $date
+     * @param int $limit limit records
+     * @return array
+     */
+    public function getQueues($date = null, $limit = null) {
+
+        $query = "SELECT * FROM `".$this->queueTable."` queue
+                    WHERE `date_activation` >= '".$date."'
+	                ORDER BY queue.priority DESC";
+
+        if(is_null($limit) === false) {
+            $query .= " LIMIT ".(int)$limit;
+        }
+
+        return $this->fetchAll($query);
     }
 }

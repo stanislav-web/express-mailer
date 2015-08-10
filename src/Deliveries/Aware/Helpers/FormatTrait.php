@@ -16,6 +16,32 @@ use Symfony\Component\Console\Helper\Table;
 trait FormatTrait {
 
     /**
+     * Draw console table multiple rows down
+     *
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param array                                             $content
+     */
+    public function tableLong(\Symfony\Component\Console\Output\OutputInterface $output, array $content) {
+
+        // write config table
+        $title = key($content);
+        $content = array_shift($content);
+        $table = new Table($output);
+        $output->writeln("<fg=yellow;options=bold>" . $title . "</fg=yellow;options=bold>");
+
+        if(empty($content)  === false) {
+            $headers = array_keys($content[0]);
+            $table->setHeaders($headers);
+            $rows = [];
+            foreach($content as $row) {
+                $rows[] = $row;
+            }
+            $table->setRows($rows);
+            $table->render();
+        }
+    }
+
+    /**
      * Draw console table
      *
      * @param \Symfony\Component\Console\Output\OutputInterface $output
@@ -30,7 +56,7 @@ trait FormatTrait {
 
             // multiple tables
             foreach($content as $header => $rows) {
-                $output->writeln("\n<comment>" . $header . "</comment>");
+                $output->writeln("<fg=yellow;options=bold>" . $header . "</fg=yellow;options=bold>");
 
                 $table->setHeaders(array_keys($rows))
                     ->setRows([$rows])
@@ -43,5 +69,35 @@ trait FormatTrait {
                 ->setRows(array_values($content));
             $table->render();
         }
+    }
+
+    /**
+     * Verify date
+     *
+     * @param string $date
+     * @param boolean $strict
+     * @throws \RuntimeException
+     */
+    public function verifyDate($date, $strict = true)
+    {
+        \DateTime::createFromFormat('Y-m-d H:i:s', $date);
+
+        if ($strict) {
+            $errors = \DateTime::getLastErrors();
+            if (!empty($errors['warning_count'])) {
+
+                throw new \RuntimeException(reset($errors['warnings']));
+            }
+        }
+    }
+
+    /**
+     * Get short class name
+     *
+     * @param object $object any class instance
+     * @return string
+     */
+    public function getClassName($object) {
+        return (new \ReflectionClass($object))->getShortName();
     }
 }

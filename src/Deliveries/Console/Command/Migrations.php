@@ -4,7 +4,6 @@ namespace Deliveries\Console\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Deliveries\Aware\Helpers\TestTrait;
 use Deliveries\Aware\Console\Command\BaseCommandAware;
 
 /**
@@ -25,7 +24,7 @@ class Migrations extends BaseCommandAware {
      *
      * @const NAME
      */
-    const LOGO = "###################\nMigration Tools ###\n###################\n";
+    const LOGO = "###################\nMigration Tools ###\n###################";
     /**
      * Command name
      *
@@ -68,8 +67,6 @@ class Migrations extends BaseCommandAware {
      */
     private $migrationFiles = [];
 
-    use TestTrait;
-
     /**
      * Get Storage configurations
      *
@@ -84,6 +81,7 @@ class Migrations extends BaseCommandAware {
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @throws \RuntimeException
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
@@ -116,6 +114,9 @@ class Migrations extends BaseCommandAware {
                 return ;
             }
         }
+
+        // add to config
+        $this->addToConfig(null, ['Storage' => ['prefix' => $prefix]]);
         $this->import($output, $prefix);
 
         return;
@@ -179,6 +180,7 @@ class Migrations extends BaseCommandAware {
      *
      * @param OutputInterface $output
      * @param string $prefix
+     * @throws \RuntimeException
      */
     private function import(OutputInterface $output, $prefix) {
 
@@ -186,6 +188,7 @@ class Migrations extends BaseCommandAware {
 
             try {
                 $db = $this->getStorageInstance();
+                asort($this->migrationFiles);
 
                 foreach($this->migrationFiles as $file) {
 
@@ -219,6 +222,7 @@ class Migrations extends BaseCommandAware {
      *
      * @param string $prefix
      * @param string $file
+     * @throws \RuntimeException
      * @return array
      */
     private function parseFileToSingleQueries($prefix, $file) {

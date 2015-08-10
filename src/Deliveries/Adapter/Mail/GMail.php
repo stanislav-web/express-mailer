@@ -51,6 +51,8 @@ class GMail implements MailProviderInterface {
      * Connect to Mail server
      *
      * @param array $config
+     * @throws \RuntimeException
+     * @return \Swift_SmtpTransport
      */
     public function connect(array $config) {
 
@@ -61,7 +63,11 @@ class GMail implements MailProviderInterface {
         $this->mailer->setUsername($config['username']);
         $this->mailer->setPassword($config['password']);
         $this->mailer->start();
-        return  $this->mailer->isStarted();
+
+        if($this->mailer->isStarted() === false) {
+            throw new \RuntimeException('Mail connection failed! Check configurations');
+        }
+        return  $this;
 
     }
 }

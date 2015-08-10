@@ -30,23 +30,23 @@ interface QueueProviderInterface {
      * Push message
      *
      * @param array $data
+     * @return int queue process id
      */
-    public function post(array $data);
+    public function push(array $data);
 
     /**
      * Get message
      *
-     * @param array $data
      * @return mixed
      */
-    public function get(array $data);
+    public function get();
 
     /**
-     * Delete message
+     * Delete message from queue
      *
-     * @param array $data
+     * @param int $pid
      * @return boolean
      */
-    public function delete(array $data);
+    public function delete($pid = null);
 
 }
