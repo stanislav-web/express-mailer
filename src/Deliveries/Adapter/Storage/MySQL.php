@@ -54,6 +54,11 @@ class MySQL implements DataProviderInterface {
     private $activeLogTable   = 'xmail_active_log';
 
     /**
+     * @vat string $queueTable
+     */
+    private $queueTable   = 'xmail_queue';
+
+    /**
      * Check if storage already support & available
      *
      * @return boolean
@@ -78,7 +83,7 @@ class MySQL implements DataProviderInterface {
      * Make a connect to storage
      *
      * @param array $config
-     * @throws \PDOException
+     * @throws \RuntimeException
      * @return \PDO
      */
     public function connect(array $config) {
@@ -128,9 +133,13 @@ class MySQL implements DataProviderInterface {
      * Execute query
      *
      * @param string $query
-     * @return boolean
+     * @param array $bindData
+     * @return boolean|int
      */
-    public function exec($query) {
+    public function exec($query, array $bindData = []) {
+        if(empty($bindData) === false) {
+            return $this->prepare($query)->execute($bindData);
+        }
         return $this->getInstance()->exec($query);
     }
 
@@ -180,10 +189,10 @@ class MySQL implements DataProviderInterface {
      * Prepare query statement
      *
      * @param string $query
-     * @return bool
+     * @return \PDOStatement
      */
     public function prepare($query) {
-        return $this->getInstance()->prepare($query)->execute();
+        return $this->getInstance()->prepare($query);
     }
 
     /**
@@ -235,5 +244,49 @@ class MySQL implements DataProviderInterface {
 	                ORDER BY log.`date_sent` DESC";
 
         return $this->fetchAll($query);
+    }
+
+    /**
+     * Get lists for submissions
+     *
+     * @param string $status
+     * @return array
+     */
+    public function getLists($status) {
+
+        $query = "SELECT list.id AS list_id, list.subject, list.message FROM ".$this->statsTable." AS stats
+	                RIGHT JOIN ".$this->listsTable." AS list ON (list.`id` = stats.`list_id`)
+	                WHERE stats.`status` = ".$this->quoteValue($status)." AND stats.`date_finish` IS NULL
+	                ORDER BY stats.id";
+
+        return $this->fetchAll($query);
+    }
+
+    /**
+     * Save queue process in storage
+     *
+     * @param int $pid
+     * @param datetime $date_activation
+     * @throws \RuntimeException
+     * @return int
+     */
+    public function saveQueue($pid, $date_activation = null) {
+
+        $query = "INSERT INTO ".$this->queueTable." (pid, adapter, date_activation) VALUES (:pid, :adapter, :date_activation)";
+
+        try {
+            // prepare bind & execute query
+
+            return $this->exec($query, [
+                ':pid'               =>  (int)$pid,
+                ':adapter'           =>  (new \ReflectionClass($this))->getShortName(),
+                ':date_activation'   =>  (is_null($date_activation) === true) ? (new \DateTime())->format('Y-m-d H:i:s') : $date_activation,
+            ]);
+        }
+        catch(\PDOException $e) {
+            throw new \RuntimeException(
+                'Create queue failed: '.$e->getMessage()
+            );
+        }
     }
 }

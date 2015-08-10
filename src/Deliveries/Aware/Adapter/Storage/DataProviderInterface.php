@@ -52,9 +52,10 @@ interface DataProviderInterface {
      * Execute query
      *
      * @param string $query
-     * @return boolean
+     * @param array $bindData
+     * @return boolean|int
      */
-    public function exec($query);
+    public function exec($query, array $bindData = []);
 
     /**
      * Prepare query string
@@ -95,4 +96,21 @@ interface DataProviderInterface {
      * @return string
      */
     public function quoteFiled($field);
+
+    /**
+     * Get lists for submissions
+     *
+     * @param string $status
+     * @return array
+     */
+    public function getLists($status);
+
+    /**
+     * Save queue process in storage
+     *
+     * @param int $pid
+     * @param datetime $date_activation
+     * @return int
+     */
+    public function saveQueue($pid, $date_activation = null);
 }

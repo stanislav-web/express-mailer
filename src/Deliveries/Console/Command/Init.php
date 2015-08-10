@@ -132,6 +132,8 @@ class Init extends BaseCommandAware {
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @throws \RuntimeException
+     * @return array
      */
     private function getConfigContent(InputInterface $input, OutputInterface $output) {
 
@@ -152,68 +154,72 @@ class Init extends BaseCommandAware {
         });
 
         $broker = 'Deliveries\Adapter\Broker\\'.$config['Broker']['adapter'];
-        $config['Broker']['host'] = $this->getPrompt('<info>Please type Queue server IP (default '.$broker::DEFAULT_HOST.'):</info> ', $input, $output,
-            function($answer) use ($config, $broker) {
 
-                if(empty($answer) === true) {
-                    return $broker::DEFAULT_HOST;
-                }
+        if($config['Broker']['adapter'] != 'Native') {
 
-                if(filter_var($answer, FILTER_VALIDATE_IP) === false && $answer != 'localhost') {
-                    throw new \RuntimeException(
-                        'Please, type a valid '.$config['Broker']['adapter'].' server IP address!'
-                    );
-                }
-            return $answer;
-        });
+            $config['Broker']['host'] = $this->getPrompt('<info>Please type Queue server IP (default '.$broker::DEFAULT_HOST.'):</info> ', $input, $output,
+                function($answer) use ($config, $broker) {
 
-        $config['Broker']['port'] = $this->getPrompt('<info>Please type AMQP server port (default '.$broker::DEFAULT_PORT.'):</info> ', $input, $output,
-            function($answer) use ($config, $broker) {
+                    if(empty($answer) === true) {
+                        return $broker::DEFAULT_HOST;
+                    }
 
-                if(empty($answer) === true) {
-                    return $broker::DEFAULT_PORT;
-                }
+                    if(filter_var($answer, FILTER_VALIDATE_IP) === false && $answer != 'localhost') {
+                        throw new \RuntimeException(
+                            'Please, type a valid '.$config['Broker']['adapter'].' server IP address!'
+                        );
+                    }
+                    return $answer;
+                });
 
-                if(preg_match('/^(\d){2,4}$/', $answer) == false) {
-                    throw new \RuntimeException(
-                        'Please, type a valid server port!'
-                    );
-                }
-                return (int)$answer;
-         });
+            $config['Broker']['port'] = $this->getPrompt('<info>Please type AMQP server port (default '.$broker::DEFAULT_PORT.'):</info> ', $input, $output,
+                function($answer) use ($config, $broker) {
 
-        $config['Broker']['timeout'] = $this->getPrompt('<info>Please type AMQP server connection timeout (default '.$broker::DEFAULT_TIMEOUT.'):</info> ', $input, $output,
-            function($answer) use ($config, $broker) {
+                    if(empty($answer) === true) {
+                        return $broker::DEFAULT_PORT;
+                    }
 
-                if(empty($answer) === true) {
-                    return $broker::DEFAULT_TIMEOUT;
-                }
+                    if(preg_match('/^(\d){2,4}$/', $answer) == false) {
+                        throw new \RuntimeException(
+                            'Please, type a valid server port!'
+                        );
+                    }
+                    return (int)$answer;
+                });
 
-                if(is_numeric($answer) == false) {
-                    throw new \RuntimeException(
-                        'Please, type a valid timeout value!'
-                    );
-                }
-                return (int)$answer;
-        });
+            $config['Broker']['timeout'] = $this->getPrompt('<info>Please type AMQP server connection timeout (default '.$broker::DEFAULT_TIMEOUT.'):</info> ', $input, $output,
+                function($answer) use ($config, $broker) {
 
-        $config['Broker']['persistent'] = $this->getPrompt('<info>Do you want to use a persistent connection to '.$config['Broker']['adapter'].'? (default "'.$broker::DEFAULT_IS_PERSISTENT.'"):</info> ', $input, $output,
-            function($answer) use ($config, $broker) {
+                    if(empty($answer) === true) {
+                        return $broker::DEFAULT_TIMEOUT;
+                    }
 
-                if(empty($answer) === true) {
-                    return $broker::DEFAULT_IS_PERSISTENT;
-                }
+                    if(is_numeric($answer) == false) {
+                        throw new \RuntimeException(
+                            'Please, type a valid timeout value!'
+                        );
+                    }
+                    return (int)$answer;
+                });
 
-                if(in_array($answer, ['true', 'false']) == false) {
-                    throw new \RuntimeException(
-                        'Please, type `true` or `false`!'
-                    );
-                }
-                return (int)$answer;
-        });
+            $config['Broker']['persistent'] = $this->getPrompt('<info>Do you want to use a persistent connection to '.$config['Broker']['adapter'].'? (default "'.$broker::DEFAULT_IS_PERSISTENT.'"):</info> ', $input, $output,
+                function($answer) use ($config, $broker) {
 
-        $config['Broker']['login'] = $this->getPrompt('<info>Please type Queue user login:</info> ', $input, $output, null, true);
-        $config['Broker']['password'] = $this->getPrompt('<info>Please type Queue user password:</info> ', $input, $output, null, true);
+                    if(empty($answer) === true) {
+                        return $broker::DEFAULT_IS_PERSISTENT;
+                    }
+
+                    if(in_array($answer, ['true', 'false']) == false) {
+                        throw new \RuntimeException(
+                            'Please, type `true` or `false`!'
+                        );
+                    }
+                    return (int)$answer;
+                });
+
+            $config['Broker']['login'] = $this->getPrompt('<info>Please type Queue user login:</info> ', $input, $output, null, true);
+            $config['Broker']['password'] = $this->getPrompt('<info>Please type Queue user password:</info> ', $input, $output, null, true);
+        }
 
         $config['Storage']['adapter'] = $this->getPrompt('<info>Please select storage adapter for handling:</info> ', $input, $output,
             function($answer) {

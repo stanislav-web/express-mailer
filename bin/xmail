@@ -39,7 +39,7 @@ if(file_exists(AUTOLOADER) === true) {
     $console->add(new Command\Init('init'));
     $console->add(new Command\Migrations('migrations'));
     $console->add(new Command\Statistics('statistics'));
-    $console->add(new Command\Run('run'));
+    $console->add(new Command\Create('create'));
     $console->run();
 }
 else {

@@ -75,6 +75,7 @@ trait TestTrait {
     /**
      * Testing for connect to Mail Server
      *
+     * @throws \RuntimeException
      * @return boolean
      */
     public function isMailConnectSuccess(array $config) {
@@ -100,6 +101,7 @@ trait TestTrait {
     /**
      * Testing for connect to Queue
      *
+     * @throws \RuntimeException
      * @return boolean
      */
     public function isQueueConnectSuccess(array $config) {

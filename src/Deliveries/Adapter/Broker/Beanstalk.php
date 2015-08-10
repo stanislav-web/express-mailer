@@ -47,7 +47,7 @@ class Beanstalk implements QueueProviderInterface {
     /**
      * Get instance connection
      *
-     * @return QueueBroker
+     * @return \Pheanstalk\Pheanstalk
      */
     public function getInstance() {
         return $this->broker;
@@ -81,19 +81,20 @@ class Beanstalk implements QueueProviderInterface {
      * Push message
      *
      * @param array $data
+     * @return \Pheanstalk\Pheanstalk
      */
-    public function post(array $data)
+    public function push(array $data)
     {
-        // TODO: Implement post() method.
+        $this->broker->useTube(mt_rand(00000, 99999))->put($data);
+        return $this->broker;
     }
 
     /**
      * Get message
      *
-     * @param array $data
      * @return mixed
      */
-    public function get(array $data)
+    public function get()
     {
         // TODO: Implement get() method.
     }
