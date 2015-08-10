@@ -70,4 +70,34 @@ trait FormatTrait {
             $table->render();
         }
     }
+
+    /**
+     * Verify date
+     *
+     * @param string $date
+     * @param boolean $strict
+     * @throws \RuntimeException
+     */
+    public function verifyDate($date, $strict = true)
+    {
+        \DateTime::createFromFormat('Y-m-d H:i:s', $date);
+
+        if ($strict) {
+            $errors = \DateTime::getLastErrors();
+            if (!empty($errors['warning_count'])) {
+
+                throw new \RuntimeException(reset($errors['warnings']));
+            }
+        }
+    }
+
+    /**
+     * Get short class name
+     *
+     * @param object $object any class instance
+     * @return string
+     */
+    public function getClassName($object) {
+        return (new \ReflectionClass($object))->getShortName();
+    }
 }

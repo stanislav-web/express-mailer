@@ -266,22 +266,21 @@ class MySQL implements DataProviderInterface {
      * Save queue process in storage
      *
      * @param int $pid
+     * @param array $params additional insert params
      * @param datetime $date_activation
      * @throws \RuntimeException
      * @return int
      */
-    public function saveQueue($pid, $date_activation = null) {
+    public function saveQueue($pid, array $params, $date_activation = null) {
 
-        $query = "INSERT INTO ".$this->queueTable." (pid, adapter, date_activation) VALUES (:pid, :adapter, :date_activation)";
+        $query = "INSERT INTO ".$this->queueTable." (pid, adapter, date_activation) VALUES (:pid, :storage, :broker, :mail, :date_activation)";
 
         try {
             // prepare bind & execute query
-
-            return $this->exec($query, [
+            return $this->exec($query, array_merge([
                 ':pid'               =>  (int)$pid,
-                ':adapter'           =>  (new \ReflectionClass($this))->getShortName(),
-                ':date_activation'   =>  (is_null($date_activation) === true) ? (new \DateTime())->format('Y-m-d H:i:s') : $date_activation,
-            ]);
+                ':date_activation'   =>  $date_activation,
+            ], $params));
         }
         catch(\PDOException $e) {
             throw new \RuntimeException(

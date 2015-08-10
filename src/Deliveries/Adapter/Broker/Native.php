@@ -38,8 +38,7 @@ class Native implements QueueProviderInterface {
      * @param array $config
      * @return \Deliveries\Adapter\Broker\Native
      */
-    public function connect(array $config)
-    {
+    public function connect(array $config) {
         return $this;
     }
 
@@ -52,12 +51,22 @@ class Native implements QueueProviderInterface {
      */
     public function push(array $data)
     {
+        // setup e_warnings error handler
+        set_error_handler(function($errno, $errstr) {
+
+            throw new \RuntimeException(
+                'Code ('.$errno.') '.$errstr
+            );
+
+        }, E_WARNING);
+
         $this->queuePid = mt_rand(00000, 99999);
+
         $queue = msg_get_queue($this->queuePid);
 
         if(msg_send($queue, 1, $data) === false) {
             throw new \RuntimeException(
-                'Could not add message to queue. Pid: '.$queue
+                'Could not add message to queue. Pid: '.$this->queuePid
             );
         }
 
@@ -72,6 +81,7 @@ class Native implements QueueProviderInterface {
     public function get()
     {
         if(is_null($this->queuePid) === false) {
+
             $queue = msg_get_queue($this->queuePid);
 
             $msg_type = NULL;
@@ -92,13 +102,21 @@ class Native implements QueueProviderInterface {
     }
 
     /**
-     * Delete message
+     * Delete message from queue
      *
-     * @param array $data
+     * @param int $pid
      * @return boolean
      */
-    public function delete(array $data)
+    public function delete($pid = null)
     {
-        // TODO: Implement delete() method.
+        $this->queuePid = (is_null($pid) === false) ? $pid : $this->queuePid;
+
+        if(msg_queue_exists($this->queuePid) === true) {
+            msg_remove_queue(msg_get_queue($this->queuePid));
+
+            return true;
+        }
+
+        return false;
     }
 }

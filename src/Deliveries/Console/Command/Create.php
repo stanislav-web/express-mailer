@@ -55,6 +55,7 @@ class Create extends BaseCommandAware {
             new InputOption('abort', 'a', InputOption::VALUE_NONE, 'Re create all the mailing in the status "abort"'),
             new InputOption('sent', 's', InputOption::VALUE_NONE, 'Re create all the mailing in the status "sent"'),
             new InputOption('failed', 'f', InputOption::VALUE_NONE, 'Re create all the mailing in the status "failed"'),
+            new InputOption('date', 'd', InputOption::VALUE_OPTIONAL, 'Queue start date', (new \DateTime())->format('Y-m-d H:i:s')),
         ];
     }
 

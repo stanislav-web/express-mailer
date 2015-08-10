@@ -42,11 +42,11 @@ interface QueueProviderInterface {
     public function get();
 
     /**
-     * Delete message
+     * Delete message from queue
      *
-     * @param array $data
+     * @param int $pid
      * @return boolean
      */
-    public function delete(array $data);
+    public function delete($pid = null);
 
 }

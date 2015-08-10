@@ -3,6 +3,7 @@ namespace Deliveries\Aware\Service;
 use Deliveries\Aware\Adapter\Storage\DataProviderInterface;
 use Deliveries\Aware\Adapter\Mail\MailProviderInterface;
 use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
+use Deliveries\Aware\Helpers\FormatTrait;
 
 /**
  * AppServiceManager class.
@@ -21,6 +22,8 @@ class AppServiceManager {
     const ABORT = 'abort';
     const SENT = 'sent';
     const FAILED = 'failed';
+
+    use FormatTrait;
 
     /**
      * Mail Adapter instance
@@ -70,7 +73,7 @@ class AppServiceManager {
         $status = array_search(true, $options, true);
 
         if(empty($status) === true) {
-            throw new \RuntimeException('Submission run status not defined');
+            throw new \RuntimeException('Submission create status not defined');
         }
 
         // get lists by status argument
@@ -80,14 +83,22 @@ class AppServiceManager {
             // push lists to queue processing & get process id
             $pid = $this->queueInstance->push($lists);
 
+            // date create verification
+            $this->verifyDate($options['date']);
+
             try {
+
                 // save process id , adapter to storage
-                $this->storageInstance->saveQueue($pid);
+                $this->storageInstance->saveQueue($pid, [
+                    ':storage'  =>  $this->getClassName($this->storageInstance),
+                    ':broker'   =>  $this->getClassName($this->queueInstance),
+                    ':mail'     =>  $this->getClassName($this->mailInstance),
+                ], $options['date']);
             }
             catch(\PDOException $e) {
 
-                // todo delete queue id from list
-                $this->queueInstance->delete(1);
+                // remove queue from list
+                $this->queueInstance->delete();
 
                 throw new \RuntimeException(
                     'Create queue failed: '.$e->getMessage()

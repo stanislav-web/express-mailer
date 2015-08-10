@@ -109,8 +109,9 @@ interface DataProviderInterface {
      * Save queue process in storage
      *
      * @param int $pid
+     * @param array $params additional insert params
      * @param datetime $date_activation
      * @return int
      */
-    public function saveQueue($pid, $date_activation = null);
+    public function saveQueue($pid, array $params, $date_activation = null);
 }
