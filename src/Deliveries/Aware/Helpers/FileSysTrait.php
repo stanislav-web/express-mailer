@@ -15,6 +15,13 @@ namespace Deliveries\Aware\Helpers;
 trait FileSysTrait {
 
     /**
+     * Default config filename
+     *
+     * @var string $configFile
+     */
+    protected $configFile = '/delivery.json';
+
+    /**
      * Broker path
      *
      * @var string $brokersPath
@@ -34,6 +41,22 @@ trait FileSysTrait {
      * @var string $mailPath
      */
     protected $mailPath = '/src/Deliveries/Adapter/Mail/';
+
+    /**
+     * Get configuration
+     *
+     * @return object
+     * @throws \RuntimeException
+     */
+    protected function getConfig() {
+
+        $configFile = getcwd().$this->configFile;
+
+        if(file_exists($configFile) === true) {
+            return (object)json_decode(file_get_contents($configFile), true);
+        }
+        throw new \RuntimeException('Configuration file '.$configFile.' does not exist');
+    }
 
     /**
      * Get reserved adapters
@@ -66,4 +89,6 @@ trait FileSysTrait {
 
         return $files;
     }
+
+
 }

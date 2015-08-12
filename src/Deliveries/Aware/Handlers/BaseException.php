@@ -1,7 +1,9 @@
 <?php
 namespace Deliveries\Aware\Handlers;
 
+use Deliveries\Aware\Helpers\FileSysTrait;
 use \Psr\Log\LoggerInterface;
+use \Psr\Log\LoggerTrait;
 
 /**
  * BaseException class. Base exception handler
@@ -14,8 +16,8 @@ use \Psr\Log\LoggerInterface;
  * @copyright Stanislav WEB
  * @filesource /Deliveries/Aware/Handlers/BaseException.php
  */
-abstract class BaseException extends \RuntimeException implements LoggerInterface
-{
+class BaseException extends \RuntimeException implements LoggerInterface {
+
     /**
      * Base exception type
      */
@@ -24,21 +26,20 @@ abstract class BaseException extends \RuntimeException implements LoggerInterfac
     /**
      * use logger trait
      */
-    use \Psr\Log\LoggerTrait;
+    use LoggerTrait, FileSysTrait;
 
     /**
      * Constructor
      *
      * @param string $message If no message is given default from child
      * @param int $code Status code, default from child
-     * @param string $type Exception type as object name raised an exception
      */
-    public function __construct($message, $logLevel, $type) {
+    public function __construct($message, $logLevel) {
 
         // save an exception to log
         $this->log($logLevel, $message, [
-            'date' =>  (new \DateTime('now'))->format('[Y-m-d H:i:s]'),
-            'type' =>  $type
+            'date' =>  (new \DateTime('now'))->format('Y-m-d H:i:s'),
+            'type' =>  static::TYPE // use as late state binding
         ]);
 
         parent::__construct($message, null);
@@ -53,14 +54,22 @@ abstract class BaseException extends \RuntimeException implements LoggerInterfac
      */
     public function log($level, $message, array $context = []) {
 
-        var_dump($level, $message,$context); exit;
         //@TODO create logger function. setup logger params
+        print_r($this->getLoggerConfig());
+
+        if (file_put_contents($this->filename, $line = '', FILE_APPEND | LOCK_EX) === false) {
+            throw new \RuntimeException('Unable to write to the log file.');
+        }
+        var_dump($level, $message,$context);
+        exit;
     }
 
     /**
-     * Get current exception name as type
+     * Get logger config
      *
-     * @return string
+     * @return array
      */
-    abstract function getExceptionType();
+    public function getLoggerConfig() {
+        return $this->getConfig()->Logger;
+    }
 }

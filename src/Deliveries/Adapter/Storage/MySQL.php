@@ -308,7 +308,7 @@ class MySQL implements DataProviderInterface {
      */
     public function getQueues($date = null, $limit = null) {
 
-        $query = "SELECT * FROM ".$this->queueTable." queue
+        $query = "SELECT * FROM ".$this->queueTable."s queue
                     WHERE `date_activation` >= '".$date."'
 	                ORDER BY queue.priority DESC";
 
