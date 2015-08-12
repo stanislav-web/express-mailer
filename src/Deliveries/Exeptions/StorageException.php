@@ -1,6 +1,8 @@
 <?php
 namespace Deliveries\Exceptions;
 
+use Deliveries\Aware\Handlers\BaseException;
+
 /**
  * StorageException class. Storage exception class
  *
@@ -12,30 +14,28 @@ namespace Deliveries\Exceptions;
  * @copyright Stanislav WEB
  * @filesource /Deliveries/Exceptions/StorageException.php
  */
-class StorageException extends \RuntimeException {
-
-    /**
-     * Exception codes
-     *
-     * @var array $exceptions
-     */
-    private $exceptions = [
-
-    ];
+class StorageException extends BaseException {
 
     /**
      * Constructor
      *
-     * @param array $data additional info
      * @param string $message
      * @param int $code Status code
      */
-    public function __construct($code, $message = null) {
+    public function __construct($message, $code = self::BASE_TYPE) {
 
-        if(is_null($message) === true) {
-            $message = $this->exceptions[$code];
-        }
+        parent::__construct($message, $code, $this->getExceptionType());
+    }
 
-        parent::__construct($message, $code);
+    /**
+     * Get current exception name as type
+     *
+     * @return string
+     */
+    public function getExceptionType() {
+
+        $class = new \ReflectionClass($this);
+        return $class->getShortName();
+
     }
 }

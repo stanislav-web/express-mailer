@@ -29,7 +29,8 @@
         "ext-pdo": "*",
         "pda/pheanstalk" : "dev-master",
         "symfony/console": "dev-master",
-        "swiftmailer/swiftmailer": "@stable"
+        "swiftmailer/swiftmailer": "@stable",
+        "psr/log": "~1.0@dev"
     },
     "autoload": {
       "psr-4": {

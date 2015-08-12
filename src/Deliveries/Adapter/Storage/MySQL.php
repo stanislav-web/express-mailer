@@ -2,6 +2,7 @@
 namespace Deliveries\Adapter\Storage;
 
 use Deliveries\Aware\Adapter\Storage\DataProviderInterface;
+use Deliveries\Exceptions\StorageException;
 
 /**
  * MySQL class. MySQL Storage
@@ -83,21 +84,23 @@ class MySQL implements DataProviderInterface {
      * Make a connect to storage
      *
      * @param array $config
-     * @throws \RuntimeException
+     * @throws \Deliveries\Exceptions\StorageException
      * @return \PDO
      */
     public function connect(array $config) {
+
         $dsn = "".strtolower($config['adapter']).":host=".$config['host'].";dbname=".$config['db'];
 
         try {
             $this->pdo = new \PDO($dsn, $config['username'], $config['password']);
             $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $this->setTables($config['prefix']);
 
             return $this;
 
         } catch(\PDOException $e) {
-            throw new \RuntimeException(
-                $config['adapter'].' error: '.$e->getMessage()
+            throw new StorageException(
+                $config['adapter'].' error: '.$e->getMessage(), $e->getCode()
             );
         }
     }
@@ -125,6 +128,7 @@ class MySQL implements DataProviderInterface {
         $this->subscribersTable = $this->quoteFiled($prefix.$this->subscribersTable);
         $this->statsTable = $this->quoteFiled($prefix.$this->statsTable);
         $this->listsTable = $this->quoteFiled($prefix.$this->listsTable);
+        $this->queueTable = $this->quoteFiled($prefix.$this->queueTable);
 
         return $this;
     }
@@ -269,7 +273,7 @@ class MySQL implements DataProviderInterface {
      * @param array $params additional insert params
      * @param datetime $date_activation
      * @param int $priority
-     * @throws \RuntimeException
+     * @throws \Deliveries\Exceptions\StorageException
      * @return int
      */
     public function saveQueue($pid, array $params, $date_activation = null, $priority = 0) {
@@ -288,8 +292,9 @@ class MySQL implements DataProviderInterface {
             ], $params));
         }
         catch(\PDOException $e) {
-            throw new \RuntimeException(
-                'Create queue failed: '.$e->getMessage()
+
+            throw new StorageException(
+                'Create queue failed: '.$e->getMessage(), $e->getCode()
             );
         }
     }
@@ -303,7 +308,7 @@ class MySQL implements DataProviderInterface {
      */
     public function getQueues($date = null, $limit = null) {
 
-        $query = "SELECT * FROM `".$this->queueTable."` queue
+        $query = "SELECT * FROM ".$this->queueTable." queue
                     WHERE `date_activation` >= '".$date."'
 	                ORDER BY queue.priority DESC";
 

@@ -56,7 +56,7 @@ trait TestTrait {
      */
     protected function getStorageInstance($config = null) {
         return (null === $this->storageInstance) ?
-            $this->isStorageConnectSuccess($config)->setTables($config['prefix'])
+            $this->isStorageConnectSuccess($config)
             : $this->storageInstance;
     }
 

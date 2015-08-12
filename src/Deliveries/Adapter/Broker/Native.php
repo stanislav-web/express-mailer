@@ -24,6 +24,27 @@ class Native implements QueueProviderInterface {
     private $queuePid = null;
 
     /**
+     * Max message body size
+     *
+     * @var int $msgMaxSize
+     */
+    private $msgMaxSize = 65536;
+
+    /**
+     * Message type
+     *
+     * @var int $msgType
+     */
+    private $msgType = null;
+
+    /**
+     * Message container
+     *
+     * @var mixed $message
+     */
+    private $message = null;
+
+    /**
      * Get instance connection
      *
      * @return \Deliveries\Adapter\Broker\Native
@@ -81,22 +102,21 @@ class Native implements QueueProviderInterface {
      */
     public function read($pid = null, callable $callback)
     {
+        // get process id
         $this->queuePid = (is_null($pid) === false) ? $pid : $this->queuePid;
 
+        // get queue by process id
         $queue = msg_get_queue($this->queuePid);
 
-        $msg_type = NULL;
-        $msg = NULL;
-        $max_msg_size = 512*512;
+        // queue read content
+        while(msg_receive($queue, 1, $this->msgType, $this->msgMaxSize, $this->message, MSG_NOERROR)) {
 
-        while(msg_receive($queue, 1, $msg_type, $max_msg_size, $msg)) {
-
-            // do business logic here and process this message!
-            $callback($msg);
+            // process this message
+            $callback($this->message);
 
             //finally, reset our msg vars for when we loop and run again
-            $msg_type = NULL;
-            $msg = NULL;
+            $this->msgType = null;
+            $this->message = null;
         }
     }
 
@@ -112,7 +132,6 @@ class Native implements QueueProviderInterface {
 
         if(msg_queue_exists($this->queuePid) === true) {
             msg_remove_queue(msg_get_queue($this->queuePid));
-
             return true;
         }
 

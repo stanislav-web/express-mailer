@@ -72,6 +72,9 @@ class Run extends BaseCommandAware {
         }
 
         // Run queue
-        $this->getAppServiceManager()->runQueue($input->getOptions());
+        $this->getAppServiceManager()->runQueue($input->getOptions(), function($message) use ($output) {
+            $output->writeln('<comment>'.$message.'</comment>');
+        });
+
     }
 }

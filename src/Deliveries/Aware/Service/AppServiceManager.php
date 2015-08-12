@@ -4,6 +4,7 @@ use Deliveries\Aware\Adapter\Storage\DataProviderInterface;
 use Deliveries\Aware\Adapter\Mail\MailProviderInterface;
 use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
 use Deliveries\Aware\Helpers\FormatTrait;
+use Deliveries\Exceptions\StorageException;
 
 /**
  * AppServiceManager class.
@@ -79,6 +80,7 @@ class AppServiceManager {
         // get lists by status argument
         $lists = $this->storageInstance->getLists($status);
 
+        print_r($lists); exit;
         try {
             // push lists to queue processing & get process id
             $pid = $this->queueInstance->push($lists);
@@ -117,9 +119,9 @@ class AppServiceManager {
     /**
      * Run mails queue
      *
-     * @throws \RuntimeException
+     * @throws \Deliveries\Exceptions\StorageException
      */
-    public function runQueue(array $options) {
+    public function runQueue(array $options, callable $callback) {
 
         try {
 
@@ -136,9 +138,13 @@ class AppServiceManager {
                     });
                 }
             }
+            else {
+                // not found queues
+                $callback('Queues not found');
+            }
         }
         catch(\Exception $e) {
-            throw new \RuntimeException(
+            throw new StorageException(
                 'Get queue failed: '.$e->getMessage()
             );
         }
