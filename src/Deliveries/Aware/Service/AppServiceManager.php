@@ -80,7 +80,6 @@ class AppServiceManager {
         // get lists by status argument
         $lists = $this->storageInstance->getLists($status);
 
-        print_r($lists); exit;
         try {
             // push lists to queue processing & get process id
             $pid = $this->queueInstance->push($lists);
@@ -88,29 +87,19 @@ class AppServiceManager {
             // date create verification
             $this->verifyDate($options['date']);
 
-            try {
+            // save process id , adapter to storage
+            $this->storageInstance->saveQueue($pid, [
+                ':storage'  =>  $this->getClassName($this->storageInstance),
+                ':broker'   =>  $this->getClassName($this->queueInstance),
+                ':mail'     =>  $this->getClassName($this->mailInstance),
+            ], $options['date'], $options['priority']);
 
-                // save process id , adapter to storage
-                $this->storageInstance->saveQueue($pid, [
-                    ':storage'  =>  $this->getClassName($this->storageInstance),
-                    ':broker'   =>  $this->getClassName($this->queueInstance),
-                    ':mail'     =>  $this->getClassName($this->mailInstance),
-                ], $options['date'], $options['priority']);
-            }
-            catch(\PDOException $e) {
-
-                // remove queue from list
-                $this->queueInstance->delete();
-
-                throw new \RuntimeException(
-                    'Create queue failed: '.$e->getMessage()
-                );
-            }
         }
-        catch(\Exception $e) {
-            throw new \RuntimeException(
-                'Create queue failed: '.$e->getMessage()
-            );
+        catch(StorageException $e) {
+
+            // remove queue from list
+            $this->queueInstance->delete();
+            throw new \RuntimeException($e->getMessage());
         }
 
         return $pid;

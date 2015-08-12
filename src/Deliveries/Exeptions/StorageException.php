@@ -2,6 +2,7 @@
 namespace Deliveries\Exceptions;
 
 use Deliveries\Aware\Handlers\BaseException;
+use Deliveries\Aware\Helpers\FormatTrait;
 
 /**
  * StorageException class. Storage exception class
@@ -15,6 +16,8 @@ use Deliveries\Aware\Handlers\BaseException;
  * @filesource /Deliveries/Exceptions/StorageException.php
  */
 class StorageException extends BaseException {
+
+    use FormatTrait;
 
     /**
      * Constructor
@@ -34,8 +37,6 @@ class StorageException extends BaseException {
      */
     public function getExceptionType() {
 
-        $class = new \ReflectionClass($this);
-        return $class->getShortName();
-
+        return $this->getClassName($this);
     }
 }

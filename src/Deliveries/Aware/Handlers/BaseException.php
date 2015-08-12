@@ -53,6 +53,7 @@ abstract class BaseException extends \RuntimeException implements LoggerInterfac
      */
     public function log($level, $message, array $context = []) {
 
+        var_dump($level, $message,$context); exit;
         //@TODO create logger function. setup logger params
     }
 

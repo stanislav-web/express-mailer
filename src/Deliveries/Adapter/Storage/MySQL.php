@@ -294,7 +294,7 @@ class MySQL implements DataProviderInterface {
         catch(\PDOException $e) {
 
             throw new StorageException(
-                'Create queue failed: '.$e->getMessage(), $e->getCode()
+                'Create queue failed: '.$e->getMessage()
             );
         }
     }
