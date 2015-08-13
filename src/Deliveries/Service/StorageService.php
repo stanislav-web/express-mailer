@@ -72,4 +72,14 @@ class StorageService {
 
         return $this->storage->getQueues($date);
     }
+
+    /**
+     *Execute queries for create table
+     *
+     * @param string $query
+     */
+    public function importTables($query) {
+
+        return $this->storage->importTables($query);
+    }
 }

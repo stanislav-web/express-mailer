@@ -54,6 +54,11 @@ class Migrations extends BaseCommandAware {
     const DEFAULT_PREFIX = '';
 
     /**
+     * @const SUCCESS command success
+     */
+    const SUCCESS = 'Data imported successfully to %s';
+
+    /**
      * Migration files path
      *
      * @var string $migrationFilesPath
@@ -119,10 +124,11 @@ class Migrations extends BaseCommandAware {
         $this->addToConfig(null, ['Storage' => ['prefix' => $prefix]]);
         $this->import($output, $prefix);
 
+        $this->logger()->info(sprintf(self::SUCCESS, $this->getConfig()['adapter']));
+
         $output->writeln(
-            "<fg=white;bg=magenta>Data imported successfully to " . $this->getConfig()['adapter'] . "</fg=white;bg=magenta>"
+            "<fg=white;bg=magenta>".sprintf(self::SUCCESS, $this->getConfig()['adapter'])."</fg=white;bg=magenta>"
         );
-        return;
     }
 
     /**
@@ -187,30 +193,23 @@ class Migrations extends BaseCommandAware {
      */
     private function import(OutputInterface $output, $prefix) {
 
-
         if(empty($this->migrationFiles) === false) {
 
-            try {
-                $db = $this->getStorageInstance();
-                asort($this->migrationFiles);
+            $db = $this->getStorageServiceManager();
+            asort($this->migrationFiles);
 
-                foreach($this->migrationFiles as $file) {
+            foreach($this->migrationFiles as $file) {
 
-                    $commands = $this->parseFileToSingleQueries($prefix, $file);
+                $commands = $this->parseFileToSingleQueries($prefix, $file);
 
-                    foreach($commands as $query) {
-                        // Import query
-                        $db->exec($query);
-                    }
+                foreach($commands as $query) {
+
+                    // Import query
+                    $db->importTables($query);
+
                 }
-                return;
             }
-            catch(\Exception $e) {
-                //@TODO rewrite exception PDO => StorageException
-                throw new \RuntimeException(
-                    'Migrations failed: '.$e->getMessage()
-                );
-            }
+            return;
         }
         throw new \RuntimeException(
             'Migrations files are not allowed'

@@ -61,7 +61,7 @@ class Beanstalk implements QueueProviderInterface {
      * Connect to AMQP server
      *
      * @param array $config
-     * @throws BrokerException
+     * @throws \Deliveries\Exceptions\BrokerException
      * @return \Pheanstalk\Pheanstalk
      */
     public function connect(array $config)
@@ -85,7 +85,6 @@ class Beanstalk implements QueueProviderInterface {
      * Push message
      *
      * @param array $data
-     * @throws \RuntimeException
      * @return int queue process id
      */
     public function push(array $data)
@@ -100,6 +99,7 @@ class Beanstalk implements QueueProviderInterface {
      *
      * @param int $pid
      * @param callable $callback
+     * @throws \Deliveries\Exceptions\BrokerException
      */
     public function read($pid = null, callable $callback)
     {
@@ -132,6 +132,7 @@ class Beanstalk implements QueueProviderInterface {
      *
      * @param int $pid
      * @param callable $callback function handler
+     * @throws \Deliveries\Exceptions\BrokerException
      * @return boolean
      */
     public function delete($pid = null, callable $callback = null)

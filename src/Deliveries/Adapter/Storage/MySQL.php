@@ -286,6 +286,16 @@ class MySQL implements DataProviderInterface {
     }
 
     /**
+     * Import tables
+     *
+     * @param string $query
+     * @return bool|int
+     */
+    public function importTables($query) {
+        return $this->exec($query);
+    }
+
+    /**
      * Execute query
      *
      * @param string $query

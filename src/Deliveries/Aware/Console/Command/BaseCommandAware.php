@@ -11,6 +11,7 @@ use Deliveries\Aware\Helpers\TestTrait;
 use Deliveries\Aware\Helpers\FileSysTrait;
 use Deliveries\Service\StorageService;
 use Deliveries\Aware\Service\AppServiceManager;
+use Deliveries\Aware\Handlers\Logger;
 
 /**
  * BaseCommandAware class. BaseCommand aware interface
@@ -120,11 +121,19 @@ class BaseCommandAware extends Command {
     }
 
     /**
-     * Get Storage instance
+     * Get logger
+     *
+     * @return \Deliveries\Aware\Handlers\Logger
+     */
+    protected function logger() {
+        return new Logger();
+    }
+    /**
+     * Get Storage service
      *
      * @return \Deliveries\Service\StorageService
      */
-    protected function getStorage() {
+    protected function getStorageServiceManager() {
 
         return new StorageService($this->getStorageInstance(self::getConfig()->Storage));
     }

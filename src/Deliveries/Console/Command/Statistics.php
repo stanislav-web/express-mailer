@@ -86,34 +86,34 @@ class Statistics extends BaseCommandAware {
         if ($input->getOption('subscribers')) {
             // throw subscribers stats
             $this->table($output,[
-                'Reports subscribers' => $this->getStorage()->getSubscribersReports()
+                'Reports subscribers' => $this->getStorageServiceManager()->getSubscribersReports()
             ]);
         }
         else if ($input->getOption('mailings')) {
             // throw deliveries stats
             $this->table($output,[
-                'Reports mailings' => $this->getStorage()->getMailingsReports()
+                'Reports mailings' => $this->getStorageServiceManager()->getMailingsReports()
             ]);
         }
         else if ($input->getOption('active')) {
             // throw active mailing stats
             $this->tableLong($output,[
-                'Tail activity mail log' => $this->getStorage()->getActiveMailStatistics()
+                'Tail activity mail log' => $this->getStorageServiceManager()->getActiveMailStatistics()
             ]);
         }
         else {
 
             // throw subscribers stats
             $this->table($output,[
-                'Reports subscribers' => $this->getStorage()->getSubscribersReports()
+                'Reports subscribers' => $this->getStorageServiceManager()->getSubscribersReports()
             ]);
             // throw deliveries stats
             $this->table($output,[
-                'Reports mailings' => $this->getStorage()->getMailingsReports()
+                'Reports mailings' => $this->getStorageServiceManager()->getMailingsReports()
             ]);
             // throw active mailing stats
             $this->tableLong($output,[
-                'Tail activity mail log' => $this->getStorage()->getActiveMailStatistics()
+                'Tail activity mail log' => $this->getStorageServiceManager()->getActiveMailStatistics()
             ]);
         }
     }

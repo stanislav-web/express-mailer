@@ -41,6 +41,14 @@ interface DataProviderInterface {
     public function getTablesList();
 
     /**
+     * Import tables
+     *
+     * @param string $query
+     * @return bool|int
+     */
+    public function importTables($query);
+
+    /**
      * Set tables
      *
      * @param string $prefix

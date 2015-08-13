@@ -85,7 +85,7 @@ class Native implements QueueProviderInterface {
      * Push message
      *
      * @param array $data
-     * @throws \RuntimeException
+     * @throws \Deliveries\Exceptions\BrokerException
      * @return int queue process id
      */
     public function push(array $data)
@@ -95,12 +95,12 @@ class Native implements QueueProviderInterface {
         $queue = msg_get_queue($this->queuePid, $this->msgPermissions);
 
         if (!$queue) {
-            throw new \RuntimeException(sprintf("msg_get_queue failed for key 0x%08x", $this->queuePid));
+            throw new BrokerException(sprintf("msg_get_queue failed for key 0x%08x", $this->queuePid));
         }
 
         if(msg_send($queue, 1, json_encode($data), false, false, $errno) === false) {
 
-            throw new \RuntimeException(
+            throw new BrokerException(
                 'Could not add message to queue. Pid: '.$this->queuePid
             );
         }
@@ -158,6 +158,7 @@ class Native implements QueueProviderInterface {
 
     /**
      * Init error handler
+     * @throws \Deliveries\Exceptions\BrokerException
      */
     private function errorHandler() {
 
