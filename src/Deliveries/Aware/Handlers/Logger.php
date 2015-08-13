@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: stanislavmenshykh
- * Date: 13.08.15
- * Time: 12:12
- */
-
 namespace Deliveries\Aware\Handlers;
 
 use Psr\Log\LoggerInterface;
