@@ -107,6 +107,32 @@ class AppServiceManager {
     }
 
     /**
+     * Get reserved queue from storage
+     *
+     * @param array input options
+     * @param callable callback handler
+     * @throws \Deliveries\Exceptions\StorageException
+     * @return array
+     */
+    public function getQueues(array $options, callable $callback) {
+
+        try {
+
+            // date create verification
+            $this->verifyDate($options['date']);
+
+            // get queues & subscribers
+            $callback([
+                'queues'         =>  $this->storageInstance->getQueues($options['date'], $options['limit']),
+                'subscribers'    =>  $this->storageInstance->getSubscribers($options['subscribers'])
+            ]);
+        }
+        catch(\RuntimeException $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    /**
      * Run mails queue
      *
      * @throws \Deliveries\Exceptions\StorageException

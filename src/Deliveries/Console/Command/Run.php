@@ -4,6 +4,8 @@ namespace Deliveries\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Deliveries\Aware\Console\Command\BaseCommandAware;
 
 /**
@@ -41,6 +43,11 @@ class Run extends BaseCommandAware {
     const DESCRIPTION = 'Run submissions from queue';
 
     /**
+     * @const NOT_FOUND command not found
+     */
+    const NOT_FOUND = 'No active queues fond';
+
+    /**
      * Get command additional options
      *
      * @return array
@@ -50,6 +57,7 @@ class Run extends BaseCommandAware {
         return [
             new InputOption('date', 'd', InputOption::VALUE_OPTIONAL, 'Queue start date', (new \DateTime())->format('Y-m-d')),
             new InputOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Limit queue lists'),
+            new InputOption('subscribers', 's', InputOption::VALUE_OPTIONAL, 'Subscribers state', 'active'),
         ];
     }
 
@@ -71,12 +79,38 @@ class Run extends BaseCommandAware {
             );
         }
 
-        // Run queue
-        $this->getAppServiceManager()->runQueue($input->getOptions(), function($message) use ($output) {
-            if(is_string($message) === true) {
-                $output->writeln('<comment>'.$message.'</comment>');
+        // Get active queues
+        $this->getAppServiceManager()->getQueues($input->getOptions(), function($data) use ($output) {
+
+            if(($queueCount = count($data['queues'])) > 0) {
+
+                // active queues founded
+                $subscribersCount = count($data['subscribers']);
+                $mailsCount = ($subscribersCount * $queueCount);
+
+                $output->writeln(
+                    "<comment>Prepare process mailings: ".$queueCount."</comment>\n".
+                    "<comment>Prepare subscribers : ".$subscribersCount."</comment>\n".
+                    "<comment>Prepare letters to send : ".$mailsCount."</comment>"
+                );
+
+                // migrate to process mailing
+
+                $inputForJob = new ArrayInput([
+                    'command'           => 'process',
+                    '--queues'          => $data['queues'],
+                    '--subscribers'     => $data['subscribers'],
+                    '--qc'              => $queueCount,
+                    '--qs'              => $subscribersCount,
+                ]);
+                return  $this->getApplication()->doRun(
+                    $inputForJob,
+                    new ConsoleOutput()
+                );
+            }
+            else {
+                $output->writeln('<comment>'.self::NOT_FOUND.'</comment>');
             }
         });
-
     }
 }

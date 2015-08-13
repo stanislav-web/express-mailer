@@ -64,13 +64,27 @@ class StorageService {
     }
 
     /**
-     * Get queues by date
+     * Get queues process from storage
      *
      * @param string $date
+     * @param int $limit limit records
+     * @return array
      */
-    public function getQueues($date) {
+    public function getQueues($date, $limit = null) {
 
-        return $this->storage->getQueues($date);
+        return $this->storage->getQueues($date, $limit);
+    }
+
+    /**
+     * Get subscribers
+     *
+     * @param string $state subscriber status
+     * @param int $limit limit records
+     * @return array
+     */
+    public function getSubscribers($state, $limit = null) {
+
+        return $this->storage->getSubscribers($state, $limit);
     }
 
     /**

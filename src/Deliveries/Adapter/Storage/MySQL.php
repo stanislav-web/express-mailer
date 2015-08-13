@@ -143,7 +143,7 @@ class MySQL implements DataProviderInterface {
      * @param int $limit limit records
      * @return array
      */
-    public function getSubscribers($state, $limit = null) {
+    public function getSubscribers($state = 'active', $limit = null) {
 
         $query = "SELECT id AS subscriber_id, name, email FROM ".$this->subscribersTable." subscribers
                     WHERE subscribers.`state` = ".$this->quoteValue($state)."

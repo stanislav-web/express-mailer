@@ -15,6 +15,11 @@ namespace Deliveries\Aware\Handlers;
 class BaseException extends \RuntimeException {
 
     /**
+     * @const TYPE default
+     */
+    const TYPE = '';
+
+    /**
      * Constructor
      *
      * @param string $message If no message is given default from child

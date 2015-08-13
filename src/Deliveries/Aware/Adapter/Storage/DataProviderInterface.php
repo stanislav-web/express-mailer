@@ -120,6 +120,6 @@ interface DataProviderInterface {
      * @param int $limit limit records
      * @return array
      */
-    public function getSubscribers($state, $limit = null);
+    public function getSubscribers($state = 'active', $limit = null);
 
 }
