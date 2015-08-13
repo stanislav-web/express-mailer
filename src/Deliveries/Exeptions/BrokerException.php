@@ -4,7 +4,7 @@ namespace Deliveries\Exceptions;
 use Deliveries\Aware\Handlers\BaseException;
 
 /**
- * StorageException class. Storage exception class
+ * BrokerException class. Storage exception class
  *
  * @package Deliveries
  * @subpackage Deliveries\Exceptions
@@ -12,14 +12,14 @@ use Deliveries\Aware\Handlers\BaseException;
  * @version 1.0
  * @author Stanislav WEB | Lugansk <stanisov@gmail.com>
  * @copyright Stanislav WEB
- * @filesource /Deliveries/Exceptions/StorageException.php
+ * @filesource /Deliveries/Exceptions/BrokerException.php
  */
-class StorageException extends BaseException {
+class BrokerException extends BaseException {
 
     /**
      * @const TYPE exception type as object name raised an exception
      */
-    const TYPE = 'StorageException';
+    const TYPE = 'BrokerException';
 
     /**
      * Constructor

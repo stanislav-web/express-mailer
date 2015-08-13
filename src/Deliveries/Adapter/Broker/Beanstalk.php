@@ -2,6 +2,8 @@
 namespace Deliveries\Adapter\Broker;
 
 use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
+use Deliveries\Exceptions\BrokerException;
+use Pheanstalk\Exception;
 use Pheanstalk\Pheanstalk as QueueBroker;
 
 /**
@@ -37,6 +39,8 @@ class Beanstalk implements QueueProviderInterface {
      */
     const DEFAULT_IS_PERSISTENT = 'false';
 
+    const DEFAULT_TUBE = 'xmail';
+
     /**
      * Broker connection
      *
@@ -57,8 +61,8 @@ class Beanstalk implements QueueProviderInterface {
      * Connect to AMQP server
      *
      * @param array $config
+     * @throws BrokerException
      * @return \Pheanstalk\Pheanstalk
-     * @throws \RuntimeException
      */
     public function connect(array $config)
     {
@@ -71,7 +75,7 @@ class Beanstalk implements QueueProviderInterface {
         $isConnect = $this->broker->getConnection()->isServiceListening();
 
         if(!$isConnect) {
-            throw new \RuntimeException('Queue connection failed! Check configurations');
+            throw new BrokerException('Queue connection failed! Check configurations');
         }
 
         return $this;
@@ -82,12 +86,13 @@ class Beanstalk implements QueueProviderInterface {
      *
      * @param array $data
      * @throws \RuntimeException
-     * @return \Pheanstalk\Pheanstalk
+     * @return int queue process id
      */
     public function push(array $data)
     {
-        $this->broker->useTube(mt_rand(00000, 99999))->put($data);
-        return $this->broker;
+        $pid = $this->broker->useTube(self::DEFAULT_TUBE)->put(json_encode($data));
+
+        return $pid;
     }
 
     /**
@@ -98,17 +103,55 @@ class Beanstalk implements QueueProviderInterface {
      */
     public function read($pid = null, callable $callback)
     {
-        // TODO: Implement read() method.
+        try {
+
+            $data = json_decode($this->broker->peek($pid)->getData(), true);
+
+            if(is_null($data) === false) {
+
+                // process this message
+                $callback($data);
+
+                // remove from queue
+                $this->delete($pid);
+            }
+            else {
+                // remove broken job from queue precess
+                $this->delete($pid, function() use ($callback, $pid) {
+                    $callback('Queue process #'.$pid.' was broken and immediately removed from queue list');
+                });
+            }
+        }
+        catch(Exception $e) {
+            throw new BrokerException($e->getMessage());
+        }
     }
 
     /**
      * Delete message from queue
      *
      * @param int $pid
+     * @param callable $callback function handler
      * @return boolean
      */
-    public function delete($pid = null)
+    public function delete($pid = null, callable $callback = null)
     {
-        // TODO: Implement delete() method.
+        try {
+
+            // get broker job by process id
+            $job = $this->broker->peek($pid);
+
+            // remove process
+            $this->broker->delete($job);
+
+            if(is_null($callback) === false) {
+                $callback();
+            }
+
+            return true;
+        }
+        catch(Exception $e) {
+            throw new BrokerException($e->getMessage());
+        }
     }
 }

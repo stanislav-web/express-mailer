@@ -46,8 +46,9 @@ interface QueueProviderInterface {
      * Delete message from queue
      *
      * @param int $pid
+     * @param callable $callback function handler
      * @return boolean
      */
-    public function delete($pid = null);
+    public function delete($pid = null, callable $callback = null);
 
 }

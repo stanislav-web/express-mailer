@@ -18,15 +18,15 @@ class BaseException extends \RuntimeException {
      * Constructor
      *
      * @param string $message If no message is given default from child
-     * @param int $code Status code, default from child
+     * @param string $code Status code, default from child
      */
     public function __construct($message, $code) {
 
         // save an exception to log
-        (new Logger())->critical($message, [
+        (new Logger())->{$code}($message, [
             'exception' =>  static::TYPE // use as late state binding
         ]);
 
-        parent::__construct($message, $code);
+        parent::__construct($message, null);
     }
 }

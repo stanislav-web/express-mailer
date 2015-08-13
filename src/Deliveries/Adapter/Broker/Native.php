@@ -2,9 +2,14 @@
 namespace Deliveries\Adapter\Broker;
 
 use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
+use Deliveries\Exceptions\BrokerException;
 
 /**
  * Native class. Native PHP Connection broker
+ * This class provides wrappers for the System V IPC family of functions. It includes semaphores,
+ * shared memory and inter-process messaging (IPC).
+ * Semaphores may be used to provide exclusive access to resources on the current machine,
+ * or to limit the number of processes that may simultaneously use a resource
  *
  * @package Deliveries
  * @subpackage Deliveries\Adapter\Broker
@@ -31,6 +36,13 @@ class Native implements QueueProviderInterface {
     private $msgMaxSize = 65536;
 
     /**
+     * Permission to save pid
+     *
+     * @var int $msgPermissions
+     */
+    private $msgPermissions = 0666;
+
+    /**
      * Message type
      *
      * @var int $msgType
@@ -44,6 +56,12 @@ class Native implements QueueProviderInterface {
      */
     private $message = null;
 
+    /**
+     * Init error handler
+     */
+    public function __construct() {
+        $this->errorHandler();
+    }
     /**
      * Get instance connection
      *
@@ -72,20 +90,16 @@ class Native implements QueueProviderInterface {
      */
     public function push(array $data)
     {
-        // setup e_warnings error handler
-        set_error_handler(function($errno, $errstr) {
-
-            throw new \RuntimeException(
-                'Code ('.$errno.') '.$errstr
-            );
-
-        }, E_WARNING);
-
         $this->queuePid = mt_rand(00000, 99999);
 
-        $queue = msg_get_queue($this->queuePid);
+        $queue = msg_get_queue($this->queuePid, $this->msgPermissions);
 
-        if(msg_send($queue, 1, $data) === false) {
+        if (!$queue) {
+            throw new \RuntimeException(sprintf("msg_get_queue failed for key 0x%08x", $this->queuePid));
+        }
+
+        if(msg_send($queue, 1, json_encode($data), false, false, $errno) === false) {
+
             throw new \RuntimeException(
                 'Could not add message to queue. Pid: '.$this->queuePid
             );
@@ -106,27 +120,31 @@ class Native implements QueueProviderInterface {
         $this->queuePid = (is_null($pid) === false) ? $pid : $this->queuePid;
 
         // get queue by process id
-        $queue = msg_get_queue($this->queuePid);
+        $queue = msg_get_queue($this->queuePid, $this->msgPermissions);
 
         // queue read content
         while(msg_receive($queue, 1, $this->msgType, $this->msgMaxSize, $this->message, MSG_NOERROR)) {
 
             // process this message
-            $callback($this->message);
+            $callback(json_decode($this->message, true));
 
             //finally, reset our msg vars for when we loop and run again
             $this->msgType = null;
             $this->message = null;
         }
+
+        // remove process from queue
+        $this->delete($this->queuePid);
     }
 
     /**
      * Delete message from queue
      *
      * @param int $pid
+     * @param callable $callback function handler
      * @return boolean
      */
-    public function delete($pid = null)
+    public function delete($pid = null, callable $callback = null)
     {
         $this->queuePid = (is_null($pid) === false) ? $pid : $this->queuePid;
 
@@ -136,5 +154,20 @@ class Native implements QueueProviderInterface {
         }
 
         return false;
+    }
+
+    /**
+     * Init error handler
+     */
+    private function errorHandler() {
+
+        // setup e_warnings error handler
+        set_error_handler(function($errno, $errstr) {
+
+            throw new BrokerException(
+                'Code ('.$errno.') '.$errstr
+            );
+
+        }, E_WARNING);
     }
 }

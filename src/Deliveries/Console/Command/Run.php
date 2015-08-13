@@ -73,7 +73,9 @@ class Run extends BaseCommandAware {
 
         // Run queue
         $this->getAppServiceManager()->runQueue($input->getOptions(), function($message) use ($output) {
-            $output->writeln('<comment>'.$message.'</comment>');
+            if(is_string($message) === true) {
+                $output->writeln('<comment>'.$message.'</comment>');
+            }
         });
 
     }

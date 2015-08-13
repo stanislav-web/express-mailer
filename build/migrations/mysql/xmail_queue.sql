@@ -7,6 +7,7 @@ CREATE TABLE `__PREFIX__xmail_queue` (
   `mail` varchar(32) NOT NULL DEFAULT '' COMMENT 'Used mail adapter',
   `priority` tinyint(2) unsigned DEFAULT '0' COMMENT 'Queue priority',
   `date_activation` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Activation date',
+  KEY `idx_pid` (`pid`),
   UNIQUE KEY (`pid`, `storage`, `broker`, `mail`),
   KEY `idx_adapters` (`storage`, `broker`, `mail`),
   KEY `idx_priority` (`priority`)

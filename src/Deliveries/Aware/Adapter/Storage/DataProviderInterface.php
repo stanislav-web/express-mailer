@@ -49,55 +49,6 @@ interface DataProviderInterface {
     public function setTables($prefix);
 
     /**
-     * Execute query
-     *
-     * @param string $query
-     * @param array $bindData
-     * @return boolean|int
-     */
-    public function exec($query, array $bindData = []);
-
-    /**
-     * Prepare query string
-     *
-     * @param string $query
-     * @return array|object
-     */
-    public function prepare($query);
-
-    /**
-     * Get result query for multiple rows
-     *
-     * @param string $query
-     * @return array
-     */
-    public function fetchAll($query);
-
-    /**
-     * Get result query for row
-     *
-     * @param string $query
-     * @return array
-     */
-    public function fetchOne($query);
-
-    /**
-     * Escape value
-     *
-     * @param string $value
-     * @return string
-     */
-    public function quoteValue($value);
-
-    /**
-     * Escape field
-     *
-     * @param string $field
-     * @return string
-     */
-    public function quoteFiled($field);
-
-    /**
      * Get lists for submissions
      *
      * @param string $status
@@ -117,6 +68,14 @@ interface DataProviderInterface {
     public function saveQueue($pid, array $params, $date_activation = null, $priority = 0);
 
     /**
+     * Remove queue
+     *
+     * @param int $pid
+     * @return int
+     */
+    public function removeQueue($pid);
+
+    /**
      * Get queues process from storage
      *
      * @param string $date
@@ -124,4 +83,35 @@ interface DataProviderInterface {
      * @return array
      */
     public function getQueues($date = null, $limit = null);
+
+    /**
+     * Count all subscribers
+     *
+     * @return array
+     */
+    public function countSubscribers();
+
+    /**
+     * Count all statistics for mailings
+     *
+     * @return array
+     */
+    public function countMailings();
+
+    /**
+     * Count all active mails stat
+     *
+     * @return array
+     */
+    public function activeMailsStat();
+
+    /**
+     * Get subscribers
+     *
+     * @param string $state subscriber status
+     * @param int $limit limit records
+     * @return array
+     */
+    public function getSubscribers($state, $limit = null);
+
 }

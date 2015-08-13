@@ -4,7 +4,7 @@ use Deliveries\Aware\Adapter\Storage\DataProviderInterface;
 use Deliveries\Aware\Adapter\Mail\MailProviderInterface;
 use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
 use Deliveries\Aware\Helpers\FormatTrait;
-use Deliveries\Exceptions\StorageException;
+use Deliveries\Exceptions\AppException;
 
 /**
  * AppServiceManager class.
@@ -74,7 +74,7 @@ class AppServiceManager {
         $status = array_search(true, $options, true);
 
         if(empty($status) === true) {
-            throw new \RuntimeException('Submission create status not defined');
+            throw new AppException('Submission create status not defined', 'info');
         }
 
         // get lists by status argument
@@ -83,6 +83,7 @@ class AppServiceManager {
         try {
             // push lists to queue processing & get process id
             $pid = $this->queueInstance->push($lists);
+
 
             // date create verification
             $this->verifyDate($options['date']);
@@ -95,7 +96,7 @@ class AppServiceManager {
             ], $options['date'], $options['priority']);
 
         }
-        catch(StorageException $e) {
+        catch(\Exception $e) {
 
             // remove queue from list
             $this->queueInstance->delete();
@@ -117,13 +118,28 @@ class AppServiceManager {
             // date create verification
             $this->verifyDate($options['date']);
 
-            // get queues
-            $queues = $this->storageInstance->getQueues($options['date'], $options['limit']);
+            try {
+                // get queues
+                $queues = $this->storageInstance->getQueues($options['date'], $options['limit']);
+
+            }
+            catch(\RuntimeException $e) {
+                throw new \Exception($e->getMessage());
+            }
 
             if(count($queues) > 0) {
+
                 foreach($queues as $queue) {
-                    $this->queueInstance->read($queue['pid'], function($message) {
-                        //@TODO parse callback $message
+                    $this->queueInstance->read($queue['pid'], function($message) use ($callback, $queue) {
+
+                        // process received message & get subscribers & send mails
+                        //print_r($message);
+                        // $this->storageInstance->getSubscribers('active') to UP!
+
+                        $callback($message);
+
+                        // remove queue from storage after read
+                        $this->storageInstance->removeQueue($queue['pid']);
                     });
                 }
             }
@@ -132,10 +148,9 @@ class AppServiceManager {
                 $callback('Queues not found');
             }
         }
-        catch(\Exception $e) {
-            throw new StorageException(
-                'Get queue failed: '.$e->getMessage()
-            );
+        catch(\RuntimeException $e) {
+
+            throw new \Exception($e->getMessage());
         }
     }
 }

@@ -137,97 +137,28 @@ class MySQL implements DataProviderInterface {
     }
 
     /**
-     * Execute query
+     * Get subscribers
      *
-     * @param string $query
-     * @param array $bindData
-     * @return boolean|int
-     */
-    public function exec($query, array $bindData = []) {
-
-        if(empty($bindData) === false) {
-            return $this->prepare($query)->execute($bindData);
-        }
-        return $this->getInstance()->exec($query);
-
-    }
-
-    /**
-     * Get result query for multiple rows
-     *
-     * @param string $query
+     * @param string $state subscriber status
+     * @param int $limit limit records
      * @return array
      */
-    public function fetchAll($query) {
+    public function getSubscribers($state, $limit = null) {
 
-        try {
+        $query = "SELECT id AS subscriber_id, name, email FROM ".$this->subscribersTable." subscribers
+                    WHERE subscribers.`state` = ".$this->quoteValue($state)."
+	                ORDER BY subscribers.id ASC";
 
-            $stmt = $this->getInstance()->query($query);
-            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
+        if(is_null($limit) === false) {
+            $query .= " LIMIT ".(int)$limit;
         }
-        catch(\PDOException $e) {
-            throw new StorageException(
-                $e->getMessage()
-            );
-        }
-    }
 
-    /**
-     * Get result query for row
-     *
-     * @param string $query
-     * @return array
-     */
-    public function fetchOne($query) {
-
-        try {
-
-            $stmt = $this->getInstance()->query($query);
-            return $stmt->fetch(\PDO::FETCH_ASSOC);
-
-        }
-        catch(\PDOException $e) {
-            throw new StorageException(
-                $e->getMessage()
-            );
-        }
-    }
-
-    /**
-     * Escape value
-     *
-     * @param string $query
-     * @return string
-     */
-    public function quoteValue($value) {
-        return $this->getInstance()->quote($value);
-    }
-
-    /**
-     * Escape arguments
-     *
-     * @param string $field
-     * @return string
-     */
-    public function quoteFiled($field) {
-        return "`".str_replace(["'"], ["`"], $field)."`";
-    }
-
-    /**
-     * Prepare query statement
-     *
-     * @param string $query
-     * @return \PDOStatement
-     */
-    public function prepare($query) {
-        return $this->getInstance()->prepare($query);
+        return $this->fetchAll($query);
     }
 
     /**
      * Count all subscribers
      *
-     * @param $table
      * @return array
      */
     public function countSubscribers() {
@@ -244,7 +175,6 @@ class MySQL implements DataProviderInterface {
     /**
      * Count all statistics for mailings
      *
-     * @param $table
      * @return array
      */
     public function countMailings() {
@@ -263,7 +193,6 @@ class MySQL implements DataProviderInterface {
     /**
      * Count all active mails stat
      *
-     * @param $table
      * @return array
      */
     public function activeMailsStat() {
@@ -306,25 +235,34 @@ class MySQL implements DataProviderInterface {
      */
     public function saveQueue($pid, array $params, $date_activation = null, $priority = 0) {
 
-        $query = "INSERT INTO `".$this->queueTable."`
+        $query = "INSERT INTO ".$this->queueTable."
                     (pid, storage, broker, mail, priority, date_activation)
                         VALUES (:pid, :storage, :broker, :mail, :priority, :date_activation)";
 
-        try {
+        // prepare bind & execute query
+        return $this->exec($query, array_merge([
+            ':pid'               =>  (int)$pid,
+            ':date_activation'   =>  $date_activation,
+            ':priority'          =>  (int)$priority
+        ], $params));
+    }
 
-            // prepare bind & execute query
-            return $this->exec($query, array_merge([
-                ':pid'               =>  (int)$pid,
-                ':date_activation'   =>  $date_activation,
-                ':priority'          =>  (int)$priority
-            ], $params));
-        }
-        catch(\PDOException $e) {
+    /**
+     * Remove queue
+     *
+     * @param int $pid
+     * @throws \Deliveries\Exceptions\StorageException
+     * @return int
+     */
+    public function removeQueue($pid) {
 
-            throw new StorageException(
-                'Create queue failed: '.$e->getMessage()
-            );
-        }
+        $query = "DELETE FROM ".$this->queueTable."
+                    WHERE pid = :pid";
+
+        // prepare bind & execute query
+        return $this->exec($query, [
+            ':pid'               =>  (int)$pid,
+        ]);
     }
 
     /**
@@ -345,5 +283,101 @@ class MySQL implements DataProviderInterface {
         }
 
         return $this->fetchAll($query);
+    }
+
+    /**
+     * Execute query
+     *
+     * @param string $query
+     * @param array $bindData
+     * @throws \Deliveries\Exceptions\StorageException
+     * @return boolean|int
+     */
+    private function exec($query, array $bindData = []) {
+
+        try {
+            if(empty($bindData) === false) {
+                return $this->prepare($query)->execute($bindData);
+            }
+            return $this->getInstance()->exec($query);
+        }
+        catch(\PDOException $e) {
+
+            throw new StorageException($e->getMessage());
+        }
+    }
+
+    /**
+     * Get result query for multiple rows
+     *
+     * @param string $query
+     * @throws \Deliveries\Exceptions\StorageException
+     * @return array
+     */
+    private function fetchAll($query) {
+
+        try {
+
+            $stmt = $this->getInstance()->query($query);
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        }
+        catch(\PDOException $e) {
+            throw new StorageException(
+                $e->getMessage()
+            );
+        }
+    }
+
+    /**
+     * Get result query for row
+     *
+     * @param string $query
+     * @throws \Deliveries\Exceptions\StorageException
+     * @return array
+     */
+    private function fetchOne($query) {
+
+        try {
+
+            $stmt = $this->getInstance()->query($query);
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        }
+        catch(\PDOException $e) {
+            throw new StorageException(
+                $e->getMessage()
+            );
+        }
+    }
+
+    /**
+     * Escape value
+     *
+     * @param string $query
+     * @return string
+     */
+    private function quoteValue($value) {
+        return $this->getInstance()->quote($value);
+    }
+
+    /**
+     * Escape arguments
+     *
+     * @param string $field
+     * @return string
+     */
+    private function quoteFiled($field) {
+        return "`".str_replace(["'"], ["`"], $field)."`";
+    }
+
+    /**
+     * Prepare query statement
+     *
+     * @param string $query
+     * @return \PDOStatement
+     */
+    private function prepare($query) {
+        return $this->getInstance()->prepare($query);
     }
 }
