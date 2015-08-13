@@ -199,9 +199,7 @@ class Migrations extends BaseCommandAware {
                         $db->exec($query);
                     }
 
-                    $output->writeln(
-                        "<fg=white;bg=magenta>Data of `".$file."` has been successfully imported</fg=white;bg=magenta>"
-                    );
+
                 }
                 return;
             }

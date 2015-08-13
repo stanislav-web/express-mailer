@@ -2,7 +2,7 @@
 namespace Deliveries\Aware\Handlers;
 
 use \Psr\Log\LoggerInterface;
-
+use Deliveries\Aware\Console\Command\BaseCommandAware;
 /**
  * BaseException class. Base exception handler
  *
@@ -37,7 +37,7 @@ abstract class BaseException extends \RuntimeException implements LoggerInterfac
 
         // save an exception to log
         $this->log($logLevel, $message, [
-            'date' =>  (new \DateTime('now'))->format('[Y-m-d H:i:s]'),
+            'date' =>  (new \DateTime('now'))->format('Y-m-d H:i:s'),
             'type' =>  $type
         ]);
 
@@ -53,7 +53,14 @@ abstract class BaseException extends \RuntimeException implements LoggerInterfac
      */
     public function log($level, $message, array $context = []) {
 
+        var_dump(BaseCommandAware::getConfig());
+        var_dump($level, $message, $context);
         //@TODO create logger function. setup logger params
+    }
+
+
+    protected function getLoggerConfig() {
+
     }
 
     /**

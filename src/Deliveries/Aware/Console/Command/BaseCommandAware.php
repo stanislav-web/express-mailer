@@ -157,7 +157,7 @@ class BaseCommandAware extends Command {
      * @return object
      * @throws \RuntimeException
      */
-    protected function getConfig() {
+    public static function getConfig() {
 
         $configFile = getcwd().self::CONFIG_FILENAME;
 
@@ -173,11 +173,13 @@ class BaseCommandAware extends Command {
      * @return \Deliveries\Aware\Service\AppServiceManager
      */
     protected function getAppServiceManager() {
+
         return new AppServiceManager(
             $this->getStorageInstance(self::getConfig()->Storage),
             $this->getMailInstance(self::getConfig()->Mail),
             $this->getQueueInstance(self::getConfig()->Broker)
         );
+
     }
 
     /**
