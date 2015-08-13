@@ -21,7 +21,7 @@ trait FormatTrait {
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param array                                             $content
      */
-    public function tableLong(\Symfony\Component\Console\Output\OutputInterface $output, array $content) {
+    protected function tableLong(\Symfony\Component\Console\Output\OutputInterface $output, array $content) {
 
         // write config table
         $title = key($content);
@@ -47,7 +47,7 @@ trait FormatTrait {
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param array                                             $content
      */
-    public function table(\Symfony\Component\Console\Output\OutputInterface $output, array $content) {
+    protected function table(\Symfony\Component\Console\Output\OutputInterface $output, array $content) {
 
         // write config table
         $table = new Table($output);
@@ -78,8 +78,8 @@ trait FormatTrait {
      * @param boolean $strict
      * @throws \RuntimeException
      */
-    public function verifyDate($date, $strict = true)
-    {
+    protected function verifyDate($date, $strict = true) {
+
         \DateTime::createFromFormat('Y-m-d H:i:s', $date);
 
         if ($strict) {
@@ -97,7 +97,7 @@ trait FormatTrait {
      * @param object $object any class instance
      * @return string
      */
-    public function getClassName($object) {
+    protected function getClassName($object) {
         return (new \ReflectionClass($object))->getShortName();
     }
 }

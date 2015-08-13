@@ -2,7 +2,6 @@
 namespace Deliveries\Exceptions;
 
 use Deliveries\Aware\Handlers\BaseException;
-use Deliveries\Aware\Helpers\FormatTrait;
 
 /**
  * StorageException class. Storage exception class
@@ -17,26 +16,18 @@ use Deliveries\Aware\Helpers\FormatTrait;
  */
 class StorageException extends BaseException {
 
-    use FormatTrait;
+    /**
+     * @const TYPE exception type as object name raised an exception
+     */
+    const TYPE = 'StorageException';
 
     /**
      * Constructor
      *
      * @param string $message
-     * @param int $code Status code
+     * @param int $code status code
      */
-    public function __construct($message, $code = self::BASE_TYPE) {
-
-        parent::__construct($message, $code, $this->getExceptionType());
-    }
-
-    /**
-     * Get current exception name as type
-     *
-     * @return string
-     */
-    public function getExceptionType() {
-
-        return $this->getClassName($this);
+    public function __construct($message, $code = null) {
+        parent::__construct($message, $code);
     }
 }

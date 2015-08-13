@@ -119,6 +119,9 @@ class Migrations extends BaseCommandAware {
         $this->addToConfig(null, ['Storage' => ['prefix' => $prefix]]);
         $this->import($output, $prefix);
 
+        $output->writeln(
+            "<fg=white;bg=magenta>Data imported successfully to " . $this->getConfig()['adapter'] . "</fg=white;bg=magenta>"
+        );
         return;
     }
 
@@ -184,6 +187,7 @@ class Migrations extends BaseCommandAware {
      */
     private function import(OutputInterface $output, $prefix) {
 
+
         if(empty($this->migrationFiles) === false) {
 
             try {
@@ -198,8 +202,6 @@ class Migrations extends BaseCommandAware {
                         // Import query
                         $db->exec($query);
                     }
-
-
                 }
                 return;
             }

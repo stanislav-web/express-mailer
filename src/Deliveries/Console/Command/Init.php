@@ -342,7 +342,7 @@ class Init extends BaseCommandAware {
      */
     private function configFile(InputInterface $input, OutputInterface $output) {
 
-        $configFile = getcwd().self::CONFIG_FILENAME;
+        $configFile = getcwd().$this->configFile;
 
         if (file_exists($configFile) === true) {
             // rebuild config file

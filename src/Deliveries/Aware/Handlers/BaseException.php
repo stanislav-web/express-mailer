@@ -1,8 +1,6 @@
 <?php
 namespace Deliveries\Aware\Handlers;
 
-use \Psr\Log\LoggerInterface;
-use Deliveries\Aware\Console\Command\BaseCommandAware;
 /**
  * BaseException class. Base exception handler
  *
@@ -14,59 +12,21 @@ use Deliveries\Aware\Console\Command\BaseCommandAware;
  * @copyright Stanislav WEB
  * @filesource /Deliveries/Aware/Handlers/BaseException.php
  */
-abstract class BaseException extends \RuntimeException implements LoggerInterface
-{
-    /**
-     * Base exception type
-     */
-    const BASE_TYPE = 'alert';
-
-    /**
-     * use logger trait
-     */
-    use \Psr\Log\LoggerTrait;
+class BaseException extends \RuntimeException {
 
     /**
      * Constructor
      *
      * @param string $message If no message is given default from child
      * @param int $code Status code, default from child
-     * @param string $type Exception type as object name raised an exception
      */
-    public function __construct($message, $logLevel, $type) {
+    public function __construct($message, $code) {
 
         // save an exception to log
-        $this->log($logLevel, $message, [
-            'date' =>  (new \DateTime('now'))->format('Y-m-d H:i:s'),
-            'type' =>  $type
+        (new Logger())->critical($message, [
+            'exception' =>  static::TYPE // use as late state binding
         ]);
 
-        parent::__construct($message, null);
+        parent::__construct($message, $code);
     }
-
-    /**
-     * Setup logger
-     *
-     * @param string $level
-     * @param string $message
-     * @param array $context
-     */
-    public function log($level, $message, array $context = []) {
-
-        var_dump(BaseCommandAware::getConfig());
-        var_dump($level, $message, $context);
-        //@TODO create logger function. setup logger params
-    }
-
-
-    protected function getLoggerConfig() {
-
-    }
-
-    /**
-     * Get current exception name as type
-     *
-     * @return string
-     */
-    abstract function getExceptionType();
 }

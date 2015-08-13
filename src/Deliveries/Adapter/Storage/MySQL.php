@@ -94,7 +94,10 @@ class MySQL implements DataProviderInterface {
         try {
             $this->pdo = new \PDO($dsn, $config['username'], $config['password']);
             $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-            $this->setTables($config['prefix']);
+
+            if(isset($config['prefix'])) {
+                $this->setTables($config['prefix']);
+            }
 
             return $this;
 
@@ -141,10 +144,12 @@ class MySQL implements DataProviderInterface {
      * @return boolean|int
      */
     public function exec($query, array $bindData = []) {
+
         if(empty($bindData) === false) {
             return $this->prepare($query)->execute($bindData);
         }
         return $this->getInstance()->exec($query);
+
     }
 
     /**
@@ -154,8 +159,18 @@ class MySQL implements DataProviderInterface {
      * @return array
      */
     public function fetchAll($query) {
-        $stmt = $this->getInstance()->query($query);
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        try {
+
+            $stmt = $this->getInstance()->query($query);
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        }
+        catch(\PDOException $e) {
+            throw new StorageException(
+                $e->getMessage()
+            );
+        }
     }
 
     /**
@@ -165,8 +180,18 @@ class MySQL implements DataProviderInterface {
      * @return array
      */
     public function fetchOne($query) {
-        $stmt = $this->getInstance()->query($query);
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        try {
+
+            $stmt = $this->getInstance()->query($query);
+            return $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        }
+        catch(\PDOException $e) {
+            throw new StorageException(
+                $e->getMessage()
+            );
+        }
     }
 
     /**
@@ -212,6 +237,7 @@ class MySQL implements DataProviderInterface {
                   (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'disabled') AS disabled,
                   (SELECT COUNT(1) FROM ".$this->subscribersTable." WHERE state = 'active') AS active
                   FROM ".$this->subscribersTable." USE INDEX(PRIMARY)";
+
         return $this->fetchOne($query);
     }
 
@@ -231,6 +257,7 @@ class MySQL implements DataProviderInterface {
                   FROM ".$this->statsTable." USE INDEX(PRIMARY)";
 
         return $this->fetchOne($query);
+
     }
 
     /**
@@ -248,6 +275,7 @@ class MySQL implements DataProviderInterface {
 	                ORDER BY log.`date_sent` DESC";
 
         return $this->fetchAll($query);
+
     }
 
     /**
@@ -294,7 +322,7 @@ class MySQL implements DataProviderInterface {
         catch(\PDOException $e) {
 
             throw new StorageException(
-                'Create queue failed: '.$e->getMessage(), $e->getCode()
+                'Create queue failed: '.$e->getMessage()
             );
         }
     }
@@ -308,7 +336,7 @@ class MySQL implements DataProviderInterface {
      */
     public function getQueues($date = null, $limit = null) {
 
-        $query = "SELECT * FROM `".$this->queueTable." queue
+        $query = "SELECT * FROM ".$this->queueTable." queue
                     WHERE `date_activation` >= '".$date."'
 	                ORDER BY queue.priority DESC";
 

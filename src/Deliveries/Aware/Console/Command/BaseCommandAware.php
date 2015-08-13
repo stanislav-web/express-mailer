@@ -8,6 +8,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Deliveries\Aware\Helpers\TestTrait;
+use Deliveries\Aware\Helpers\FileSysTrait;
 use Deliveries\Service\StorageService;
 use Deliveries\Aware\Service\AppServiceManager;
 
@@ -24,14 +25,7 @@ use Deliveries\Aware\Service\AppServiceManager;
  */
 class BaseCommandAware extends Command {
 
-    /**
-     * Default config filename
-     *
-     * @const CONFIG_FILENAME
-     */
-    const CONFIG_FILENAME = '/delivery.json';
-
-    use TestTrait;
+    use TestTrait, FileSysTrait;
 
     /**
      * Command logo
@@ -111,63 +105,6 @@ class BaseCommandAware extends Command {
     }
 
     /**
-     * Check configuration exist
-     *
-     * @return bool
-     */
-    protected function isConfigExist() {
-        return file_exists(getcwd().self::CONFIG_FILENAME);
-    }
-
-    /**
-     * Create config file
-     *
-     * @param string $file
-     * @param mixed $content
-     * @return int
-     */
-    protected function createConfigFile($file = null, $content = '') {
-
-        $file = ($file === null) ? getcwd().self::CONFIG_FILENAME : $file;
-        return file_put_contents($file, json_encode($content));
-    }
-
-    /**
-     * Create config file
-     *
-     * @param string $file
-     * @param array $content
-     * @return int
-     */
-    protected function addToConfig($file = null, array $content) {
-
-        $file = ($file === null) ? getcwd().self::CONFIG_FILENAME : $file;
-
-        $config = (array)self::getConfig();
-
-        foreach($content as $key => $values) {
-            $config[$key] = array_merge($config[$key], $values);
-        }
-        return file_put_contents($file, json_encode($config));
-    }
-
-    /**
-     * Get configuration
-     *
-     * @return object
-     * @throws \RuntimeException
-     */
-    public static function getConfig() {
-
-        $configFile = getcwd().self::CONFIG_FILENAME;
-
-        if(file_exists($configFile) === true) {
-            return (object)json_decode(file_get_contents($configFile), true);
-        }
-        throw new \RuntimeException('Configuration file '.$configFile.' does not exist');
-    }
-
-    /**
      * Get ServiceManager
      *
      * @return \Deliveries\Aware\Service\AppServiceManager
@@ -188,6 +125,7 @@ class BaseCommandAware extends Command {
      * @return \Deliveries\Service\StorageService
      */
     protected function getStorage() {
+
         return new StorageService($this->getStorageInstance(self::getConfig()->Storage));
     }
 }
