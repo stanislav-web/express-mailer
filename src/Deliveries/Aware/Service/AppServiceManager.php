@@ -107,9 +107,30 @@ class AppServiceManager {
     }
 
     /**
+     * Get queue data by process id
+     *
+     * @param int $pid process id
+     * @param callable $callback
+     */
+    public function getQueueData($pid, callable $callback) {
+
+        try {
+
+            $this->queueInstance->read($pid, function($data) use ($callback) {
+                // process message
+                $callback($data);
+            });
+
+        }
+        catch(\RuntimeException $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    /**
      * Get reserved queue from storage
      *
-     * @param array input options
+     * @param array $options input options
      * @param callable callback handler
      * @throws \Deliveries\Exceptions\StorageException
      * @return array

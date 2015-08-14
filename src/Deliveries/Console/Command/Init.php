@@ -65,10 +65,11 @@ class Init extends BaseCommandAware {
 
         if($configFile) {
 
+            // create config file with default settings
+
             $configContent = $this->getConfigContent($input, $output);
 
-            // create config file with default settings
-            $progress = $this->getProgress($output);
+            $progress = $this->getProgress($output, 100);
 
             sleep(1);
 

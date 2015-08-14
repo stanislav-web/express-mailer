@@ -4,7 +4,9 @@ namespace Deliveries\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Deliveries\Aware\Console\Command\BaseCommandAware;
+use Deliveries\Aware\Helpers\ProgressTrait;
 
 /**
  * Process class. Application Process mailing
@@ -32,6 +34,22 @@ class Process extends BaseCommandAware {
      * @const DESCRIPTION
      */
     const DESCRIPTION = 'Process mailing';
+
+    /**
+     * Send list message format
+     *
+     * @const SEND_PROCESS_DESCRIPTION
+     */
+    const SEND_PROCESS_DESCRIPTION = 'Send list #%d';
+
+    /**
+     * Send list message format
+     *
+     * @const DONE_PROCESS_DESCRIPTION
+     */
+    const DONE_PROCESS_DESCRIPTION = ' Done list #%d';
+
+    use ProgressTrait;
 
     /**
      * Get command additional options
@@ -66,9 +84,34 @@ class Process extends BaseCommandAware {
             );
         }
 
-        // resolve mailing process
-        //var_dump($input->getOptions());
-        //exit();
+        // get requested data
+        $request = $input->getOptions();
 
+        foreach($request['queues'] as $queue) {
+
+            // get queue by process id
+            $this->getAppServiceManager()->getQueueData($queue['pid'], function($processData) use ($output, $request) {
+
+                foreach($processData as $data) {
+
+                    // start to send list
+                    $output->writeln(sprintf(self::SEND_PROCESS_DESCRIPTION, $data['list_id']));
+
+                    // create progress instance with total of subscribers
+                    $progress = $this->getProgress($output, $request['qs'], 'debug');
+                    $progress->start();
+
+                    $i = 0;
+                    while ($i++ < $request['qs']) {
+
+                        // send message
+                        usleep(rand(100000, 1000000));
+                        $progress->advance();
+                    }
+                    $progress->finish();
+                    $output->writeln(sprintf(self::DONE_PROCESS_DESCRIPTION, $data['list_id']));
+                }
+            });
+        }
     }
 }

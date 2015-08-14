@@ -2,7 +2,7 @@
 namespace Deliveries\Aware\Helpers;
 
 use Symfony\Component\Console\Helper\ProgressBar;
-
+use Symfony\Component\Console\Output\OutputInterface;
 /**
  * ProgressTrait trait. CLI Progress bar helper
  *
@@ -16,21 +16,20 @@ use Symfony\Component\Console\Helper\ProgressBar;
  */
 trait ProgressTrait {
 
+
     /**
      * Progress bar define
      *
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param int $output
-     * @param string $format
-     * @return ProgressBar
+     * @param int                                               $finish
+     * @param string                                            $format
+     * @return \Symfony\Component\Console\Helper\ProgressBar
      */
-    public function getProgress(\Symfony\Component\Console\Output\OutputInterface $output, $format = 'normal', $finish = 100) {
+    public function getProgress(\Symfony\Component\Console\Output\OutputInterface $output, $finish = 100, $format = 'normal') {
 
-        ProgressBar::setFormatDefinition('minimal', 'Progress: %percent%%');
         $progress = new ProgressBar($output, $finish);
-        $progress->setBarCharacter('<comment>=</comment>');
-        $progress->setRedrawFrequency(100);
         $progress->setFormat($format);
+        $progress->setBarCharacter('<comment>=</comment>');
 
         return $progress;
     }
