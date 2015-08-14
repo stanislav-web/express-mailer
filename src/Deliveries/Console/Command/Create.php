@@ -56,12 +56,12 @@ class Create extends BaseCommandAware {
     public static function getOptions() {
 
         return [
-            new InputOption('pending', 'p', InputOption::VALUE_NONE, 'Create all the mailing in the status "pending"'),
-            new InputOption('abort', 'a', InputOption::VALUE_NONE, 'Re create all the mailing in the status "abort"'),
-            new InputOption('sent', 's', InputOption::VALUE_NONE, 'Re create all the mailing in the status "sent"'),
-            new InputOption('failed', 'f', InputOption::VALUE_NONE, 'Re create all the mailing in the status "failed"'),
-            new InputOption('date', 'd', InputOption::VALUE_OPTIONAL, 'Queue start date', (new \DateTime())->format('Y-m-d H:i:s')),
-            new InputOption('priority', 'pt', InputOption::VALUE_NONE, 'Queue priority'),
+            new InputOption('pending', null, InputOption::VALUE_NONE, 'Create all the mailing in the status "pending"'),
+            new InputOption('abort', null, InputOption::VALUE_NONE, 'Re create all the mailing in the status "abort"'),
+            new InputOption('sent', null, InputOption::VALUE_NONE, 'Re create all the mailing in the status "sent"'),
+            new InputOption('failed', null, InputOption::VALUE_NONE, 'Re create all the mailing in the status "failed"'),
+            new InputOption('date', null, InputOption::VALUE_OPTIONAL, 'Queue start date', (new \DateTime())->format('Y-m-d H:i:s')),
+            new InputOption('priority', null, InputOption::VALUE_NONE, 'Queue priority'),
         ];
     }
 

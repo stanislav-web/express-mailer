@@ -82,26 +82,27 @@ class Run extends BaseCommandAware {
         // Get active queues
         $this->getAppServiceManager()->getQueues($input->getOptions(), function($data) use ($output) {
 
-            if(($queueCount = count($data['queues'])) > 0) {
+            if(($queueTotal = count($data['queues'])) > 0) {
 
                 // active queues founded
-                $subscribersCount = count($data['subscribers']);
-                $mailsCount = ($subscribersCount * $queueCount);
+                $subscribersTotal = count($data['subscribers']);
+                $mailsTotal = ($subscribersTotal * $queueTotal);
 
                 $output->writeln(
-                    "<comment>Prepare process mailings: ".$queueCount."</comment>\n".
-                    "<comment>Prepare subscribers : ".$subscribersCount."</comment>\n".
-                    "<comment>Prepare letters to send : ".$mailsCount."</comment>"
+                    "<comment>Prepare process mailings: ".$queueTotal."</comment>\n".
+                    "<comment>Prepare subscribers : ".$subscribersTotal."</comment>\n".
+                    "<comment>Prepare letters to send : ".$mailsTotal."</comment>\n".
+                    "---------------------------------------------------"
                 );
 
                 // migrate to process mailing
 
                 $inputForJob = new ArrayInput([
-                    'command'           => 'process',
-                    '--queues'          => $data['queues'],
-                    '--subscribers'     => $data['subscribers'],
-                    '--qc'              => $queueCount,
-                    '--qs'              => $subscribersCount,
+                    'command'               => 'process',
+                    '--queues'              => $data['queues'],
+                    '--subscribers'         => $data['subscribers'],
+                    '--queueTotal'          => $queueTotal,
+                    '--subscribersTotal'    => $subscribersTotal,
                 ]);
                 return  $this->getApplication()->doRun(
                     $inputForJob,

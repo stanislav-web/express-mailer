@@ -36,18 +36,32 @@ class Process extends BaseCommandAware {
     const DESCRIPTION = 'Process mailing';
 
     /**
-     * Send list message format
+     * Start process format message
+     *
+     * @const START_PROCESS_DESCRIPTION
+     */
+    const START_PROCESS_DESCRIPTION = 'Start process #%d';
+
+    /**
+     * Send list format message
      *
      * @const SEND_PROCESS_DESCRIPTION
      */
-    const SEND_PROCESS_DESCRIPTION = 'Send list #%d';
+    const SEND_PROCESS_DESCRIPTION = 'Send mail list #%d';
 
     /**
-     * Send list message format
+     * Done list process description
      *
      * @const DONE_PROCESS_DESCRIPTION
      */
-    const DONE_PROCESS_DESCRIPTION = ' Done list #%d';
+    const DONE_PROCESS_DESCRIPTION = 'Done list #%d';
+
+    /**
+     * Complete all mailing
+     *
+     * @const COMPLETE_SENDING
+     */
+    const COMPLETE_ALL = "Sending completed";
 
     use ProgressTrait;
 
@@ -62,11 +76,10 @@ class Process extends BaseCommandAware {
         return [
             new InputOption('queues', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Queues'),
             new InputOption('subscribers', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Subscribers'),
-            new InputOption('qc', null, InputOption::VALUE_REQUIRED, 'Queues counter'),
-            new InputOption('qs', null, InputOption::VALUE_REQUIRED, 'Subscribers count')
+            new InputOption('queueTotal', null, InputOption::VALUE_REQUIRED, 'Queues counter'),
+            new InputOption('subscribersTotal', null, InputOption::VALUE_REQUIRED, 'Subscribers count')
         ];
     }
-
 
     /**
      * Execute command
@@ -89,29 +102,38 @@ class Process extends BaseCommandAware {
 
         foreach($request['queues'] as $queue) {
 
+            $this->logOutput($output, sprintf(self::START_PROCESS_DESCRIPTION, $queue['pid']), "<bg=white;options=bold>%s</>");
+
             // get queue by process id
             $this->getAppServiceManager()->getQueueData($queue['pid'], function($processData) use ($output, $request) {
 
                 foreach($processData as $data) {
 
                     // start to send list
-                    $output->writeln(sprintf(self::SEND_PROCESS_DESCRIPTION, $data['list_id']));
+                    $this->logOutput($output, sprintf(self::SEND_PROCESS_DESCRIPTION, $data['list_id']));
 
                     // create progress instance with total of subscribers
-                    $progress = $this->getProgress($output, $request['qs'], 'debug');
+                    $progress = $this->getProgress($output, $request['subscribersTotal'], 'debug');
                     $progress->start();
 
                     $i = 0;
-                    while ($i++ < $request['qs']) {
+                    while ($i++ < $request['subscribersTotal']) {
 
                         // send message
-                        usleep(rand(100000, 1000000));
                         $progress->advance();
                     }
                     $progress->finish();
-                    $output->writeln(sprintf(self::DONE_PROCESS_DESCRIPTION, $data['list_id']));
+                    $progress->getMessage();
+
+                    $this->logOutput($output, sprintf(self::DONE_PROCESS_DESCRIPTION, $data['list_id']), " <bg=white;options=bold>%s</>");
                 }
             });
+
+            // remove waste processes from storage
+            $this->getStorageServiceManager()->removeQueue($queue['pid']);
         }
+
+        // final message
+        $this->logOutput($output, self::COMPLETE_ALL, "<fg=white;bg=magenta>%s</fg=white;bg=magenta>");
     }
 }

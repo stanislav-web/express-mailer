@@ -28,6 +28,7 @@ trait ProgressTrait {
     public function getProgress(\Symfony\Component\Console\Output\OutputInterface $output, $finish = 100, $format = 'normal') {
 
         $progress = new ProgressBar($output, $finish);
+        $progress->setProgressCharacter('ϟ');
         $progress->setFormat($format);
         $progress->setBarCharacter('<comment>=</comment>');
 

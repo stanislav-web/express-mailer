@@ -76,6 +76,17 @@ class StorageService {
     }
 
     /**
+     * Delete queue from storage
+     *
+     * @param int $pid process id
+     * @return int
+     */
+    public function removeQueue($pid) {
+
+        return $this->storage->removeQueue($pid);
+    }
+
+    /**
      * Get subscribers
      *
      * @param string $state subscriber status

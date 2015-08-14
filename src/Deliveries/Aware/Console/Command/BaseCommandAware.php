@@ -137,4 +137,23 @@ class BaseCommandAware extends Command {
 
         return new StorageService($this->getStorageInstance(self::getConfig()->Storage));
     }
+
+    /**
+     * Output with logging
+     *
+     * @param OutputInterface $output
+     * @param string          $message
+     * @param string          $format
+     */
+    protected function logOutput(OutputInterface $output, $message, $format = '') {
+
+        $this->logger()->info($message);
+
+        if(empty($format) === true) {
+            return $output->writeln($message);
+        }
+        else {
+            return $output->writeln(sprintf($format, $message));
+        }
+    }
 }
