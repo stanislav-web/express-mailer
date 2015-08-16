@@ -55,9 +55,10 @@ class Run extends BaseCommandAware {
     public static function getOptions() {
 
         return [
-            new InputOption('date', 'd', InputOption::VALUE_OPTIONAL, 'Queue start date', (new \DateTime())->format('Y-m-d')),
-            new InputOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Limit queue lists'),
-            new InputOption('subscribers', 's', InputOption::VALUE_OPTIONAL, 'Subscribers state', 'active'),
+            new InputOption('pid', null, InputOption::VALUE_OPTIONAL, 'Process identifier'),
+            new InputOption('date', null, InputOption::VALUE_OPTIONAL, 'Queue start date', (new \DateTime())->format('Y-m-d')),
+            new InputOption('limit', null, InputOption::VALUE_OPTIONAL, 'Limit queue lists'),
+            new InputOption('subscribers', null, InputOption::VALUE_OPTIONAL, 'Subscribers state', 'active'),
         ];
     }
 

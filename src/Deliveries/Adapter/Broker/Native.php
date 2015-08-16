@@ -123,7 +123,7 @@ class Native implements QueueProviderInterface {
         $queue = msg_get_queue($this->queuePid, $this->msgPermissions);
 
         // queue read content
-        while(msg_receive($queue, 1, $this->msgType, $this->msgMaxSize, $this->message, MSG_NOERROR)) {
+        while(msg_receive($queue, 1, $this->msgType, $this->msgMaxSize, $this->message, false, MSG_IPC_NOWAIT)) {
 
             // process this message
             $callback(json_decode($this->message, true));

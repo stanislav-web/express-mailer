@@ -22,12 +22,17 @@ class AppException extends BaseException {
     const TYPE = 'AppException';
 
     /**
+     * @const CODE exception code
+     */
+    const CODE = 500;
+
+    /**
      * Constructor
      *
      * @param string $message
      * @param int $code status code
      */
-    public function __construct($message, $code = null) {
+    public function __construct($message, $code = 'critical') {
         parent::__construct($message, $code);
     }
 }

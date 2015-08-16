@@ -226,7 +226,7 @@ class MySQL implements DataProviderInterface {
     /**
      * Save queue process in storage
      *
-     * @param int $pid
+     * @param int $pid process id
      * @param array $params additional insert params
      * @param datetime $date_activation
      * @param int $priority
@@ -250,7 +250,7 @@ class MySQL implements DataProviderInterface {
     /**
      * Remove queue
      *
-     * @param int $pid
+     * @param int $pid process id
      * @throws \Deliveries\Exceptions\StorageException
      * @return int
      */
@@ -266,20 +266,39 @@ class MySQL implements DataProviderInterface {
     }
 
     /**
+     * Get queue by process id
+     *
+     * @param int $pid process id
+     * @return array
+     */
+    public function getQueue($pid) {
+
+        $query = "SELECT * FROM ".$this->queueTable." queue
+                    WHERE `pid` = ".(int)$pid;
+
+        return $this->fetchAll($query);
+    }
+
+    /**
      * Get queues process from storage
      *
-     * @param string $date
+     * @param array $properties request properties
      * @param int $limit limit records
      * @return array
      */
-    public function getQueues($date = null, $limit = null) {
+    public function getQueues(array $properties = []) {
+
+        if(isset($properties['pid']) === true) {
+            // return queue by process id (limit 1)
+            return $this->getQueue($properties['pid']);
+        }
 
         $query = "SELECT * FROM ".$this->queueTable." queue
-                    WHERE `date_activation` >= '".$date."'
+                    WHERE `date_activation` >= '".$properties['date']."'
 	                ORDER BY queue.priority DESC";
 
-        if(is_null($limit) === false) {
-            $query .= " LIMIT ".(int)$limit;
+        if(isset($properties['limit']) === true) {
+            $query .= " LIMIT ".(int)$properties['limit'];
         }
 
         return $this->fetchAll($query);

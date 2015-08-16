@@ -78,19 +78,26 @@ interface DataProviderInterface {
     /**
      * Remove queue
      *
-     * @param int $pid
+     * @param int $pid process id
      * @return int
      */
     public function removeQueue($pid);
 
     /**
-     * Get queues process from storage
+     * Get queue by process id
      *
-     * @param string $date
-     * @param int $limit limit records
+     * @param int $pid process id
      * @return array
      */
-    public function getQueues($date = null, $limit = null);
+    public function getQueue($pid);
+
+    /**
+     * Get queues process from storage
+     *
+     * @param array $properties request properties
+     * @return array
+     */
+    public function getQueues(array $properties = []);
 
     /**
      * Count all subscribers

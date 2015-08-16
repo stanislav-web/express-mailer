@@ -17,21 +17,21 @@ trait TestTrait {
     /**
      * Mail Adapter instance
      *
-     * @var object $mailInstance
+     * @var \Deliveries\Aware\Adapter\Mail\MailProviderInterface $mailInstance
      */
     private $mailInstance;
 
     /**
      * Queue Adapter instance
      *
-     * @var object $queueInstance
+     * @var \Deliveries\Aware\Adapter\Broker\QueueProviderInterface $queueInstance
      */
     private $queueInstance;
 
     /**
      * Storage Adapter instance
      *
-     * @var object $storageInstance
+     * @var \Deliveries\Aware\Adapter\Storage\DataProviderInterface $storageInstance
      */
     private $storageInstance;
 
@@ -86,12 +86,15 @@ trait TestTrait {
 
             if(true === class_exists($Mail)) {
 
-                $this->mailInstance = (new $Mail())->connect($config);
+                $connect = (new $Mail())->connect($config);
 
-                if($this->mailInstance === false) {
+                if($connect === false) {
                     throw new \RuntimeException('Connection to mail server: '.$config["adapter"].' is not allow. Check configurations');
                 }
-                return $this->mailInstance;
+
+                $this->mailInstance = $connect->getInstance();
+
+                return $connect;
             }
             throw new \RuntimeException($config["adapter"]. ' mail adapter is not exist');
         }

@@ -16,7 +16,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 trait ProgressTrait {
 
-
     /**
      * Progress bar define
      *

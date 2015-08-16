@@ -92,6 +92,22 @@ trait FormatTrait {
     }
 
     /**
+     * Format array keys as format
+     *
+     * @param array $params
+     * @param string $format
+     */
+    protected function arrayKeysPlaceholders(array $params, $format = "{%s}") {
+
+        $result = [];
+        foreach($params as $key => $value) {
+            $result[sprintf($format, $key)] = $value;
+        }
+
+        return $result;
+    }
+
+    /**
      * Get short class name
      *
      * @param object $object any class instance

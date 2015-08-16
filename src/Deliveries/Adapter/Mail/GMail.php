@@ -2,6 +2,7 @@
 namespace Deliveries\Adapter\Mail;
 
 use Deliveries\Aware\Adapter\Mail\MailProviderInterface;
+use Deliveries\Exceptions\MailException;
 
 /**
  * GMail class. Google Mail connection client
@@ -32,20 +33,58 @@ class GMail implements MailProviderInterface {
     const DEFAULT_PROTOCOL = 'tls';
 
     /**
+     * Adapter config
+     *
+     * @var array $config
+     */
+    private $config = [];
+
+    /**
      * SMTP connection
      *
-     * @var \Swift_SmtpTransport $mailer
+     * @var \Swift_SmtpTransport $connect
+     */
+    private $connect;
+
+    /**
+     * Mailer
+     *
+     * @var \Swift_Mailer $mailer
      */
     protected $mailer;
 
     /**
-     * Get instance connection
+     * Message builder
      *
-     * @return \Swift_SmtpTransport
+     * @var \Swift_Message $message
+     */
+    protected $message;
+
+    /**
+     * Get instance of adapter
+     *
+     * @return \Deliveries\Aware\Adapter\Mail\MailProviderInterface
      */
     public function getInstance() {
-        return $this->mailer;
+
+        if(!$this->mailer) {
+            // create the Mailer using your created Transport
+            $this->mailer = \Swift_Mailer::newInstance($this->connect);
+        }
+
+        return $this;
     }
+
+    /**
+     * Get adapter configurations
+     *
+     * @return array
+     */
+    public function getConfig() {
+
+        return $this->config;
+    }
+
 
     /**
      * Connect to Mail server
@@ -56,18 +95,76 @@ class GMail implements MailProviderInterface {
      */
     public function connect(array $config) {
 
+        // save config
+        $this->config = $config;
+
         // Create the Transport
-        $this->mailer = new \Swift_SmtpTransport($config['server'], $config['port'],
-            (sizeof($config['secure']) > 0) ? $config['secure'] : null);
+        $this->connect = new \Swift_SmtpTransport($config['server'], $config['port'],
+            (count($config['secure']) > 0) ? $config['secure'] : null);
 
-        $this->mailer->setUsername($config['username']);
-        $this->mailer->setPassword($config['password']);
-        $this->mailer->start();
+        $this->connect->setUsername($config['username']);
+        $this->connect->setPassword($config['password']);
+        $this->connect->start();
 
-        if($this->mailer->isStarted() === false) {
+        if($this->connect->isStarted() === false) {
             throw new \RuntimeException('Mail connection failed! Check configurations');
         }
         return  $this;
 
+    }
+
+    /**
+     * Create message from config params
+     *
+     * @param       $subject
+     * @param       $message
+     * @param array $placeholders email message placeholders in body
+     *
+     */
+    public function createMessage($subject, $message, array $placeholders = []) {
+
+        if(isset($this->message) === false) {
+
+            $from = $this->getConfig()['from'];
+
+            // add decorator plugin to resolve messages placeholders
+            $decorator = new \Swift_Plugins_DecoratorPlugin($placeholders);
+            $this->mailer->registerPlugin($decorator);
+
+            // prepare message to transport
+            $this->message = \Swift_Message::newInstance();
+            $this->message->setFrom([$from['email'] => $from['name']]);
+            $this->message->setSubject($subject);
+            $this->message->setBody($message, 'text/html');
+            $this->message->setCharset('UTF-8');
+            $this->message->setPriority(1);
+        }
+    }
+
+    /**
+     * Send message to recipient
+     *
+     * @param array $recipient ['test@email.com' => 'TestName']
+     * @param string $subject
+     * @param string $message
+     * @param array $placeholders mail body variables
+     * @return int count of successfully
+     */
+    public function send(array $recipient, $subject, $message, array $placeholders = []) {
+
+        // create message if not exists
+        $this->createMessage($subject, $message, $placeholders);
+
+        // add recipient
+        $this->message->setTo($recipient['email']);
+
+        try {
+
+            // send message
+            return $this->mailer->send($this->message);
+        }
+        catch(\Exception $e) {
+            throw new MailException($e->getMessage());
+        }
     }
 }

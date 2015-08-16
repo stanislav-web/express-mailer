@@ -56,9 +56,10 @@ class AppServiceManager {
      */
     public function __construct(DataProviderInterface $storage, MailProviderInterface $mail, QueueProviderInterface $queue) {
 
-        $this->queueInstance = $queue;
-        $this->mailInstance = $mail;
         $this->storageInstance = $storage;
+        $this->mailInstance = $mail;
+        $this->queueInstance = $queue;
+
     }
 
     /**
@@ -144,12 +145,29 @@ class AppServiceManager {
 
             // get queues & subscribers
             $callback([
-                'queues'         =>  $this->storageInstance->getQueues($options['date'], $options['limit']),
+                'queues'         =>  $this->storageInstance->getQueues($options),
                 'subscribers'    =>  $this->storageInstance->getSubscribers($options['subscribers'])
             ]);
         }
         catch(\RuntimeException $e) {
             throw new \Exception($e->getMessage());
         }
+    }
+
+    /**
+     * Send message to recipient
+     *
+     * @param array $recipient ['test@email.com' => 'TestName']
+     * @param array $msg message params with placeholders
+     *
+     * @return int count of successfully
+     */
+    public function sendMessage(array $recipient, array $msg) {
+
+        // formatting mail data placeholders for put into message body
+        $placeholders = $this->arrayKeysPlaceholders(array_merge($recipient, $msg));
+
+        // send message to recipient
+        return $this->mailInstance->send($recipient, $msg['subject'], $msg['message'], $placeholders);
     }
 }

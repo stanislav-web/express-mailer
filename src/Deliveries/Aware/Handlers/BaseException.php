@@ -15,9 +15,9 @@ namespace Deliveries\Aware\Handlers;
 class BaseException extends \RuntimeException {
 
     /**
-     * @const TYPE default
+     * @const DELIMITER default
      */
-    const TYPE = '';
+    const DELIMITER = ' : ';
 
     /**
      * Constructor
@@ -27,11 +27,11 @@ class BaseException extends \RuntimeException {
      */
     public function __construct($message, $code) {
 
-        // save an exception to log
-        (new Logger())->{$code}($message, [
-            'exception' =>  static::TYPE // use as late state binding
-        ]);
+        $message = static::TYPE.self::DELIMITER.$message; // use as late state binding
 
-        parent::__construct($message, null);
+        // save an exception to log
+        (new Logger())->{$code}($message);
+
+        parent::__construct($message, static::CODE);
     }
 }

@@ -40,7 +40,7 @@ class Process extends BaseCommandAware {
      *
      * @const START_PROCESS_DESCRIPTION
      */
-    const START_PROCESS_DESCRIPTION = 'Start process #%d';
+    const START_PROCESS_DESCRIPTION = 'Start process #%d / %d mail receivers';
 
     /**
      * Send list format message
@@ -102,15 +102,12 @@ class Process extends BaseCommandAware {
 
         foreach($request['queues'] as $queue) {
 
-            $this->logOutput($output, sprintf(self::START_PROCESS_DESCRIPTION, $queue['pid']), "<bg=white;options=bold>%s</>");
+            $this->logOutput($output, sprintf(self::START_PROCESS_DESCRIPTION, $queue['pid'], $request['subscribersTotal']), "<bg=white;options=bold>%s</>");
 
             // get queue by process id
             $this->getAppServiceManager()->getQueueData($queue['pid'], function($processData) use ($output, $request) {
 
                 foreach($processData as $data) {
-
-                    // start to send list
-                    $this->logOutput($output, sprintf(self::SEND_PROCESS_DESCRIPTION, $data['list_id']));
 
                     // create progress instance with total of subscribers
                     $progress = $this->getProgress($output, $request['subscribersTotal'], 'debug');
@@ -120,6 +117,8 @@ class Process extends BaseCommandAware {
                     while ($i++ < $request['subscribersTotal']) {
 
                         // send message
+                        $this->getAppServiceManager()->sendMessage($request['subscribers'][$i], $data);
+
                         $progress->advance();
                     }
                     $progress->finish();
