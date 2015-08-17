@@ -59,6 +59,18 @@ class Migrations extends BaseCommandAware {
     const SUCCESS = 'Data imported successfully to %s';
 
     /**
+     * Prompt string formatter
+     *
+     * @var array $prompt
+     */
+    private $prompt = [
+        'STORAGE_TABLE_PREFIX_TYPE' =>  "<info>Please type import %s tables prefix (default `%s`):</info> ",
+        'STORAGE_IMPORT_SUCCESS'    =>  "<fg=white;bg=magenta>Data imported successfully to %s</fg=white;bg=magenta>",
+        'STORAGE_DATA_WARNING'      =>  "<comment>Some of the data is already imported into your base.</comment>\n",
+        'STORAGE_DATA_OVERWRITE'    =>  "<question>Do you want to continue? This action will overwrite the already previously imported table?:</question> [<comment>no/yes</comment>] ",
+    ];
+
+    /**
      * Migration files path
      *
      * @var string $migrationFilesPath
@@ -102,7 +114,7 @@ class Migrations extends BaseCommandAware {
         // checking connection
         if($this->isStorageConnectSuccess($this->getConfig())) {
 
-            $prefix = $this->getPrompt('<info>Please type import '.$this->getConfig()['adapter'].' tables prefix (default `'.self::DEFAULT_PREFIX.'`):</info> ', $input, $output,
+            $prefix = $this->getPrompt(sprintf($this->prompt['STORAGE_TABLE_PREFIX_TYPE'], $this->getConfig()['adapter'], self::DEFAULT_PREFIX), $input, $output,
                 function($answer) {
 
                     if(empty($answer) === true) {
@@ -124,11 +136,9 @@ class Migrations extends BaseCommandAware {
         $this->addToConfig(null, ['Storage' => ['prefix' => $prefix]]);
         $this->import($output, $prefix);
 
-        $this->logger()->info(sprintf(self::SUCCESS, $this->getConfig()['adapter']));
-
-        $output->writeln(
-            "<fg=white;bg=magenta>".sprintf(self::SUCCESS, $this->getConfig()['adapter'])."</fg=white;bg=magenta>"
-        );
+        $message = sprintf($this->prompt['STORAGE_IMPORT_SUCCESS'], $this->getConfig()['adapter']);
+        $this->logger()->info($message);
+        $output->writeln($message);
     }
 
     /**
@@ -161,16 +171,17 @@ class Migrations extends BaseCommandAware {
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @throws \InvalidArgumentException
      * @return bool
      */
     private function cautionDialog(InputInterface $input, OutputInterface $output) {
 
         $helper = $this->getHelper('question');
 
-        $question = new Question(array(
-            "<comment>Some of the data is already imported into your base.</comment>\n",
-            "<question>Do you want to continue? This action will overwrite the already previously imported table?:</question> [<comment>no/yes</comment>] ",
-        ));
+        $question = new Question([
+            sprintf($this->prompt['STORAGE_DATA_WARNING']),
+            sprintf($this->prompt['STORAGE_DATA_OVERWRITE'])
+        ]);
 
         $question->setValidator(function($typeInput) {
             if (!in_array($typeInput, array('no', 'yes'))) {
@@ -195,7 +206,8 @@ class Migrations extends BaseCommandAware {
 
         if(empty($this->migrationFiles) === false) {
 
-            $db = $this->getStorageServiceManager();
+            $sm = $this->getAppServiceManager();
+
             asort($this->migrationFiles);
 
             foreach($this->migrationFiles as $file) {
@@ -205,7 +217,7 @@ class Migrations extends BaseCommandAware {
                 foreach($commands as $query) {
 
                     // Import query
-                    $db->importTables($query);
+                    $sm->importTables($query);
 
                 }
             }

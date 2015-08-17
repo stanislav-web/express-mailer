@@ -8,7 +8,7 @@ use Deliveries\Aware\Console\Command\BaseCommandAware;
 use Deliveries\Aware\Helpers\ProgressTrait;
 
 /**
- * Process class. Application Process mailing
+ * Check class. Application checking command
  *
  * @package Deliveries
  * @subpackage Deliveries\Console\Command
@@ -16,23 +16,23 @@ use Deliveries\Aware\Helpers\ProgressTrait;
  * @version 1.0
  * @author Stanislav WEB | Lugansk <stanisov@gmail.com>
  * @copyright Stanislav WEB
- * @filesource /Deliveries/Console/Command/Process.php
+ * @filesource /Deliveries/Console/Command/Check.php
  */
-class Process extends BaseCommandAware {
+class Check extends BaseCommandAware {
 
     /**
      * Command name
      *
      * @const NAME
      */
-    const NAME = 'process';
+    const NAME = 'check';
 
     /**
      * Command description
      *
      * @const DESCRIPTION
      */
-    const DESCRIPTION = 'Process mailing';
+    const DESCRIPTION = 'Checking tool';
 
     /**
      * Prompt string formatter
@@ -56,10 +56,8 @@ class Process extends BaseCommandAware {
     {
 
         return [
-            new InputOption('queues', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Queues'),
-            new InputOption('subscribers', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Subscribers'),
-            new InputOption('queueTotal', null, InputOption::VALUE_REQUIRED, 'Queues counter'),
-            new InputOption('subscribersTotal', null, InputOption::VALUE_REQUIRED, 'Subscribers count')
+            new InputOption('queues', null, InputOption::VALUE_OPTIONAL, 'Queues'),
+            new InputOption('subscribers', null, InputOption::VALUE_OPTIONAL, 'Subscribers'),
         ];
     }
 

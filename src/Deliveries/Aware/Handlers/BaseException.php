@@ -25,7 +25,7 @@ class BaseException extends \RuntimeException {
      * @param string $message If no message is given default from child
      * @param string $code Status code, default from child
      */
-    public function __construct($message, $code) {
+    public function __construct($message = null, $code = null) {
 
         $message = static::TYPE.self::DELIMITER.$message; // use as late state binding
 

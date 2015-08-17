@@ -9,8 +9,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Deliveries\Aware\Helpers\TestTrait;
 use Deliveries\Aware\Helpers\FileSysTrait;
-use Deliveries\Service\StorageService;
-use Deliveries\Aware\Service\AppServiceManager;
+use Deliveries\Service\AppServiceManager;
 use Deliveries\Aware\Handlers\Logger;
 
 /**
@@ -108,7 +107,7 @@ class BaseCommandAware extends Command {
     /**
      * Get ServiceManager
      *
-     * @return \Deliveries\Aware\Service\AppServiceManager
+     * @return \Deliveries\Service\AppServiceManager
      */
     protected function getAppServiceManager() {
 
@@ -127,15 +126,6 @@ class BaseCommandAware extends Command {
      */
     protected function logger() {
         return new Logger();
-    }
-    /**
-     * Get Storage service
-     *
-     * @return \Deliveries\Service\StorageService
-     */
-    protected function getStorageServiceManager() {
-
-        return new StorageService($this->getStorageInstance(self::getConfig()->Storage));
     }
 
     /**

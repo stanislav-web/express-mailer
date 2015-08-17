@@ -4,7 +4,7 @@ namespace Deliveries\Exceptions;
 use Deliveries\Aware\Handlers\BaseException;
 
 /**
- * MailException class. Storage exception class
+ * MailException class. Mail exception class
  *
  * @package Deliveries
  * @subpackage Deliveries\Exceptions

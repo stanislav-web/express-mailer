@@ -19,6 +19,20 @@ use Deliveries\Aware\Helpers\FileSysTrait;
 class Logger extends LogLevel implements LoggerInterface {
 
     /**
+     * Default date format
+     *
+     * @const DEFAULT_DATE_FORMAT
+     */
+    const DEFAULT_DATE_FORMAT = 'Y-m-d H:i:s';
+
+    /**
+     * Default log record format
+     *
+     * @const DEFAULT_LOG_FORMAT
+     */
+    const DEFAULT_LOG_FORMAT = '[date][level] message';
+
+    /**
      * use logger trait
      */
     use FileSysTrait;

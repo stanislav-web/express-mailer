@@ -40,6 +40,17 @@ class Statistics extends BaseCommandAware {
      */
     const DESCRIPTION = 'Statistics tool';
 
+    /**
+     * Prompt string formatter
+     *
+     * @var array $prompt
+     */
+    private $prompt = [
+        'REPORT_SUBSCRIBERS'        =>  "Reports subscribers",
+        'REPORT_MAILINGS'           =>  "Reports mailings",
+        'REPORT_ACTIVITY'           =>  "Tail activity mail log"
+    ];
+
     use FormatTrait;
 
     /**
@@ -50,9 +61,9 @@ class Statistics extends BaseCommandAware {
     public static function getOptions() {
 
         return [
-            new InputOption('subscribers', 's', InputOption::VALUE_NONE, 'Show subscribers reports'),
-            new InputOption('mailings', 'm', InputOption::VALUE_NONE, 'Show mailings reports'),
-            new InputOption('active', 'a', InputOption::VALUE_NONE, 'Show active mail stats'),
+            new InputOption('subscribers', null, InputOption::VALUE_NONE, 'Show subscribers reports'),
+            new InputOption('mailings', null, InputOption::VALUE_NONE, 'Show mailings reports'),
+            new InputOption('active', null, InputOption::VALUE_NONE, 'Show active mail stats'),
         ];
     }
 
@@ -86,34 +97,34 @@ class Statistics extends BaseCommandAware {
         if ($input->getOption('subscribers')) {
             // throw subscribers stats
             $this->table($output,[
-                'Reports subscribers' => $this->getStorageServiceManager()->getSubscribersReports()
+                $this->prompt['REPORT_SUBSCRIBERS'] => $this->getAppServiceManager()->getSubscribersReports()
             ]);
         }
         else if ($input->getOption('mailings')) {
             // throw deliveries stats
             $this->table($output,[
-                'Reports mailings' => $this->getStorageServiceManager()->getMailingsReports()
+                $this->prompt['REPORT_MAILINGS'] => $this->getAppServiceManager()->getMailingsReports()
             ]);
         }
         else if ($input->getOption('active')) {
             // throw active mailing stats
             $this->tableLong($output,[
-                'Tail activity mail log' => $this->getStorageServiceManager()->getActiveMailStatistics()
+                $this->prompt['REPORT_ACTIVITY'] => $this->getAppServiceManager()->getActiveMailStatistics()
             ]);
         }
         else {
 
             // throw subscribers stats
             $this->table($output,[
-                'Reports subscribers' => $this->getStorageServiceManager()->getSubscribersReports()
+                $this->prompt['REPORT_SUBSCRIBERS'] => $this->getAppServiceManager()->getSubscribersReports()
             ]);
             // throw deliveries stats
             $this->table($output,[
-                'Reports mailings' => $this->getStorageServiceManager()->getMailingsReports()
+                $this->prompt['REPORT_MAILINGS'] => $this->getAppServiceManager()->getMailingsReports()
             ]);
             // throw active mailing stats
             $this->tableLong($output,[
-                'Tail activity mail log' => $this->getStorageServiceManager()->getActiveMailStatistics()
+                $this->prompt['REPORT_ACTIVITY'] => $this->getAppServiceManager()->getActiveMailStatistics()
             ]);
         }
     }

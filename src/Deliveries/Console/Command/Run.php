@@ -43,9 +43,16 @@ class Run extends BaseCommandAware {
     const DESCRIPTION = 'Run submissions from queue';
 
     /**
-     * @const NOT_FOUND command not found
+     * Prompt string formatter
+     *
+     * @var array $prompt
      */
-    const NOT_FOUND = 'No active queues fond';
+    private $prompt = [
+        'MAILINGS_PROCESSES'        =>  "<comment>Prepare process mailings: %d</comment>\n",
+        'MAILINGS_SUBSCRIBERS'      =>  "<comment>Prepare subscribers : %d</comment>\n",
+        'MAILINGS_LETTERS'          =>  "<comment>Prepare letters to send : %d</comment>\n",
+        'QUEUES_NOT_FOUND'          =>  "<comment>No active queues fond</comment>"
+    ];
 
     /**
      * Get command additional options
@@ -90,9 +97,9 @@ class Run extends BaseCommandAware {
                 $mailsTotal = ($subscribersTotal * $queueTotal);
 
                 $output->writeln(
-                    "<comment>Prepare process mailings: ".$queueTotal."</comment>\n".
-                    "<comment>Prepare subscribers : ".$subscribersTotal."</comment>\n".
-                    "<comment>Prepare letters to send : ".$mailsTotal."</comment>\n".
+                    sprintf($this->prompt['MAILINGS_PROCESSES'], $queueTotal).
+                    sprintf($this->prompt['MAILINGS_SUBSCRIBERS'], $subscribersTotal).
+                    sprintf($this->prompt['MAILINGS_LETTERS'], $mailsTotal).
                     "---------------------------------------------------"
                 );
 
@@ -111,7 +118,7 @@ class Run extends BaseCommandAware {
                 );
             }
             else {
-                $output->writeln('<comment>'.self::NOT_FOUND.'</comment>');
+                $output->writeln(sprintf($this->prompt['QUEUES_NOT_FOUND']));
             }
         });
     }

@@ -10,6 +10,7 @@ use Deliveries\Aware\Console\Command\BaseCommandAware;
 use Deliveries\Aware\Helpers\FileSysTrait;
 use Deliveries\Aware\Helpers\FormatTrait;
 use Deliveries\Aware\Helpers\ProgressTrait;
+use Deliveries\Aware\Handlers\Logger;
 
 /**
  * Init class. Application Init command
@@ -46,6 +47,42 @@ class Init extends BaseCommandAware {
     const DESCRIPTION = 'Create default package configurations';
 
     /**
+     * Prompt string formatter
+     *
+     * @var array $prompt
+     */
+    private $prompt = [
+        'CONFIG_ALREADY_INIT'       =>  "<comment>Config is already initialized in %s</comment>\n",
+        'CONFIG_OVERWRITE'          =>  "<question>Do you want to overwrite it?:</question> [<comment>no/yes</comment>] ",
+        'CONFIG_SAVE'               =>  "<question>Do you want to save your configurations?:</question> [<comment>no/yes</comment>] ",
+        'CONFIG_CREATED'            =>  "Initializing config file in %s ",
+        'QUEUE_ADAPTER_SELECT'      =>  "<info>Please select queue broker for handling:</info> ",
+        'QUEUE_HOST_TYPE'           =>  "<info>Please type Queue server IP (default %s):</info> ",
+        'QUEUE_PORT_TYPE'           =>  "<info>Please type Queue server port (default %s):</info> ",
+        'QUEUE_TIMEOUT_TYPE'        =>  "<info>Please type Queue server connection timeout (default %d):</info> ",
+        'QUEUE_IS_PERSISTENT'       =>  "<info>Do you want to use a persistent connection to %s? (default %s):</info> ",
+        'QUEUE_LOGIN_TYPE'          =>  "<info>Please type Queue user login:</info> ",
+        'QUEUE_PASSWORD_TYPE'       =>  "<info>Please type Queue user password:</info> ",
+        'STORAGE_ADAPTER_SELECT'    =>  "<info>Please select storage adapter for handling:</info> ",
+        'STORAGE_HOST_TYPE'         =>  "<info>Please type %s host (default %s):</info> ",
+        'STORAGE_PORT_TYPE'         =>  "<info>Please type %s port (default %d):</info> ",
+        'STORAGE_DB_NAME_TYPE'      =>  "<info>Please type %s database name:</info> ",
+        'STORAGE_DB_USER_TYPE'      =>  "<info>Please type %s username:</info> ",
+        'STORAGE_DB_PASSWORD_TYPE'  =>  "<info>Please type %s user password:</info> ",
+        'MAIL_ADAPTER_SELECT'       =>  "<info>Please select mail adapter for handling:</info> ",
+        'MAIL_HOST_TYPE'            =>  "<info>Please type %s smtp host (default %s):</info> ",
+        'MAIL_PORT_TYPE'            =>  "<info>Please type SMTP port for %s (default %d):</info> ",
+        'MAIL_SOCKET_TYPE'          =>  "<info>Please type SMTP socket (ssl/tls) for %s (default %s):</info> ",
+        'MAIL_AUTH_USER_TYPE'       =>  "<info>Please type %s username:</info> ",
+        'MAIL_AUTH_PASSWORD_TYPE'   =>  "<info>Please type %s user password:</info> ",
+        'MAIL_FROM_NAME_TYPE'       =>  "<info>Please type sender name (from):</info> ",
+        'MAIL_FROM_EMAIL_TYPE'      =>  "<info>Please type sender email (from):</info> ",
+        'LOGGER_FILE_TYPE'          =>  "<info>Please type the logger file destination path:</info> ",
+        'LOGGER_DATE_FORMAT_TYPE'   =>  "<info>Please type Logger date format (default %s):</info> ",
+        'LOGGER_RECORD_FORMAT_TYPE' =>  "<info>Please type Logger record format (default %s):</info> ",
+    ];
+
+    /**
      * Assign CLI helpers
      */
     use FileSysTrait, ProgressTrait, FormatTrait;
@@ -55,6 +92,7 @@ class Init extends BaseCommandAware {
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @throws \RuntimeException
      */
     public function execute(InputInterface $input, OutputInterface $output) {
 
@@ -69,43 +107,36 @@ class Init extends BaseCommandAware {
 
             $configContent = $this->getConfigContent($input, $output);
 
-            $progress = $this->getProgress($output, 100);
+            if (file_exists($configFile) === false) {
 
-            sleep(1);
-
-            $i = 0;
-            while ($i++ < 100) {
-
-                if (file_exists($configFile) === false) {
-                    $progress->advance();
-                }
-                else {
-                    $progress->finish();
-                    break;
-                }
-
-                // Test Queue connect
+                // test Queue connect
                 if($this->isQueueConnectSuccess($configContent['Broker'])
-                    // Test Storage connect
+                    // test Storage connect
                     && $this->isStorageConnectSuccess($configContent['Storage'])
-                        // Test mail client connect
-                        && $this->isMailConnectSuccess($configContent['Mail'])) {
+                    // test mail client connect
+                    && $this->isMailConnectSuccess($configContent['Mail'])) {
 
-                        // Confirm dialog to prepare save input data
-                        if($this->isConfigOk($configContent, $input, $output)) {
+                    // confirm dialog to prepare save input data
+                    if($this->isConfigOk($configContent, $input, $output)) {
 
-                            // Create config file
-                            $this->createConfigFile($configFile, $configContent);
+                        // create config file
+                        $isCreate = $this->createConfigFile($configFile, $configContent);
 
-                            // Run migration command
+                        if($isCreate > 0) {
+                            $this->logger()->info(sprintf($this->prompt['CONFIG_CREATED'], $configFile));
+                            $output->writeln("<fg=white;bg=magenta>".sprintf($this->prompt['CONFIG_CREATED'], $configFile)."</fg=white;bg=magenta>");
+
+                            sleep(1);
+
+                            // run migration command
                             $this->migrationRunner();
                         }
+                        else {
+                            throw new \RuntimeException('Create config failed!');
+                        }
+                    }
                 }
             }
-
-            $output->writeln(
-                "\n<fg=white;bg=magenta>Initializing config file in " . $configFile . "</fg=white;bg=magenta>"
-            );
         }
         return;
     }
@@ -149,8 +180,8 @@ class Init extends BaseCommandAware {
          // create mail configurations
         $this->createMailConfigurations($config,$input, $output);
 
-        //@todo create log configurations
-        $this->createLogConfigurations($config,$input, $output);
+        // create logger configurations
+        $this->createLoggerConfigurations($config,$input, $output);
 
         return $config;
     }
@@ -180,6 +211,7 @@ class Init extends BaseCommandAware {
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @param boolean $skip
+     * @throws \InvalidArgumentException
      * @return int|null|void
      */
     private function rebuildConfig($configFile, $input, $output) {
@@ -187,8 +219,8 @@ class Init extends BaseCommandAware {
         $helper = $this->getHelper('question');
 
         $question = new Question([
-            "<comment>Config is already initialized $configFile</comment>\n",
-            "<question>Do you want to overwrite it?:</question> [<comment>no/yes</comment>] ",
+            sprintf($this->prompt['CONFIG_ALREADY_INIT'],$configFile),
+            sprintf($this->prompt['CONFIG_OVERWRITE']),
         ]);
 
         $question->setValidator(function($typeInput) {
@@ -214,18 +246,19 @@ class Init extends BaseCommandAware {
     /**
      * Draw results for prepare saving
      *
-     * @param $configContent
+     * @param array $configContent
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @throws \InvalidArgumentException
      * @return boolean
      */
-    private function isConfigOk($configContent, $input, $output) {
+    private function isConfigOk(array $configContent, $input, $output) {
 
         $this->table($output, $configContent);
 
         $helper = $this->getHelper('question');
 
-        $question = new Question("<question>Do you want to save your configurations?:</question> [<comment>no/yes</comment>] ");
+        $question = new Question(sprintf($this->prompt['CONFIG_SAVE']));
 
         $question->setValidator(function($typeInput) {
             if (!in_array($typeInput, ['no', 'yes'])) {
@@ -244,15 +277,16 @@ class Init extends BaseCommandAware {
     }
 
     /**
-     * Create Broker configurations
+     * Create queue Broker configurations
      *
-     * @param $config
+     * @param array $config
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @throws \RuntimeException
      */
     private function createBrokerConfigurations(&$config, $input, $output) {
 
-        $config['Broker']['adapter'] = $this->getPrompt('<info>Please select queue broker for handling:</info> ', $input, $output,
+        $config['Broker']['adapter']    = $this->getPrompt(sprintf($this->prompt['QUEUE_ADAPTER_SELECT']), $input, $output,
             function($answer) {
 
                 $queues = $this->getReserved('Broker');
@@ -269,7 +303,7 @@ class Init extends BaseCommandAware {
 
         if($config['Broker']['adapter'] != 'Native') {
 
-            $config['Broker']['host'] = $this->getPrompt('<info>Please type Queue server IP (default '.$broker::DEFAULT_HOST.'):</info> ', $input, $output,
+            $config['Broker']['host']       = $this->getPrompt(sprintf($this->prompt['QUEUE_HOST_TYPE'], $broker::DEFAULT_HOST), $input, $output,
                 function($answer) use ($config, $broker) {
 
                     if(empty($answer) === true) {
@@ -284,8 +318,7 @@ class Init extends BaseCommandAware {
                     return $answer;
                 }
             );
-
-            $config['Broker']['port'] = $this->getPrompt('<info>Please type AMQP server port (default '.$broker::DEFAULT_PORT.'):</info> ', $input, $output,
+            $config['Broker']['port']       = $this->getPrompt(sprintf($this->prompt['QUEUE_PORT_TYPE'], $broker::DEFAULT_PORT), $input, $output,
                 function($answer) use ($config, $broker) {
 
                     if(empty($answer) === true) {
@@ -300,8 +333,7 @@ class Init extends BaseCommandAware {
                     return (int)$answer;
                 }
             );
-
-            $config['Broker']['timeout'] = $this->getPrompt('<info>Please type AMQP server connection timeout (default '.$broker::DEFAULT_TIMEOUT.'):</info> ', $input, $output,
+            $config['Broker']['timeout']    = $this->getPrompt(sprintf($this->prompt['QUEUE_TIMEOUT_TYPE'], $broker::DEFAULT_TIMEOUT), $input, $output,
                 function($answer) use ($config, $broker) {
 
                     if(empty($answer) === true) {
@@ -316,8 +348,7 @@ class Init extends BaseCommandAware {
                     return (int)$answer;
                 }
             );
-
-            $config['Broker']['persistent'] = $this->getPrompt('<info>Do you want to use a persistent connection to '.$config['Broker']['adapter'].'? (default "'.$broker::DEFAULT_IS_PERSISTENT.'"):</info> ', $input, $output,
+            $config['Broker']['persistent'] = $this->getPrompt(sprintf($this->prompt['QUEUE_IS_PERSISTENT'], $config['Broker']['adapter'], $broker::DEFAULT_IS_PERSISTENT), $input, $output,
                 function($answer) use ($config, $broker) {
 
                     if(empty($answer) === true) {
@@ -332,22 +363,24 @@ class Init extends BaseCommandAware {
                     return (int)$answer;
                 }
             );
+            $config['Broker']['login']      = $this->getPrompt(sprintf($this->prompt['QUEUE_LOGIN_TYPE']), $input, $output, null, true);
+            $config['Broker']['password']   = $this->getPrompt(sprintf($this->prompt['QUEUE_PASSWORD_TYPE']), $input, $output, null, true);
 
-            $config['Broker']['login'] = $this->getPrompt('<info>Please type Queue user login:</info> ', $input, $output, null, true);
-            $config['Broker']['password'] = $this->getPrompt('<info>Please type Queue user password:</info> ', $input, $output, null, true);
         }
+
     }
 
     /**
      * Create Storage configurations
      *
-     * @param $config
+     * @param array $config
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @throws \RuntimeException
      */
     private function createStorageConfigurations(&$config, $input, $output) {
 
-        $config['Storage']['adapter'] = $this->getPrompt('<info>Please select storage adapter for handling:</info> ', $input, $output,
+        $config['Storage']['adapter']   = $this->getPrompt(sprintf($this->prompt['STORAGE_ADAPTER_SELECT']), $input, $output,
             function($answer) {
                 $storages = $this->getReserved('Storage');
                 if(array_search(strtolower($answer), array_map('strtolower', $storages)) === false) {
@@ -360,7 +393,7 @@ class Init extends BaseCommandAware {
 
         $storage = 'Deliveries\Adapter\Storage\\'.$config['Storage']['adapter'];
 
-        $config['Storage']['host'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' host (default '.$storage::DEFAULT_HOST.'):</info> ', $input, $output,
+        $config['Storage']['host']      = $this->getPrompt(sprintf($this->prompt['STORAGE_HOST_TYPE'], $config['Storage']['adapter'], $storage::DEFAULT_HOST), $input, $output,
             function($answer) use ($config, $storage) {
 
                 if(empty($answer) === true) {
@@ -373,8 +406,7 @@ class Init extends BaseCommandAware {
                 }
                 return $answer;
             });
-
-        $config['Storage']['port'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' port (default '.$storage::DEFAULT_PORT.'):</info> ', $input, $output,
+        $config['Storage']['port']      = $this->getPrompt(sprintf($this->prompt['STORAGE_PORT_TYPE'], $config['Storage']['adapter'], $storage::DEFAULT_PORT), $input, $output,
             function($answer) use ($config, $storage) {
 
                 if(empty($answer) === true) {
@@ -388,21 +420,23 @@ class Init extends BaseCommandAware {
                 }
                 return (int)$answer;
             });
-        $config['Storage']['db'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' database name:</info> ', $input, $output, null);
-        $config['Storage']['username'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' username:</info> ', $input, $output, null);
-        $config['Storage']['password'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' user password:</info> ', $input, $output, null, true);
+        $config['Storage']['db']        = $this->getPrompt(sprintf($this->prompt['STORAGE_DB_NAME_TYPE'], $config['Storage']['adapter']), $input, $output, null);
+        $config['Storage']['username']  = $this->getPrompt(sprintf($this->prompt['STORAGE_DB_USER_TYPE'], $config['Storage']['adapter']), $input, $output, null);
+        $config['Storage']['password']  = $this->getPrompt(sprintf($this->prompt['STORAGE_DB_PASSWORD_TYPE'], $config['Storage']['adapter']), $input, $output, null, true);
+
     }
 
     /**
      * Create Mail configurations
      *
-     * @param $config
+     * @param array $config
      * @param InputInterface  $input
      * @param OutputInterface $output
+     * @throws \RuntimeException
      */
     private function createMailConfigurations(&$config, $input, $output) {
 
-        $config['Mail']['adapter'] = $this->getPrompt('<info>Please select mail adapter for handling:</info> ', $input, $output,
+        $config['Mail']['adapter'] = $this->getPrompt(sprintf($this->prompt['MAIL_ADAPTER_SELECT']), $input, $output,
             function($answer) {
 
                 $mails = $this->getReserved('Mail');
@@ -417,7 +451,7 @@ class Init extends BaseCommandAware {
 
         $mail = 'Deliveries\Adapter\Mail\\'.$config['Mail']['adapter'];
 
-        $config['Mail']['server'] = $this->getPrompt('<info>Please type '.$config['Mail']['adapter'].' smtp host (default '.$mail::DEFAULT_HOST.'):</info> ', $input, $output,
+        $config['Mail']['server']       = $this->getPrompt(sprintf($this->prompt['MAIL_HOST_TYPE'], $config['Mail']['adapter'], $mail::DEFAULT_HOST), $input, $output,
             function($answer) use ($config, $mail) {
 
                 if(empty($answer) === true) {
@@ -432,8 +466,7 @@ class Init extends BaseCommandAware {
                 return $answer;
             }
         );
-
-        $config['Mail']['port'] = $this->getPrompt('<info>Please type SMTP port for '.$config['Mail']['server'].' (default '.$mail::DEFAULT_PORT.'):</info> ', $input, $output,
+        $config['Mail']['port']         = $this->getPrompt(sprintf($this->prompt['MAIL_PORT_TYPE'], $config['Mail']['server'], $mail::DEFAULT_PORT), $input, $output,
 
             function($answer) use ($mail) {
 
@@ -449,8 +482,7 @@ class Init extends BaseCommandAware {
                 return (int)$answer;
             }
         );
-
-        $config['Mail']['secure'] = $this->getPrompt('<info>Please type SMTP Secure (ssl/tls) for '.$config['Mail']['adapter'].' (default '.$mail::DEFAULT_PROTOCOL.'):</info> ', $input, $output,
+        $config['Mail']['socket']       = $this->getPrompt(sprintf($this->prompt['MAIL_SOCKET_TYPE'], $config['Mail']['adapter'], $mail::DEFAULT_SOCKET), $input, $output,
 
             function($answer) use ($mail) {
 
@@ -466,16 +498,14 @@ class Init extends BaseCommandAware {
                 return (int)$answer;
             }
         );
-
-        $config['Mail']['username'] = $this->getPrompt('<info>Please type '.$config['Mail']['server'].' username:</info> ', $input, $output, null);
-        $config['Mail']['password'] = $this->getPrompt('<info>Please type '.$config['Mail']['server'].' user password:</info> ', $input, $output, null, true);
-
-        $config['Mail']['from']['name'] = $this->getPrompt('<info>Please type sender name:</info> ', $input, $output);
-        $config['Mail']['from']['email'] = $this->getPrompt('<info>Please type sender email:</info> ', $input, $output,
+        $config['Mail']['username']     = $this->getPrompt(sprintf($this->prompt['MAIL_AUTH_USER_TYPE'], $config['Mail']['server']), $input, $output, null);
+        $config['Mail']['password']     = $this->getPrompt(sprintf($this->prompt['MAIL_AUTH_PASSWORD_TYPE'], $config['Mail']['server']), $input, $output, null, true);
+        $config['Mail']['fromName']     = $this->getPrompt(sprintf($this->prompt['MAIL_FROM_NAME_TYPE']), $input, $output);
+        $config['Mail']['fromEmail']    = $this->getPrompt(sprintf($this->prompt['MAIL_FROM_EMAIL_TYPE']), $input, $output,
 
             function($answer)  {
 
-                if(filter_var($answer, FILTER_VALIDATE_EMAILA) === false) {
+                if(filter_var($answer, FILTER_VALIDATE_EMAIL) === false) {
                     throw new \RuntimeException(
                         'Please, type a valid sender email'
                     );
@@ -483,5 +513,39 @@ class Init extends BaseCommandAware {
                 return $answer;
             }
         );
+
+    }
+
+    /**
+     * Create Log configurations
+     *
+     * @param array $config
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    private function createLoggerConfigurations(&$config, $input, $output) {
+
+        $config['Logger']['logFile'] = $this->getPrompt(sprintf($this->prompt['LOGGER_FILE_TYPE']), $input, $output, null);
+        $config['Logger']['logDateFormat'] = $this->getPrompt(sprintf($this->prompt['LOGGER_DATE_FORMAT_TYPE'], Logger::DEFAULT_DATE_FORMAT), $input, $output,
+
+            function($answer) {
+
+                if(empty($answer) === true) {
+                    return Logger::DEFAULT_DATE_FORMAT;
+                }
+                return $answer;
+            }
+        );
+        $config['Logger']['LogFormat'] = $this->getPrompt(sprintf($this->prompt['LOGGER_RECORD_FORMAT_TYPE'], Logger::DEFAULT_LOG_FORMAT), $input, $output,
+
+            function($answer) {
+
+                if(empty($answer) === true) {
+                    return Logger::DEFAULT_LOG_FORMAT;
+                }
+                return $answer;
+            }
+        );
+
     }
 }

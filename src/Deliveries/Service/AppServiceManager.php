@@ -1,5 +1,5 @@
 <?php
-namespace Deliveries\Aware\Service;
+namespace Deliveries\Service;
 use Deliveries\Aware\Adapter\Storage\DataProviderInterface;
 use Deliveries\Aware\Adapter\Mail\MailProviderInterface;
 use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
@@ -15,7 +15,7 @@ use Deliveries\Exceptions\AppException;
  * @version 1.0
  * @author Stanislav WEB | Lugansk <stanisov@gmail.com>
  * @copyright Stanislav WEB
- * @filesource /Deliveries/Aware/Service/AppServiceManager.php
+ * @filesource /Deliveries/Service/AppServiceManager.php
  */
 class AppServiceManager {
 
@@ -63,6 +63,46 @@ class AppServiceManager {
     }
 
     /**
+     * Import tables
+     *
+     * @param string $query
+     * @return bool|int
+     */
+    public function importTables ($query) {
+        $this->storageInstance->importTables($query);
+    }
+
+    /**
+     * Get subscribers statistics
+     *
+     * @return array
+     */
+    public function getSubscribersReports() {
+
+        return $this->storageInstance->countSubscribers();
+    }
+
+    /**
+     * Get deliveries statistics
+     *
+     * @return array
+     */
+    public function getMailingsReports() {
+
+        return $this->storageInstance->countMailings();
+    }
+
+    /**
+     * Get active mail statistics
+     *
+     * @return array
+     */
+    public function getActiveMailStatistics() {
+
+        return $this->storageInstance->activeMailsStat();
+    }
+
+    /**
      * Create queue mailing by status only
      *
      * @param array $options
@@ -105,6 +145,17 @@ class AppServiceManager {
         }
 
         return $pid;
+    }
+
+    /**
+     * Delete queue from storage
+     *
+     * @param int $pid process id
+     * @return int
+     */
+    public function removeQueue($pid) {
+
+        return $this->storageInstance->removeQueue($pid);
     }
 
     /**

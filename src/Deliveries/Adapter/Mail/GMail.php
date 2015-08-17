@@ -3,6 +3,7 @@ namespace Deliveries\Adapter\Mail;
 
 use Deliveries\Aware\Adapter\Mail\MailProviderInterface;
 use Deliveries\Exceptions\MailException;
+use Deliveries\Exceptions\MailSMTPExceptions;
 
 /**
  * GMail class. Google Mail connection client
@@ -28,9 +29,9 @@ class GMail implements MailProviderInterface {
     const DEFAULT_PORT = 587;
 
     /**
-     * Default mail protocol
+     * Default mail socket
      */
-    const DEFAULT_PROTOCOL = 'tls';
+    const DEFAULT_SOCKET = 'tls';
 
     /**
      * Adapter config
@@ -100,7 +101,7 @@ class GMail implements MailProviderInterface {
 
         // Create the Transport
         $this->connect = new \Swift_SmtpTransport($config['server'], $config['port'],
-            (count($config['secure']) > 0) ? $config['secure'] : null);
+            (count($config['socket']) > 0) ? $config['socket'] : null);
 
         $this->connect->setUsername($config['username']);
         $this->connect->setPassword($config['password']);
@@ -124,15 +125,17 @@ class GMail implements MailProviderInterface {
     public function createMessage($subject, $message, array $placeholders = []) {
 
         // get mail configurations
-        $from = $this->getConfig()['from'];
+        $config = $this->getConfig();
+
+        // add smtp exception plugin to resolve SMTP errors
+        $this->mailer->registerPlugin(new MailSMTPExceptions());
 
         // add decorator plugin to resolve messages placeholders
-        $decorator = new \Swift_Plugins_DecoratorPlugin($placeholders);
-        $this->mailer->registerPlugin($decorator);
+        $this->mailer->registerPlugin(new \Swift_Plugins_DecoratorPlugin($placeholders));
 
         // prepare message to transport
         $this->message = \Swift_Message::newInstance();
-        $this->message->setFrom([$from['email'] => $from['name']]);
+        $this->message->setFrom([$config['fromEmail'] => $config['fromName']]);
         $this->message->setSubject($subject);
         $this->message->setBody($message, 'text/html');
         $this->message->setCharset('UTF-8');

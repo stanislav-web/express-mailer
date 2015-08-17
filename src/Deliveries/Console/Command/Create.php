@@ -42,9 +42,13 @@ class Create extends BaseCommandAware {
     const DESCRIPTION = 'Submission create';
 
     /**
-     * @const SUCCESS command success
+     * Prompt string formatter
+     *
+     * @var array $prompt
      */
-    const SUCCESS = 'Queue has been created. QID: %d';
+    private $prompt = [
+        'QUEUE_CREATE_SUCCESS'      =>  "Queue has been created. QID: %d",
+    ];
 
     use FormatTrait;
 
@@ -86,10 +90,10 @@ class Create extends BaseCommandAware {
         // create queue
         $pid = $this->getAppServiceManager()->createQueue($input->getOptions());
 
-        $this->logger()->info(sprintf(self::SUCCESS, $pid));
+        $this->logger()->info(sprintf($this->prompt['QUEUE_CREATE_SUCCESS'], $pid));
 
         $output->writeln(
-            "<fg=white;bg=magenta>".sprintf(self::SUCCESS, $pid)."</fg=white;bg=magenta>"
+            "<fg=white;bg=magenta>".sprintf($this->prompt['QUEUE_CREATE_SUCCESS'], $pid)."</fg=white;bg=magenta>"
         );
     }
 }

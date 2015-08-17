@@ -9,6 +9,11 @@ This system is designed for large-scale mailings, which is activated on built-in
 
 ## System requirements
 
+* System based on Unix
+* PHP 5.6.x
+* PCNTL Process Control support in PHP
+* PHP PDO MySQL driver
+
 ## Install
 
 ## Usage
