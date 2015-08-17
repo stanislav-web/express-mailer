@@ -107,7 +107,7 @@ class GMail implements MailProviderInterface {
         $this->connect->start();
 
         if($this->connect->isStarted() === false) {
-            throw new \RuntimeException('Mail connection failed! Check configurations');
+            throw new MailException('Mail connection failed! Check configurations');
         }
         return  $this;
 
@@ -123,22 +123,20 @@ class GMail implements MailProviderInterface {
      */
     public function createMessage($subject, $message, array $placeholders = []) {
 
-        if(isset($this->message) === false) {
+        // get mail configurations
+        $from = $this->getConfig()['from'];
 
-            $from = $this->getConfig()['from'];
+        // add decorator plugin to resolve messages placeholders
+        $decorator = new \Swift_Plugins_DecoratorPlugin($placeholders);
+        $this->mailer->registerPlugin($decorator);
 
-            // add decorator plugin to resolve messages placeholders
-            $decorator = new \Swift_Plugins_DecoratorPlugin($placeholders);
-            $this->mailer->registerPlugin($decorator);
-
-            // prepare message to transport
-            $this->message = \Swift_Message::newInstance();
-            $this->message->setFrom([$from['email'] => $from['name']]);
-            $this->message->setSubject($subject);
-            $this->message->setBody($message, 'text/html');
-            $this->message->setCharset('UTF-8');
-            $this->message->setPriority(1);
-        }
+        // prepare message to transport
+        $this->message = \Swift_Message::newInstance();
+        $this->message->setFrom([$from['email'] => $from['name']]);
+        $this->message->setSubject($subject);
+        $this->message->setBody($message, 'text/html');
+        $this->message->setCharset('UTF-8');
+        $this->message->setPriority(1);
     }
 
     /**

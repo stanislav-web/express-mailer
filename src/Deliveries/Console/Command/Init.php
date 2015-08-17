@@ -118,9 +118,9 @@ class Init extends BaseCommandAware {
     public function migrationRunner() {
 
         // setup all needed parameters
-        $inputForJob = new ArrayInput(array(
+        $inputForJob = new ArrayInput([
             'command' => 'migrations',
-        ));
+        ]);
 
         return  $this->getApplication()->doRun(
             $inputForJob,
@@ -140,196 +140,17 @@ class Init extends BaseCommandAware {
 
         $config = [];
 
-        $config['Broker']['adapter'] = $this->getPrompt('<info>Please select queue broker for handling:</info> ', $input, $output,
-            function($answer) {
+        // create broker configurations
+        $this->createBrokerConfigurations($config,$input, $output);
 
-                $queues = $this->getReserved('Broker');
+        // create storage configurations
+        $this->createStorageConfigurations($config,$input, $output);
 
+         // create mail configurations
+        $this->createMailConfigurations($config,$input, $output);
 
-                if(array_search(strtolower($answer), array_map('strtolower', $queues)) === false) {
-                    throw new \RuntimeException(
-                        'You must select one from existing brokers ('.implode(',', $queues).')'
-                    );
-                }
-                return $answer;
-        });
-
-        $broker = 'Deliveries\Adapter\Broker\\'.$config['Broker']['adapter'];
-
-        if($config['Broker']['adapter'] != 'Native') {
-
-            $config['Broker']['host'] = $this->getPrompt('<info>Please type Queue server IP (default '.$broker::DEFAULT_HOST.'):</info> ', $input, $output,
-                function($answer) use ($config, $broker) {
-
-                    if(empty($answer) === true) {
-                        return $broker::DEFAULT_HOST;
-                    }
-
-                    if(filter_var($answer, FILTER_VALIDATE_IP) === false && $answer != 'localhost') {
-                        throw new \RuntimeException(
-                            'Please, type a valid '.$config['Broker']['adapter'].' server IP address!'
-                        );
-                    }
-                    return $answer;
-                });
-
-            $config['Broker']['port'] = $this->getPrompt('<info>Please type AMQP server port (default '.$broker::DEFAULT_PORT.'):</info> ', $input, $output,
-                function($answer) use ($config, $broker) {
-
-                    if(empty($answer) === true) {
-                        return $broker::DEFAULT_PORT;
-                    }
-
-                    if(preg_match('/^(\d){2,4}$/', $answer) == false) {
-                        throw new \RuntimeException(
-                            'Please, type a valid server port!'
-                        );
-                    }
-                    return (int)$answer;
-                });
-
-            $config['Broker']['timeout'] = $this->getPrompt('<info>Please type AMQP server connection timeout (default '.$broker::DEFAULT_TIMEOUT.'):</info> ', $input, $output,
-                function($answer) use ($config, $broker) {
-
-                    if(empty($answer) === true) {
-                        return $broker::DEFAULT_TIMEOUT;
-                    }
-
-                    if(is_numeric($answer) == false) {
-                        throw new \RuntimeException(
-                            'Please, type a valid timeout value!'
-                        );
-                    }
-                    return (int)$answer;
-                });
-
-            $config['Broker']['persistent'] = $this->getPrompt('<info>Do you want to use a persistent connection to '.$config['Broker']['adapter'].'? (default "'.$broker::DEFAULT_IS_PERSISTENT.'"):</info> ', $input, $output,
-                function($answer) use ($config, $broker) {
-
-                    if(empty($answer) === true) {
-                        return $broker::DEFAULT_IS_PERSISTENT;
-                    }
-
-                    if(in_array($answer, ['true', 'false']) == false) {
-                        throw new \RuntimeException(
-                            'Please, type `true` or `false`!'
-                        );
-                    }
-                    return (int)$answer;
-                });
-
-            $config['Broker']['login'] = $this->getPrompt('<info>Please type Queue user login:</info> ', $input, $output, null, true);
-            $config['Broker']['password'] = $this->getPrompt('<info>Please type Queue user password:</info> ', $input, $output, null, true);
-        }
-
-        $config['Storage']['adapter'] = $this->getPrompt('<info>Please select storage adapter for handling:</info> ', $input, $output,
-            function($answer) {
-                $storages = $this->getReserved('Storage');
-                if(array_search(strtolower($answer), array_map('strtolower', $storages)) === false) {
-                    throw new \RuntimeException(
-                        'You must select one from existing storages ('.implode(',', $storages).')'
-                    );
-                }
-                return $answer;
-        });
-
-        $storage = 'Deliveries\Adapter\Storage\\'.$config['Storage']['adapter'];
-
-        $config['Storage']['host'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' host (default '.$storage::DEFAULT_HOST.'):</info> ', $input, $output,
-            function($answer) use ($config, $storage) {
-
-                if(empty($answer) === true) {
-                    return $storage::DEFAULT_HOST;
-                }
-                if(filter_var(gethostbyname($answer), FILTER_VALIDATE_IP) === false && $answer != 'localhost') {
-                    throw new \RuntimeException(
-                        'Please, type a valid '.$config['Storage']['adapter'].' host!'
-                    );
-                }
-                return $answer;
-        });
-
-        $config['Storage']['port'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' port (default '.$storage::DEFAULT_PORT.'):</info> ', $input, $output,
-            function($answer) use ($config, $storage) {
-
-                if(empty($answer) === true) {
-                    return $storage::DEFAULT_PORT;
-                }
-
-                if(preg_match('/^(\d){2,4}$/', $answer) == false) {
-                    throw new \RuntimeException(
-                        'Please, type a valid '.$config['Storage']['adapter'].' port!'
-                    );
-                }
-                return (int)$answer;
-        });
-        $config['Storage']['db'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' database name:</info> ', $input, $output, null);
-        $config['Storage']['username'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' username:</info> ', $input, $output, null);
-        $config['Storage']['password'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' user password:</info> ', $input, $output, null, true);
-
-        $config['Mail']['adapter'] = $this->getPrompt('<info>Please select mail adapter for handling:</info> ', $input, $output,
-            function($answer) {
-
-                $mails = $this->getReserved('Mail');
-                if(array_search(strtolower($answer), array_map('strtolower', $mails)) === false) {
-                    throw new \RuntimeException(
-                        'You must select one from existing mail adapters ('.implode(',', $mails).')'
-                    );
-                }
-                return $answer;
-        });
-
-        $mail = 'Deliveries\Adapter\Mail\\'.$config['Mail']['adapter'];
-
-        $config['Mail']['server'] = $this->getPrompt('<info>Please type '.$config['Mail']['adapter'].' smtp host (default '.$mail::DEFAULT_HOST.'):</info> ', $input, $output,
-            function($answer) use ($config, $mail) {
-
-                if(empty($answer) === true) {
-                    return $mail::DEFAULT_HOST;
-                }
-
-                if(filter_var(gethostbyname($answer), FILTER_VALIDATE_IP) === false && $answer != 'localhost') {
-                    throw new \RuntimeException(
-                        'Please, type a valid '.$config['Mail']['adapter'].' host!'
-                    );
-                }
-                return $answer;
-        });
-
-        $config['Mail']['port'] = $this->getPrompt('<info>Please type SMTP port for '.$config['Mail']['server'].' (default '.$mail::DEFAULT_PORT.'):</info> ', $input, $output,
-
-            function($answer) use ($config, $mail) {
-
-                if(empty($answer) === true) {
-                    return $mail::DEFAULT_PORT;
-                }
-
-                if(preg_match('/^(\d){2,4}$/', $answer) == false) {
-                    throw new \RuntimeException(
-                        'Please, type a valid SMTP port!'
-                    );
-                }
-                return (int)$answer;
-        });
-
-        $config['Mail']['secure'] = $this->getPrompt('<info>Please type SMTP Secure (ssl/tls) for '.$config['Mail']['adapter'].' (default '.$mail::DEFAULT_PROTOCOL.'):</info> ', $input, $output,
-
-            function($answer) use ($config, $mail) {
-
-                if(empty($answer) === true) {
-                    return $mail::DEFAULT_PROTOCOL;
-                }
-
-                if(preg_match('/^(\w){3}$/', $answer) == false) {
-                    throw new \RuntimeException(
-                        'Please, type a valid SMTP connection!'
-                    );
-                }
-                return (int)$answer;
-            });
-
-        $config['Mail']['username'] = $this->getPrompt('<info>Please type '.$config['Mail']['server'].' username:</info> ', $input, $output, null);
-        $config['Mail']['password'] = $this->getPrompt('<info>Please type '.$config['Mail']['server'].' user password:</info> ', $input, $output, null, true);
+        //@todo create log configurations
+        $this->createLogConfigurations($config,$input, $output);
 
         return $config;
     }
@@ -365,13 +186,13 @@ class Init extends BaseCommandAware {
 
         $helper = $this->getHelper('question');
 
-        $question = new Question(array(
+        $question = new Question([
             "<comment>Config is already initialized $configFile</comment>\n",
             "<question>Do you want to overwrite it?:</question> [<comment>no/yes</comment>] ",
-        ));
+        ]);
 
         $question->setValidator(function($typeInput) {
-            if (!in_array($typeInput, array('no', 'yes'))) {
+            if (!in_array($typeInput, ['no', 'yes'])) {
                 throw new \InvalidArgumentException('Invalid input type. Please [yes] or [no]');
             }
             return $typeInput;
@@ -394,8 +215,8 @@ class Init extends BaseCommandAware {
      * Draw results for prepare saving
      *
      * @param $configContent
-     * @param $input
-     * @param $output
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      * @return boolean
      */
     private function isConfigOk($configContent, $input, $output) {
@@ -407,7 +228,7 @@ class Init extends BaseCommandAware {
         $question = new Question("<question>Do you want to save your configurations?:</question> [<comment>no/yes</comment>] ");
 
         $question->setValidator(function($typeInput) {
-            if (!in_array($typeInput, array('no', 'yes'))) {
+            if (!in_array($typeInput, ['no', 'yes'])) {
                 throw new \InvalidArgumentException('Invalid input type. Please [yes] or [no]');
             }
             return $typeInput;
@@ -420,5 +241,247 @@ class Init extends BaseCommandAware {
         }
 
         return true;
+    }
+
+    /**
+     * Create Broker configurations
+     *
+     * @param $config
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    private function createBrokerConfigurations(&$config, $input, $output) {
+
+        $config['Broker']['adapter'] = $this->getPrompt('<info>Please select queue broker for handling:</info> ', $input, $output,
+            function($answer) {
+
+                $queues = $this->getReserved('Broker');
+                if(array_search(strtolower($answer), array_map('strtolower', $queues)) === false) {
+                    throw new \RuntimeException(
+                        'You must select one from existing brokers ('.implode(',', $queues).')'
+                    );
+                }
+                return $answer;
+            }
+        );
+
+        $broker = 'Deliveries\Adapter\Broker\\'.$config['Broker']['adapter'];
+
+        if($config['Broker']['adapter'] != 'Native') {
+
+            $config['Broker']['host'] = $this->getPrompt('<info>Please type Queue server IP (default '.$broker::DEFAULT_HOST.'):</info> ', $input, $output,
+                function($answer) use ($config, $broker) {
+
+                    if(empty($answer) === true) {
+                        return $broker::DEFAULT_HOST;
+                    }
+
+                    if(filter_var($answer, FILTER_VALIDATE_IP) === false && $answer != 'localhost') {
+                        throw new \RuntimeException(
+                            'Please, type a valid '.$config['Broker']['adapter'].' server IP address!'
+                        );
+                    }
+                    return $answer;
+                }
+            );
+
+            $config['Broker']['port'] = $this->getPrompt('<info>Please type AMQP server port (default '.$broker::DEFAULT_PORT.'):</info> ', $input, $output,
+                function($answer) use ($config, $broker) {
+
+                    if(empty($answer) === true) {
+                        return $broker::DEFAULT_PORT;
+                    }
+
+                    if(preg_match('/^(\d){2,4}$/', $answer) == false) {
+                        throw new \RuntimeException(
+                            'Please, type a valid server port!'
+                        );
+                    }
+                    return (int)$answer;
+                }
+            );
+
+            $config['Broker']['timeout'] = $this->getPrompt('<info>Please type AMQP server connection timeout (default '.$broker::DEFAULT_TIMEOUT.'):</info> ', $input, $output,
+                function($answer) use ($config, $broker) {
+
+                    if(empty($answer) === true) {
+                        return $broker::DEFAULT_TIMEOUT;
+                    }
+
+                    if(is_numeric($answer) == false) {
+                        throw new \RuntimeException(
+                            'Please, type a valid timeout value!'
+                        );
+                    }
+                    return (int)$answer;
+                }
+            );
+
+            $config['Broker']['persistent'] = $this->getPrompt('<info>Do you want to use a persistent connection to '.$config['Broker']['adapter'].'? (default "'.$broker::DEFAULT_IS_PERSISTENT.'"):</info> ', $input, $output,
+                function($answer) use ($config, $broker) {
+
+                    if(empty($answer) === true) {
+                        return $broker::DEFAULT_IS_PERSISTENT;
+                    }
+
+                    if(in_array($answer, ['true', 'false']) == false) {
+                        throw new \RuntimeException(
+                            'Please, type `true` or `false`!'
+                        );
+                    }
+                    return (int)$answer;
+                }
+            );
+
+            $config['Broker']['login'] = $this->getPrompt('<info>Please type Queue user login:</info> ', $input, $output, null, true);
+            $config['Broker']['password'] = $this->getPrompt('<info>Please type Queue user password:</info> ', $input, $output, null, true);
+        }
+    }
+
+    /**
+     * Create Storage configurations
+     *
+     * @param $config
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    private function createStorageConfigurations(&$config, $input, $output) {
+
+        $config['Storage']['adapter'] = $this->getPrompt('<info>Please select storage adapter for handling:</info> ', $input, $output,
+            function($answer) {
+                $storages = $this->getReserved('Storage');
+                if(array_search(strtolower($answer), array_map('strtolower', $storages)) === false) {
+                    throw new \RuntimeException(
+                        'You must select one from existing storages ('.implode(',', $storages).')'
+                    );
+                }
+                return $answer;
+            });
+
+        $storage = 'Deliveries\Adapter\Storage\\'.$config['Storage']['adapter'];
+
+        $config['Storage']['host'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' host (default '.$storage::DEFAULT_HOST.'):</info> ', $input, $output,
+            function($answer) use ($config, $storage) {
+
+                if(empty($answer) === true) {
+                    return $storage::DEFAULT_HOST;
+                }
+                if(filter_var(gethostbyname($answer), FILTER_VALIDATE_IP) === false && $answer != 'localhost') {
+                    throw new \RuntimeException(
+                        'Please, type a valid '.$config['Storage']['adapter'].' host!'
+                    );
+                }
+                return $answer;
+            });
+
+        $config['Storage']['port'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' port (default '.$storage::DEFAULT_PORT.'):</info> ', $input, $output,
+            function($answer) use ($config, $storage) {
+
+                if(empty($answer) === true) {
+                    return $storage::DEFAULT_PORT;
+                }
+
+                if(preg_match('/^(\d){2,4}$/', $answer) == false) {
+                    throw new \RuntimeException(
+                        'Please, type a valid '.$config['Storage']['adapter'].' port!'
+                    );
+                }
+                return (int)$answer;
+            });
+        $config['Storage']['db'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' database name:</info> ', $input, $output, null);
+        $config['Storage']['username'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' username:</info> ', $input, $output, null);
+        $config['Storage']['password'] = $this->getPrompt('<info>Please type '.$config['Storage']['adapter'].' user password:</info> ', $input, $output, null, true);
+    }
+
+    /**
+     * Create Mail configurations
+     *
+     * @param $config
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    private function createMailConfigurations(&$config, $input, $output) {
+
+        $config['Mail']['adapter'] = $this->getPrompt('<info>Please select mail adapter for handling:</info> ', $input, $output,
+            function($answer) {
+
+                $mails = $this->getReserved('Mail');
+                if(array_search(strtolower($answer), array_map('strtolower', $mails)) === false) {
+                    throw new \RuntimeException(
+                        'You must select one from existing mail adapters ('.implode(',', $mails).')'
+                    );
+                }
+                return $answer;
+            }
+        );
+
+        $mail = 'Deliveries\Adapter\Mail\\'.$config['Mail']['adapter'];
+
+        $config['Mail']['server'] = $this->getPrompt('<info>Please type '.$config['Mail']['adapter'].' smtp host (default '.$mail::DEFAULT_HOST.'):</info> ', $input, $output,
+            function($answer) use ($config, $mail) {
+
+                if(empty($answer) === true) {
+                    return $mail::DEFAULT_HOST;
+                }
+
+                if(filter_var(gethostbyname($answer), FILTER_VALIDATE_IP) === false && $answer != 'localhost') {
+                    throw new \RuntimeException(
+                        'Please, type a valid '.$config['Mail']['adapter'].' host!'
+                    );
+                }
+                return $answer;
+            }
+        );
+
+        $config['Mail']['port'] = $this->getPrompt('<info>Please type SMTP port for '.$config['Mail']['server'].' (default '.$mail::DEFAULT_PORT.'):</info> ', $input, $output,
+
+            function($answer) use ($mail) {
+
+                if(empty($answer) === true) {
+                    return $mail::DEFAULT_PORT;
+                }
+
+                if(preg_match('/^(\d){2,4}$/', $answer) == false) {
+                    throw new \RuntimeException(
+                        'Please, type a valid SMTP port!'
+                    );
+                }
+                return (int)$answer;
+            }
+        );
+
+        $config['Mail']['secure'] = $this->getPrompt('<info>Please type SMTP Secure (ssl/tls) for '.$config['Mail']['adapter'].' (default '.$mail::DEFAULT_PROTOCOL.'):</info> ', $input, $output,
+
+            function($answer) use ($mail) {
+
+                if(empty($answer) === true) {
+                    return $mail::DEFAULT_PROTOCOL;
+                }
+
+                if(preg_match('/^(\w){3}$/', $answer) == false) {
+                    throw new \RuntimeException(
+                        'Please, type a valid SMTP connection!'
+                    );
+                }
+                return (int)$answer;
+            }
+        );
+
+        $config['Mail']['username'] = $this->getPrompt('<info>Please type '.$config['Mail']['server'].' username:</info> ', $input, $output, null);
+        $config['Mail']['password'] = $this->getPrompt('<info>Please type '.$config['Mail']['server'].' user password:</info> ', $input, $output, null, true);
+
+        $config['Mail']['from']['name'] = $this->getPrompt('<info>Please type sender name:</info> ', $input, $output);
+        $config['Mail']['from']['email'] = $this->getPrompt('<info>Please type sender email:</info> ', $input, $output,
+
+            function($answer)  {
+
+                if(filter_var($answer, FILTER_VALIDATE_EMAILA) === false) {
+                    throw new \RuntimeException(
+                        'Please, type a valid sender email'
+                    );
+                }
+                return $answer;
+            }
+        );
     }
 }
