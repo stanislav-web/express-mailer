@@ -111,9 +111,10 @@ class Check extends BaseCommandAware {
 
                 // count checked email
                 $valid += ($status->isValid() === true) ? 1 : 0;
+                $invalid += ($status->isValid() === false) ? 1 : 0;
 
                 // print process data
-                printf($this->prompt['STATE_PROCESS'], $valid, $invalid).$progress->advance();
+                $progress->advance().' '.printf($this->prompt['STATE_PROCESS'], $valid, $invalid);
 
                 $i++;
             }
