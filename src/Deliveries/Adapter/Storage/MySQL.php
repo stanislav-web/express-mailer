@@ -140,14 +140,24 @@ class MySQL implements DataProviderInterface {
      * Get subscribers
      *
      * @param string $state subscriber status
+     * @param int $checked only valid subscribers
      * @param int $limit limit records
      * @return array
      */
-    public function getSubscribers($state = 'active', $limit = null) {
+    public function getSubscribers($state = 'active', $checked = null, $limit = null) {
 
         $query = "SELECT id AS subscriber_id, name, email FROM ".$this->subscribersTable." subscribers
-                    WHERE subscribers.`state` = ".$this->quoteValue($state)."
-	                ORDER BY subscribers.id ASC";
+                    WHERE 1=1";
+
+        if(is_null($state) === false) {
+            $query .= " AND subscribers.`state` = ".$this->quoteValue($state);
+        }
+
+        if(is_null($checked) === false) {
+            $query .= " AND `checked` = ".(int)$checked;
+        }
+
+        $query .= " ORDER BY subscribers.id ASC";
 
         if(is_null($limit) === false) {
             $query .= " LIMIT ".(int)$limit;

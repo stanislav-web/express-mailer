@@ -5,6 +5,7 @@ use Deliveries\Aware\Adapter\Mail\MailProviderInterface;
 use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
 use Deliveries\Aware\Helpers\FormatTrait;
 use Deliveries\Exceptions\AppException;
+use Deliveries\Aware\Handlers\SMTPValidator;
 
 /**
  * AppServiceManager class.
@@ -210,7 +211,6 @@ class AppServiceManager {
      *
      * @param array $recipient ['test@email.com' => 'TestName']
      * @param array $msg message params with placeholders
-     *
      * @return int count of successfully
      */
     public function sendMessage(array $recipient, array $msg) {
@@ -220,5 +220,34 @@ class AppServiceManager {
 
         // send message to recipient
         return $this->mailInstance->send($recipient, $msg['subject'], $msg['message'], $placeholders);
+    }
+
+    /**
+     * Get unchecked subscribers by state
+     *
+     * @param string $state subscriber status
+     * @return array
+     */
+    public function getUncheckedSubscribers($state) {
+
+        // get unchecked subscribers
+        $subscribers = $this->storageInstance->getSubscribers($state, 0);
+        return $subscribers;
+
+    }
+
+    /**
+     * Validate email addresses via SMTP
+     *
+     * @param string $email subscriber email
+     *
+     * @return \Deliveries\Aware\Handlers\SMTPValidator
+     */
+    public function verifyEmail($email) {
+
+        // verify assigned email address
+        $smtpValidator = new SMTPValidator($email);
+        $smtpValidator->verifyMX();
+        return $smtpValidator;
     }
 }

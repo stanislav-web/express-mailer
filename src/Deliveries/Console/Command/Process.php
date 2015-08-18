@@ -81,13 +81,14 @@ class Process extends BaseCommandAware {
 
         // get requested data
         $request = $input->getOptions();
+        $serviceManager = $this->getAppServiceManager();
 
         foreach($request['queues'] as $queue) {
 
             $this->logOutput($output, sprintf($this->prompt['START_PROCESS'], $queue['pid'], $request['subscribersTotal']), "<bg=white;options=bold>%s</>");
 
             // get queue by process id
-            $this->getAppServiceManager()->getQueueData($queue['pid'], function($processData) use ($output, $request) {
+            $serviceManager->getQueueData($queue['pid'], function($processData) use ($output, $request, $serviceManager) {
 
                 foreach($processData as $data) {
 
@@ -99,7 +100,7 @@ class Process extends BaseCommandAware {
                     while ($i++ < $request['subscribersTotal']) {
 
                         // send message
-                        $this->getAppServiceManager()->sendMessage($request['subscribers'][$i], $data);
+                        $serviceManager->sendMessage($request['subscribers'][$i], $data);
 
                         $progress->advance();
                     }
@@ -111,7 +112,7 @@ class Process extends BaseCommandAware {
             });
 
             // remove waste processes from storage
-            $this->getAppServiceManager()->removeQueue($queue['pid']);
+            $serviceManager->removeQueue($queue['pid']);
         }
 
         // final message

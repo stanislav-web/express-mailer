@@ -7,10 +7,12 @@ CREATE TABLE `__PREFIX__xmail_subscribers` (
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT 'Subscriber name',
   `email` varchar(255) NOT NULL DEFAULT '' COMMENT 'Subscriber email',
   `state` enum('disabled','active','moderated') NOT NULL DEFAULT 'disabled' COMMENT 'Activity state, 0 - disabled, 1 - active, 2 - moderated',
+  `checked` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Subscriber ID',
   `date_registration` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Default subscriber reg date',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uni_email` (`email`),
-  KEY `idx_state` (`state`)
+  KEY `idx_state` (`state`),
+  KEY `idx_checked` (`checked`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Subscriber\'s list';
 
 SET FOREIGN_KEY_CHECKS = 1;

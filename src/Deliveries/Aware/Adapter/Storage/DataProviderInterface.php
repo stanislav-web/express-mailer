@@ -124,9 +124,10 @@ interface DataProviderInterface {
      * Get subscribers
      *
      * @param string $state subscriber status
+     * @param int $checked only valid subscribers
      * @param int $limit limit records
      * @return array
      */
-    public function getSubscribers($state = 'active', $limit = null);
+    public function getSubscribers($state = 'active', $checked = null, $limit = null);
 
 }

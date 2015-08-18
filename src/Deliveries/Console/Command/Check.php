@@ -21,6 +21,13 @@ use Deliveries\Aware\Helpers\ProgressTrait;
 class Check extends BaseCommandAware {
 
     /**
+     * Command logo
+     *
+     * @const NAME
+     */
+    const LOGO = "###################\nCheck tools #######\n###################";
+
+    /**
      * Command name
      *
      * @const NAME
@@ -32,7 +39,7 @@ class Check extends BaseCommandAware {
      *
      * @const DESCRIPTION
      */
-    const DESCRIPTION = 'Checking tool';
+    const DESCRIPTION = 'Check tools. Validate subscriber\'s list & process';
 
     /**
      * Prompt string formatter
@@ -40,9 +47,9 @@ class Check extends BaseCommandAware {
      * @var array $prompt
      */
     private $prompt = [
-        'START_PROCESS'     =>  "Start process #%d / %d mail receivers",
-        'DONE_PROCESS'      =>  "Done list #%d",
-        'DONE_ALL'          =>  "Sending completed",
+        'START_PROCESS'     =>  "Validate process for `%s` is started",
+        'STATE_PROCESS'     => " \033[1;30mEmails check status:\033[1;30m \033[0;32m%d\033[0;32m / \033[5;31m%d\033[0;30m",
+        'DONE_PROCESS'      =>  "\nChecking complete",
     ];
 
     use ProgressTrait;
@@ -57,7 +64,9 @@ class Check extends BaseCommandAware {
 
         return [
             new InputOption('queues', null, InputOption::VALUE_OPTIONAL, 'Queues'),
-            new InputOption('subscribers', null, InputOption::VALUE_OPTIONAL, 'Subscribers'),
+            new InputOption('subscribers', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_NONE, 'Subscribers'),
+            new InputOption('autoremove', null, InputOption::VALUE_NONE, 'Remove invalid'),
+
         ];
     }
 
@@ -70,6 +79,8 @@ class Check extends BaseCommandAware {
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->logo();
+
         // checking config
         if($this->isConfigExist() === false) {
             throw new \RuntimeException(
@@ -79,40 +90,41 @@ class Check extends BaseCommandAware {
 
         // get requested data
         $request = $input->getOptions();
+        $serviceManager = $this->getAppServiceManager();
 
-        foreach($request['queues'] as $queue) {
+        // check subscribers for valid
+        if($request['subscribers'] !== false) {
 
-            $this->logOutput($output, sprintf($this->prompt['START_PROCESS'], $queue['pid'], $request['subscribersTotal']), "<bg=white;options=bold>%s</>");
+            $subscribers = $serviceManager->getUncheckedSubscribers($request['subscribers']);
+            $countSubscribers = count($subscribers);
+            $this->logOutput($output, sprintf($this->prompt['START_PROCESS'], 'subscribers'), "<bg=white;options=bold>%s</>");
 
-            // get queue by process id
-            $this->getAppServiceManager()->getQueueData($queue['pid'], function($processData) use ($output, $request) {
+            // create progress instance with total of subscribers
+            $progress = $this->getProgress($output, $countSubscribers, 'debug');
+            $progress->start();
 
-                foreach($processData as $data) {
+            $i = 0; $valid = 0; $invalid = 0;
+            while ($i < $countSubscribers) {
 
-                    // create progress instance with total of subscribers
-                    $progress = $this->getProgress($output, $request['subscribersTotal'], 'debug');
-                    $progress->start();
+                // validate subscriber
+                $status = $serviceManager->verifyEmail($subscribers[$i]['email']);
 
-                    $i = 0;
-                    while ($i++ < $request['subscribersTotal']) {
+                // count checked email
+                $valid += ($status->isValid() === true) ? 1 : 0;
 
-                        // send message
-                        $this->getAppServiceManager()->sendMessage($request['subscribers'][$i], $data);
+                // print process data
+                printf($this->prompt['STATE_PROCESS'], $valid, $invalid).$progress->advance();
 
-                        $progress->advance();
-                    }
-                    $progress->finish();
-                    $progress->getMessage();
+                $i++;
+            }
 
-                    $this->logOutput($output, sprintf($this->prompt['DONE_PROCESS'], $data['list_id']), " <bg=white;options=bold>%s</>");
-                }
-            });
 
-            // remove waste processes from storage
-            $this->getAppServiceManager()->removeQueue($queue['pid']);
+            $progress->finish();
+            $this->logOutput($output, sprintf($this->prompt['DONE_PROCESS']), " <bg=white;options=bold>%s</>");
+            //$serviceManager->verifyEmail($subscribers, function($validate) use ($subscribers, $output) {
+
+
+            //});
         }
-
-        // final message
-        $this->logOutput($output, $this->prompt['DONE_ALL'], "<fg=white;bg=magenta>%s</fg=white;bg=magenta>");
     }
 }
