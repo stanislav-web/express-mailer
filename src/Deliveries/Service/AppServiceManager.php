@@ -235,19 +235,4 @@ class AppServiceManager {
         return $subscribers;
 
     }
-
-    /**
-     * Validate email addresses via SMTP
-     *
-     * @param string $email subscriber email
-     *
-     * @return \Deliveries\Aware\Handlers\SMTPValidator
-     */
-    public function verifyEmail($email) {
-
-        // verify assigned email address
-        $smtpValidator = new SMTPValidator($email);
-        $smtpValidator->verifyMX();
-        return $smtpValidator;
-    }
 }

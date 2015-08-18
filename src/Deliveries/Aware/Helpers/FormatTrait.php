@@ -1,6 +1,7 @@
 <?php
 namespace Deliveries\Aware\Helpers;
 use Symfony\Component\Console\Helper\Table;
+use Deliveries\Aware\Handlers\EmailValidator;
 
 /**
  * FormatTrait trait.
@@ -14,6 +15,13 @@ use Symfony\Component\Console\Helper\Table;
  * @filesource /Deliveries/Aware/Helpers/FormatTrait.php
  */
 trait FormatTrait {
+
+    /**
+     * Email validator
+     *
+     * @var \Deliveries\Aware\Handlers\EmailValidator $validator
+     */
+    protected $validator;
 
     /**
      * Draw console table multiple rows down
@@ -89,6 +97,37 @@ trait FormatTrait {
                 throw new \RuntimeException(reset($errors['warnings']));
             }
         }
+    }
+
+    /**
+     * Validate email addresses via SMTP, validate syntax
+     *
+     * @param string $email subscriber email
+     * @param boolean $syntax validate syntax of email
+     * @param boolean $smtp smtp mx record & lookup verify
+     *
+     * @return \Deliveries\Aware\Handlers\EmailValidator
+     */
+    public function verifyEmail($email, $syntax = true, $smtp = true) {
+
+        if(!$this->validator) {
+            $this->validator = new EmailValidator();
+        }
+
+        // verify assigned email address
+        $this->validator->addEmail($email);
+
+        if($syntax === true) {
+            // check email syntax
+            $this->validator->verifySyntax();
+        }
+
+        if($smtp === true) {
+            // check via dns mx records & smtp
+            $this->validator->verifyEmailServer();
+        }
+
+        return $this->validator;
     }
 
     /**

@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Deliveries\Aware\Console\Command\BaseCommandAware;
 use Deliveries\Aware\Helpers\ProgressTrait;
+use Deliveries\Aware\Helpers\FormatTrait;
 
 /**
  * Check class. Application checking command
@@ -41,6 +42,9 @@ class Check extends BaseCommandAware {
      */
     const DESCRIPTION = 'Check tools. Validate subscriber\'s list & process';
 
+    private $valid = 0;
+    private $invalid = 0;
+
     /**
      * Prompt string formatter
      *
@@ -48,11 +52,11 @@ class Check extends BaseCommandAware {
      */
     private $prompt = [
         'START_PROCESS'     =>  "Validate process for `%s` is started",
-        'STATE_PROCESS'     => " \033[1;30mEmails check status:\033[1;30m \033[0;32m%d\033[0;32m / \033[5;31m%d\033[0;30m",
+        'STATE_PROCESS'     => " \033[1;30mEmails check status:\033[1;30m \033[0;32m%s\033[0;32m / \033[5;31m%s\033[0;30m",
         'DONE_PROCESS'      =>  "\nChecking complete",
     ];
 
-    use ProgressTrait;
+    use ProgressTrait, FormatTrait;
 
     /**
      * Get command additional options
@@ -95,37 +99,49 @@ class Check extends BaseCommandAware {
         // check subscribers for valid
         if($request['subscribers'] !== false) {
 
-            $subscribers = $serviceManager->getUncheckedSubscribers($request['subscribers']);
-            $countSubscribers = count($subscribers);
-            $this->logOutput($output, sprintf($this->prompt['START_PROCESS'], 'subscribers'), "<bg=white;options=bold>%s</>");
+            $this->subscribersVerify($output, $serviceManager, $request);
+        }
+    }
 
-            // create progress instance with total of subscribers
-            $progress = $this->getProgress($output, $countSubscribers, 'debug');
-            $progress->start();
+    /**
+     * Verify subscribers email addresses
+     *
+     * @param OutputInterface                       $output
+     * @param \Deliveries\Service\AppServiceManager $serviceManager
+     * @param array                                 $request
+     */
+    private function subscribersVerify(OutputInterface $output, \Deliveries\Service\AppServiceManager $serviceManager, array $request) {
 
-            $i = 0; $valid = 0; $invalid = 0;
-            while ($i < $countSubscribers) {
+        $subscribers = $serviceManager->getUncheckedSubscribers($request['subscribers']);
+        $countSubscribers = count($subscribers);
+        $this->logOutput($output, sprintf($this->prompt['START_PROCESS'], 'subscribers'), "<bg=white;options=bold>%s</>");
 
-                // validate subscriber
-                $status = $serviceManager->verifyEmail($subscribers[$i]['email']);
+        // create progress instance with total of subscribers
+        $progress = $this->getProgress($output, $countSubscribers, 'very_verbose');
+        $progress->start();
 
-                // count checked email
-                $valid += ($status->isValid() === true) ? 1 : 0;
-                $invalid += ($status->isValid() === false) ? 1 : 0;
+        $i = 0;
+        while ($i < $countSubscribers) {
 
-                // print process data
-                $progress->advance().' '.printf($this->prompt['STATE_PROCESS'], $valid, $invalid);
+            // verify subscriber email via SMTP
+            $status = $serviceManager->verifyEmail($subscribers[$i]['email'], true, true);
 
-                $i++;
+            // count checked email
+            if($status->isValid() === true) {
+                ++$this->valid;
+            }
+            else {
+                ++$this->invalid;
             }
 
+            // print process data
+            $progress->advance().' '.printf($this->prompt['STATE_PROCESS'], $this->valid, $this->invalid);
 
-            $progress->finish();
-            $this->logOutput($output, sprintf($this->prompt['DONE_PROCESS']), " <bg=white;options=bold>%s</>");
-            //$serviceManager->verifyEmail($subscribers, function($validate) use ($subscribers, $output) {
-
-
-            //});
+            $i++;
         }
+
+        // process done
+        $progress->finish();
+        $this->logOutput($output, sprintf($this->prompt['DONE_PROCESS']), " <bg=white;options=bold>%s</>");
     }
 }
