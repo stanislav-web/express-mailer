@@ -31,7 +31,9 @@
         "pda/pheanstalk" : "dev-master",
         "symfony/console": "dev-master",
         "swiftmailer/swiftmailer": "@stable",
-        "psr/log": "~1.0@dev"
+        "psr/log": "~1.0@dev",
+        "symfony/event-dispatcher": "~3.0@dev",
+        "misterion/ko-process": "*"
     },
     "autoload": {
       "psr-4": {

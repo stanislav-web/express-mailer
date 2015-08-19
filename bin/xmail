@@ -30,12 +30,24 @@ unset($file);
 use Symfony\Component\Console\Application;
 use Deliveries\Console\Application as App;
 use Deliveries\Console\Command;
+use Deliveries\Aware\Handlers\EventEmitter;
 
 if(file_exists(AUTOLOADER) === true) {
 
     include AUTOLOADER;
 
+    // init console event emitter
+    $eventDispatcher = new EventEmitter();
+
+    if(App::VERBOSE === true) {
+        $eventDispatcher->beforeExecuteCommand();
+        $eventDispatcher->afterExecuteCommand();
+    }
+
+    $eventDispatcher->beforeException();
+
     $console = new Application(App::NAME, App::VERSION);
+    $console->setDispatcher($eventDispatcher);
     $console->add(new Command\Init('init'));
     $console->add(new Command\Migrations('migrations'));
     $console->add(new Command\Statistics('statistics'));

@@ -1,11 +1,11 @@
 <?php
 namespace Deliveries\Service;
+
 use Deliveries\Aware\Adapter\Storage\DataProviderInterface;
 use Deliveries\Aware\Adapter\Mail\MailProviderInterface;
 use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
 use Deliveries\Aware\Helpers\FormatTrait;
 use Deliveries\Exceptions\AppException;
-use Deliveries\Aware\Handlers\SMTPValidator;
 
 /**
  * AppServiceManager class.
@@ -138,11 +138,11 @@ class AppServiceManager {
             ], $options['date'], $options['priority']);
 
         }
-        catch(\Exception $e) {
+        catch(\RuntimeException $e) {
 
             // remove queue from list
             $this->queueInstance->delete();
-            throw new \RuntimeException($e->getMessage());
+            throw new \Exception($e->getMessage(), $e->getCode());
         }
 
         return $pid;
@@ -176,7 +176,7 @@ class AppServiceManager {
 
         }
         catch(\RuntimeException $e) {
-            throw new \Exception($e->getMessage());
+            throw new \Exception($e->getMessage(), $e->getCode());
         }
     }
 
@@ -202,7 +202,7 @@ class AppServiceManager {
             ]);
         }
         catch(\RuntimeException $e) {
-            throw new \Exception($e->getMessage());
+            throw new \Exception($e->getMessage(), $e->getCode());
         }
     }
 

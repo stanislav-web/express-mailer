@@ -53,7 +53,7 @@ class Check extends BaseCommandAware {
     private $prompt = [
         'START_PROCESS'     =>  "Validate process for `%s` is started",
         'STATE_PROCESS'     => " \033[1;30mEmails check status:\033[1;30m \033[0;32m%s\033[0;32m / \033[5;31m%s\033[0;30m",
-        'DONE_PROCESS'      =>  "\nChecking complete",
+        'DONE_PROCESS'      =>  "Checking complete",
     ];
 
     use ProgressTrait, FormatTrait;
@@ -135,13 +135,13 @@ class Check extends BaseCommandAware {
             }
 
             // print process data
-            $progress->advance().' '.printf($this->prompt['STATE_PROCESS'], $this->valid, $this->invalid);
+            $progress->advance().' '.printf($this->prompt['STATE_PROCESS'], (int)$this->valid, (int)$this->invalid);
 
             $i++;
         }
 
         // process done
         $progress->finish();
-        $this->logOutput($output, sprintf($this->prompt['DONE_PROCESS']), ' <bg=white;options=bold>%s</>');
+        $this->logOutput($output, "\n".sprintf($this->prompt['DONE_PROCESS']), ' <bg=white;options=bold>%s</>');
     }
 }

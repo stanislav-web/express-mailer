@@ -28,10 +28,6 @@ class BaseException extends \RuntimeException {
     public function __construct($message = null, $code = null) {
 
         $message = static::TYPE.self::DELIMITER.$message; // use as late state binding
-
-        // save an exception to log
-        (new Logger())->{$code}($message);
-
-        parent::__construct($message, static::CODE);
+        parent::__construct($message, Logger::$codeName[$code]);
     }
 }

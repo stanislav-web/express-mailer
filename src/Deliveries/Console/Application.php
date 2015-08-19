@@ -25,4 +25,9 @@ class Application extends AppConsole {
      * App name
      */
     const NAME = 'Express mailer';
+
+    /**
+     * Verbose mode
+     */
+    const VERBOSE = true;
 }

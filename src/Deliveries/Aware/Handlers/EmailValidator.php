@@ -255,6 +255,5 @@ class EmailValidator {
     public function __destruct() {
         unset($this->email);
         unset($this->socket);
-        unset($this);
     }
 }

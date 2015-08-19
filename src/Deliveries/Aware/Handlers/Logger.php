@@ -33,6 +33,22 @@ class Logger extends LogLevel implements LoggerInterface {
     const DEFAULT_LOG_FORMAT = '[date][level] message';
 
     /**
+     * Code names
+     *
+     * @var array $codeName
+     */
+    public static $codeName = [
+        parent::EMERGENCY => 1,
+        parent::ALERT     => 2,
+        parent::CRITICAL  => 3,
+        parent::ERROR     => 4,
+        parent::WARNING   => 5,
+        parent::NOTICE    => 6,
+        parent::INFO      => 7,
+        parent::DEBUG     => 8
+    ];
+
+    /**
      * use logger trait
      */
     use FileSysTrait;

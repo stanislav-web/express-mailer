@@ -22,11 +22,6 @@ class BrokerException extends BaseException {
     const TYPE = 'BrokerException';
 
     /**
-     * @const CODE exception code
-     */
-    const CODE = 500;
-
-    /**
      * Constructor
      *
      * @param string $message If no message is given default from child

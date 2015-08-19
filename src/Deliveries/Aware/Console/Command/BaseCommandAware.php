@@ -35,7 +35,7 @@ class BaseCommandAware extends Command {
      */
     protected function logo() {
         echo (new ConsoleOutput())->writeln(
-            "\n<info>" . static::LOGO . "</info>"
+            "<info>" . static::LOGO . "</info>"
         );
     }
 
