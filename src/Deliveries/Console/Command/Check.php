@@ -114,7 +114,7 @@ class Check extends BaseCommandAware {
 
         $subscribers = $serviceManager->getUncheckedSubscribers($request['subscribers']);
         $countSubscribers = count($subscribers);
-        $this->logOutput($output, sprintf($this->prompt['START_PROCESS'], 'subscribers'), "<bg=white;options=bold>%s</>");
+        $this->logOutput($output, sprintf($this->prompt['START_PROCESS'], 'subscribers'), '<bg=white;options=bold>%s</>');
 
         // create progress instance with total of subscribers
         $progress = $this->getProgress($output, $countSubscribers, 'very_verbose');
@@ -142,6 +142,6 @@ class Check extends BaseCommandAware {
 
         // process done
         $progress->finish();
-        $this->logOutput($output, sprintf($this->prompt['DONE_PROCESS']), " <bg=white;options=bold>%s</>");
+        $this->logOutput($output, sprintf($this->prompt['DONE_PROCESS']), ' <bg=white;options=bold>%s</>');
     }
 }

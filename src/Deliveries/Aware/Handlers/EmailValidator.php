@@ -35,7 +35,7 @@ class EmailValidator {
     const FROM = 'robot@';
 
     /**
-     * PHP Socket resource to remote MTA
+     * PHP Socket resource from remote MTA
      *
      * @var resource $socket
      */
@@ -90,14 +90,14 @@ class EmailValidator {
     }
 
     /**
-     * Verify email servers
+     * Verify email via SMTP & MX
      *
      * @return bool
      */
-    public function verifyEmailServer() {
+    public function verifySmtp() {
 
-        // get domain name from mail
-        $domain = substr(strrchr($this->email, "@"), 1);
+        // get domain name from email
+        $domain = $this->getDomain();
 
         // check if domain is already passed verification
         if(array_key_exists($domain, $this->domains) === true) {
@@ -130,6 +130,15 @@ class EmailValidator {
     }
 
     /**
+     * Get domain address from an email
+     *
+     * @return string
+     */
+    private function getDomain() {
+        return substr(strrchr($this->email, "@"), 1);
+    }
+
+    /**
      * Check email MX record via DNS
      * Usually a mail server is configured to process emails for a domain.
      * MX Record holds ip address of that mail server, just like a pointer.
@@ -138,8 +147,6 @@ class EmailValidator {
      * @return bool
      */
     private function isMxAvailable($domain) {
-
-        // check domain MX record
         return checkdnsrr($domain, 'MX');
     }
 
@@ -153,16 +160,8 @@ class EmailValidator {
      */
     private function isSmtpAvailable($domain) {
 
-        $hosts = [];
-        $mxWeights = [];
-
-        // retrieve SMTP Server via MX query on domain
-        getmxrr($domain, $hosts, $mxWeights);
-        $mxs = array_combine($hosts, $mxWeights);
-        asort($mxs, SORT_NUMERIC);
-
         // last fallback is the original domain
-
+        $mxs = $this->getMxRecords($domain);
         $mxs[$domain] = 100;
 
         $timeout = self::MAX_CONNECTION_TIME / count($mxs);
@@ -206,6 +205,25 @@ class EmailValidator {
     }
 
     /**
+     * Get mx records by domain name
+     *
+     * @param string $domain
+     *
+     * @return array
+     */
+    private function getMxRecords($domain) {
+
+        $hosts = [];
+        $mxWeights = [];
+
+        // retrieve SMTP Server via MX query on domain
+        getmxrr($domain, $hosts, $mxWeights);
+        $mxs = array_combine($hosts, $mxWeights);
+        asort($mxs, SORT_NUMERIC);
+
+        return $mxs;
+    }
+    /**
      * Get reply code from SMTP server
      *
      * @param string $msg message to send
@@ -236,6 +254,7 @@ class EmailValidator {
      */
     public function __destruct() {
         unset($this->email);
+        unset($this->socket);
         unset($this);
     }
 }

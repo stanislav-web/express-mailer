@@ -124,7 +124,7 @@ trait FormatTrait {
 
         if($smtp === true) {
             // check via dns mx records & smtp
-            $this->validator->verifyEmailServer();
+            $this->validator->verifySmtp();
         }
 
         return $this->validator;
