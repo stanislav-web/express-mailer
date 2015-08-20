@@ -1,22 +1,22 @@
 <?php
-namespace Deliveries\Aware\Handlers;
+namespace Deliveries\Service;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Deliveries\Aware\Helpers\FileSysTrait;
 
 /**
- * Logger class. Log data handler
+ * AppLoggerService class. Log data handler
  *
- * @package Deliveries
- * @subpackage Deliveries\Aware\Handlers
- * @since PHP >=5.5
+ * @package Application
+ * @subpackage Helpers
+ * @since PHP >=5.6
  * @version 1.0
  * @author Stanislav WEB | Lugansk <stanisov@gmail.com>
  * @copyright Stanislav WEB
- * @filesource /Deliveries/Aware/Handlers/Logger.php
+ * @filesource /Deliveries/Service/AppLoggerService.php
  */
-class Logger extends LogLevel implements LoggerInterface {
+class AppLoggerService extends LogLevel implements LoggerInterface {
 
     /**
      * Default date format

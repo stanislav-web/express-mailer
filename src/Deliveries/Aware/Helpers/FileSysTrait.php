@@ -19,30 +19,28 @@ trait FileSysTrait {
      *
      * @var string $configFile
      */
-    protected $configFile = '/delivery.json';
+    private $configFile = '/delivery.json';
 
     /**
      * Broker path
      *
      * @var string $brokersPath
      */
-    protected $brokersPath = '/src/Deliveries/Adapter/Broker/';
+    private $brokersPath = '/src/Deliveries/Adapter/Broker/';
 
     /**
      * Storages path
      *
      * @var string $storagesPath
      */
-    protected $storagesPath = '/src/Deliveries/Adapter/Storage/';
+    private $storagesPath = '/src/Deliveries/Adapter/Storage/';
 
     /**
      * Mail path
      *
      * @var string $mailPath
      */
-    protected $mailPath = '/src/Deliveries/Adapter/Mail/';
-
-
+    private $mailPath = '/src/Deliveries/Adapter/Mail/';
 
     /**
      * Get configuration

@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Deliveries\Aware\Helpers\TestTrait;
 use Deliveries\Aware\Helpers\FileSysTrait;
 use Deliveries\Service\AppServiceManager;
-use Deliveries\Aware\Handlers\Logger;
+use Deliveries\Service\AppLoggerService;
 
 /**
  * BaseCommandAware class. BaseCommand aware interface
@@ -24,6 +24,13 @@ use Deliveries\Aware\Handlers\Logger;
  * @filesource /Deliveries/Console/Command/Init.php
  */
 class BaseCommandAware extends Command {
+
+    /**
+     * Logger interface
+     *
+     * @var \Deliveries\Service\AppLoggerService $logger
+     */
+    private $logger = null;
 
     use TestTrait, FileSysTrait;
 
@@ -122,10 +129,14 @@ class BaseCommandAware extends Command {
     /**
      * Get logger
      *
-     * @return \Deliveries\Aware\Handlers\Logger
+     * @return \Deliveries\Service\LoggerService
      */
     protected function logger() {
-        return new Logger();
+
+        if(is_null($this->logger) == true) {
+            $this->logger = new AppLoggerService();
+        }
+        return $this->logger;
     }
 
     /**

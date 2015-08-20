@@ -5,6 +5,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Deliveries\Aware\Console\Command\BaseCommandAware;
+use Symfony\Component\Process\Process as CliProcess;
+use Ko\ProcessManager;
 use Deliveries\Aware\Helpers\ProgressTrait;
 use Deliveries\Aware\Helpers\FormatTrait;
 
@@ -34,6 +36,8 @@ class Check extends BaseCommandAware {
      * @const NAME
      */
     const NAME = 'check';
+
+    const COMMAND = 'php bin/xmail thread --command=%s --arguments=%s';
 
     /**
      * Command description
@@ -112,36 +116,70 @@ class Check extends BaseCommandAware {
      */
     private function subscribersVerify(OutputInterface $output, \Deliveries\Service\AppServiceManager $serviceManager, array $request) {
 
+        // get subscribers && chunk by cpu numbers fro threading results
         $subscribers = $serviceManager->getUncheckedSubscribers($request['subscribers']);
+
         $countSubscribers = count($subscribers);
         $this->logOutput($output, sprintf($this->prompt['START_PROCESS'], 'subscribers'), '<bg=white;options=bold>%s</>');
 
+//        $manager = new ProcessManager();
+//
+//        for ($i = 0; $i < $this->getCPUNumbers(); $i++) {
+//            $manager->fork(function(\Ko\Process $p) {
+//                echo 'Hello from ' . $p->getPid()."\n";
+//                sleep(1);
+//            });
+//        }
+//        $manager->wait();
+//
+//
+//        var_dump($countSubscribers); exit;
+//
+//        $process = new CliProcess('php bin/xmail thread');
+//
+//        $process = new CliProcess('php bin/xmail thread');
+//        $process->run();
+//        try {
+//            if(!$process->isSuccessful()) {
+//                throw new \RuntimeException($process->getErrorOutput());
+//            }
+//            echo $process->getOutput();
+//        } catch (\RuntimeException $r) {
+//            echo $r->getMessage();
+//        }
+//
+//
+//
+//        exit;
         // create progress instance with total of subscribers
-        $progress = $this->getProgress($output, $countSubscribers, 'very_verbose');
-        $progress->start();
-
-        $i = 0;
-        while ($i < $countSubscribers) {
-
-            // verify subscriber email via SMTP
-            $status = $serviceManager->verifyEmail($subscribers[$i]['email'], true, true);
-
-            // count checked email
-            if($status->isValid() === true) {
-                ++$this->valid;
-            }
-            else {
-                ++$this->invalid;
-            }
-
-            // print process data
-            $progress->advance().' '.printf($this->prompt['STATE_PROCESS'], (int)$this->valid, (int)$this->invalid);
-
-            $i++;
-        }
-
-        // process done
-        $progress->finish();
-        $this->logOutput($output, "\n".sprintf($this->prompt['DONE_PROCESS']), ' <bg=white;options=bold>%s</>');
+//        $progress = $this->getProgress($output, $countSubscribers, 'very_verbose');
+//        $progress->start();
+//
+//        $i = 0;
+//        while ($i < $countSubscribers) {
+//
+//            // verify subscriber email via SMTP
+//            $status = $serviceManager->verifyEmail($subscribers[$i]['email'], true, true);
+//
+//            // count checked email
+//            if($status->isValid() === true) {
+//                ++$this->valid;
+//            }
+//            else {
+//                ++$this->invalid;
+//            }
+//
+//            // print process data
+//            $progress->advance().' '.printf($this->prompt['STATE_PROCESS'], (int)$this->valid, (int)$this->invalid);
+//
+//            $i++;
+//        }
+//
+//        // process done
+//        $progress->finish();
+//        $this->logOutput($output, "\n".sprintf($this->prompt['DONE_PROCESS']), ' <bg=white;options=bold>%s</>');
     }
+
+
+
 }

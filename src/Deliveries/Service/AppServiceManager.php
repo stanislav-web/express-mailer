@@ -6,6 +6,7 @@ use Deliveries\Aware\Adapter\Mail\MailProviderInterface;
 use Deliveries\Aware\Adapter\Broker\QueueProviderInterface;
 use Deliveries\Aware\Helpers\FormatTrait;
 use Deliveries\Exceptions\AppException;
+use Deliveries\Service\AppCacheService as Cache;
 
 /**
  * AppServiceManager class.
@@ -226,13 +227,58 @@ class AppServiceManager {
      * Get unchecked subscribers by state
      *
      * @param string $state subscriber status
+     * @param int $chunks the number of parts to be staked out
      * @return array
      */
     public function getUncheckedSubscribers($state) {
 
         // get unchecked subscribers
-        $subscribers = $this->storageInstance->getSubscribers($state, 0);
-        return $subscribers;
+        $subscribers =  (Cache::exists())
+            ? Cache::fetch() : $this->storageInstance->getSubscribers($state, 0);
 
+        // count cpu cores
+        $chunks = $this->cpuCoreCount();
+
+        if($chunks > 0) {
+            // chunk subscribers by parts
+            $subscribers = array_chunk($subscribers, $chunks);
+        }
+        //Cache::store(md5(__METHOD__.$state), json_encode($subscribers));
+
+        return $subscribers;
+    }
+
+    /**
+     * Get number of CPU
+     *
+     * @used It serves to perform threading
+     * @return int
+     */
+    public function cpuCoreCount() {
+
+        $num = 1;
+
+        if(is_file('/proc/cpuinfo') === true) {
+            $info = file_get_contents('/proc/cpuinfo');
+            preg_match_all('/^processor/m', $info, $matches);
+
+            $num = count($matches[0]);
+        }
+        else {
+
+            $process = @popen('sysctl -a', 'rb');
+            if($process != false) {
+
+                $output = stream_get_contents($process);
+                preg_match('/hw.ncpu: (\d+)/', $output, $matches);
+
+                if($matches) {
+                    $num = intval($matches[1][0]);
+                }
+                pclose($process);
+            }
+        }
+
+        return $num;
     }
 }

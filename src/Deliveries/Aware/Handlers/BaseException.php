@@ -1,5 +1,6 @@
 <?php
 namespace Deliveries\Aware\Handlers;
+use Deliveries\Service\AppLoggerService;
 
 /**
  * BaseException class. Base exception handler
@@ -28,6 +29,6 @@ class BaseException extends \RuntimeException {
     public function __construct($message = null, $code = null) {
 
         $message = static::TYPE.self::DELIMITER.$message; // use as late state binding
-        parent::__construct($message, Logger::$codeName[$code]);
+        parent::__construct($message, AppLoggerService::$codeName[$code]);
     }
 }

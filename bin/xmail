@@ -55,6 +55,7 @@ if(file_exists(AUTOLOADER) === true) {
     $console->add(new Command\Run('run'));
     $console->add(new Command\Process('process'));
     $console->add(new Command\Check('check'));
+    $console->add(new Command\Thread('thread'));
     $console->run();
 }
 else {
