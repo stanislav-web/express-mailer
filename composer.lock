@@ -1,11 +1,60 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5c727cc95eab99e3ff1704bb68da9642",
+    "hash": "164f49a44dc66ef19396e45958af7549",
     "packages": [
+        {
+            "name": "comos/qpm",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Comos/qpm.git",
+                "reference": "77720715c88f9eabc2f75e37202286b7bf9365f9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Comos/qpm/zipball/77720715c88f9eabc2f75e37202286b7bf9365f9",
+                "reference": "77720715c88f9eabc2f75e37202286b7bf9365f9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "psr/log": "~1.0"
+            },
+            "require-dev": {
+                "monolog/monolog": "~1.13",
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "monolog/monolog": "an implementor of PSR-3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Comos\\Qpm\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3"
+            ],
+            "authors": [
+                {
+                    "name": "Qing Zhao",
+                    "email": "alex.q.chao@gmail.com"
+                }
+            ],
+            "description": "Quick process management framework in PHP. To simplify PHP daemon development ",
+            "homepage": "http://github.com/Comos/qpm",
+            "keywords": [
+                "daemon",
+                "process"
+            ],
+            "time": "2015-04-25 03:55:15"
+        },
         {
             "name": "misterion/ko-process",
             "version": "dev-master",
@@ -391,7 +440,8 @@
         "swiftmailer/swiftmailer": 0,
         "psr/log": 20,
         "symfony/event-dispatcher": 20,
-        "symfony/process": 20
+        "symfony/process": 20,
+        "comos/qpm": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

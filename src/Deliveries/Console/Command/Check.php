@@ -5,10 +5,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Deliveries\Aware\Console\Command\BaseCommandAware;
-use Symfony\Component\Process\Process as CliProcess;
 use Ko\ProcessManager;
+use Ko\Process as ForkProcess;
 use Deliveries\Aware\Helpers\ProgressTrait;
 use Deliveries\Aware\Helpers\FormatTrait;
+
+error_reporting(0);
 
 /**
  * Check class. Application checking command
@@ -55,7 +57,7 @@ class Check extends BaseCommandAware {
      * @var array $prompt
      */
     private $prompt = [
-        'START_PROCESS'     =>  "Validate process for `%s` is started",
+        'START_PROCESS'     =>  "Validate process for `%s` is started. Pid %d\n",
         'STATE_PROCESS'     => " \033[1;30mEmails check status:\033[1;30m \033[0;32m%s\033[0;32m / \033[5;31m%s\033[0;30m",
         'DONE_PROCESS'      =>  "Checking complete",
     ];
@@ -116,70 +118,54 @@ class Check extends BaseCommandAware {
      */
     private function subscribersVerify(OutputInterface $output, \Deliveries\Service\AppServiceManager $serviceManager, array $request) {
 
-        // get subscribers && chunk by cpu numbers fro threading results
+        // get subscribers
         $subscribers = $serviceManager->getUncheckedSubscribers($request['subscribers']);
+        $forks = count($subscribers);
+        $manager = new ProcessManager();
+        $manager->demonize();
+        $manager->setProcessTitle('I_am_a_master!');
+        // start process forks
+        for ($f = 0; $f < $forks; $f++) {
+            $manager->fork(function(ForkProcess $p) use ($subscribers, $output, $f, $serviceManager) {
 
-        $countSubscribers = count($subscribers);
-        $this->logOutput($output, sprintf($this->prompt['START_PROCESS'], 'subscribers'), '<bg=white;options=bold>%s</>');
+                $this->logOutput($output, sprintf($this->prompt['START_PROCESS'], 'subscribers', $p->getPid()), '<bg=white;options=bold>%s</>');
 
-//        $manager = new ProcessManager();
+                // create progress instance with total of subscribers
+                $count = count($subscribers[$f]);
+                //$progress = $this->getProgress($output, $count, 'very_verbose');
+                //$progress->start();
+
+                $i = 0;
+                while ($i < 10) {
+
+                    print "Fork: $f Email:$i \n";
+                    // verify subscriber email via SMTP
+                    $serviceManager->verifyEmail($subscribers[$f][$i]['email'], true, true);
+                    //$status = $serviceManager->verifyEmail($subscribers[$f][$i]['email'], true, true);
+
+//                    // count checked email
+//                    if($status->isValid() === true) {
+//                        ++$this->valid;
+//                    }
+//                    else {
+//                        ++$this->invalid;
+//                    }
 //
-//        for ($i = 0; $i < $this->getCPUNumbers(); $i++) {
-//            $manager->fork(function(\Ko\Process $p) {
-//                echo 'Hello from ' . $p->getPid()."\n";
-//                sleep(1);
-//            });
-//        }
-//        $manager->wait();
-//
-//
-//        var_dump($countSubscribers); exit;
-//
-//        $process = new CliProcess('php bin/xmail thread');
-//
-//        $process = new CliProcess('php bin/xmail thread');
-//        $process->run();
-//        try {
-//            if(!$process->isSuccessful()) {
-//                throw new \RuntimeException($process->getErrorOutput());
-//            }
-//            echo $process->getOutput();
-//        } catch (\RuntimeException $r) {
-//            echo $r->getMessage();
-//        }
-//
-//
-//
-//        exit;
-        // create progress instance with total of subscribers
-//        $progress = $this->getProgress($output, $countSubscribers, 'very_verbose');
-//        $progress->start();
-//
-//        $i = 0;
-//        while ($i < $countSubscribers) {
-//
-//            // verify subscriber email via SMTP
-//            $status = $serviceManager->verifyEmail($subscribers[$i]['email'], true, true);
-//
-//            // count checked email
-//            if($status->isValid() === true) {
-//                ++$this->valid;
-//            }
-//            else {
-//                ++$this->invalid;
-//            }
-//
-//            // print process data
-//            $progress->advance().' '.printf($this->prompt['STATE_PROCESS'], (int)$this->valid, (int)$this->invalid);
-//
-//            $i++;
-//        }
-//
-//        // process done
-//        $progress->finish();
-//        $this->logOutput($output, "\n".sprintf($this->prompt['DONE_PROCESS']), ' <bg=white;options=bold>%s</>');
+//                    // print process data
+//                    $progress->advance().' '.printf($this->prompt['STATE_PROCESS'], (int)$this->valid, (int)$this->invalid);
+
+                    $i++;
+                    //if($i >= $count) break;
+                }
+                //$progress->finish();
+            })->onSuccess(function() use ($output) {
+                // process done
+                $this->logOutput($output, "\n".sprintf($this->prompt['DONE_PROCESS']), ' <bg=white;options=bold>%s</>');
+            })->wait();
+            $manager->onShutdown(function() use ($manager) {
+                echo 'Catch sigterm.Quiting...' . PHP_EOL;
+                exit();
+            });
+        }
     }
-
-
-
 }

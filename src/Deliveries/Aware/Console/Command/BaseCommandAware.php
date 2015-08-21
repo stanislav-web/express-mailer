@@ -30,7 +30,14 @@ class BaseCommandAware extends Command {
      *
      * @var \Deliveries\Service\AppLoggerService $logger
      */
-    private $logger = null;
+    private $logger;
+
+    /**
+     * Application service manager
+     *
+     * @param \Deliveries\Service\AppServiceManager $serviceManager
+     */
+    private $serviceManager;
 
     use TestTrait, FileSysTrait;
 
@@ -118,18 +125,21 @@ class BaseCommandAware extends Command {
      */
     protected function getAppServiceManager() {
 
-        return new AppServiceManager(
-            $this->getStorageInstance(self::getConfig()->Storage),
-            $this->getMailInstance(self::getConfig()->Mail),
-            $this->getQueueInstance(self::getConfig()->Broker)
-        );
-
+        if(is_null($this->serviceManager) == true) {
+            // lazy load of service manager
+            $this->serviceManager = new AppServiceManager(
+                $this->getStorageInstance(self::getConfig()->Storage),
+                $this->getMailInstance(self::getConfig()->Mail),
+                $this->getQueueInstance(self::getConfig()->Broker)
+            );
+        }
+        return $this->serviceManager;
     }
 
     /**
      * Get logger
      *
-     * @return \Deliveries\Service\LoggerService
+     * @return \Deliveries\Service\AppLoggerService
      */
     protected function logger() {
 

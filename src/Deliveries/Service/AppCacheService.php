@@ -70,13 +70,14 @@ class AppCacheService {
      *
      * @return boolean - Returns true on success or false on failure.
      */
-    public static function store($key, $data, $ttl = 0, $overwrite = false)
+    public static function store($key, $data, $ttl = 60*10, $overwrite = false)
     {
         try {
             if ($overwrite) {
-                return apc_store($key, $data, $ttl);
+                return apc_store($key, json_encode($data), $ttl);
             } else {
-                return apc_add($key, $data, $ttl);
+
+                return apc_add($key, json_encode($data), $ttl);
             }
         } catch (\RuntimeException $e) {
             throw new CacheException($e->getMessage());
@@ -94,7 +95,7 @@ class AppCacheService {
     {
         try {
             if (self::exists($key)) {
-                return apc_fetch($key);
+                return json_decode(apc_fetch($key), true);
             } else {
                 return false;
             }

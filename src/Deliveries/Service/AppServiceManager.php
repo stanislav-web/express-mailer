@@ -233,19 +233,14 @@ class AppServiceManager {
     public function getUncheckedSubscribers($state) {
 
         // get unchecked subscribers
-        $subscribers =  (Cache::exists())
-            ? Cache::fetch() : $this->storageInstance->getSubscribers($state, 0);
+        $key = md5(__FUNCTION__.$state);
 
-        // count cpu cores
-        $chunks = $this->cpuCoreCount();
+        $subscribers =  (Cache::exists($key))
+            ? Cache::fetch($key) : $this->storageInstance->getSubscribers($state, 0);
 
-        if($chunks > 0) {
-            // chunk subscribers by parts
-            $subscribers = array_chunk($subscribers, $chunks);
-        }
-        //Cache::store(md5(__METHOD__.$state), json_encode($subscribers));
+        Cache::store($key, $subscribers);
 
-        return $subscribers;
+        return $this->arrayPartition($subscribers, $this->cpuCoreCount());
     }
 
     /**
@@ -273,7 +268,7 @@ class AppServiceManager {
                 preg_match('/hw.ncpu: (\d+)/', $output, $matches);
 
                 if($matches) {
-                    $num = intval($matches[1][0]);
+                    $num = (int)$matches[1][0];
                 }
                 pclose($process);
             }

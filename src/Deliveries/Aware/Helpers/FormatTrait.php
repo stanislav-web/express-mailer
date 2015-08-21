@@ -147,6 +147,30 @@ trait FormatTrait {
     }
 
     /**
+     * Format array to partition
+     *
+     * @param array $list
+     * @param int   $parts
+     *
+     * @return array
+     */
+    protected function arrayPartition(array $list, $parts = 1) {
+
+        $listLength = count( $list );
+        $partLength = floor( $listLength / $parts );
+        $partMax = $listLength % $parts;
+        $partition = [];
+        $mark = 0;
+        for ($px = 0; $px < $parts; $px++) {
+            $increment = ($px < $partMax) ? $partLength + 1 : $partLength;
+            $partition[$px] = array_slice( $list, $mark, $increment );
+            $mark += $increment;
+        }
+
+        return $partition;
+    }
+
+    /**
      * Get short class name
      *
      * @param object $object any class instance

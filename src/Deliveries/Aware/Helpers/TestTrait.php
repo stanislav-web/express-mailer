@@ -1,6 +1,8 @@
 <?php
 namespace Deliveries\Aware\Helpers;
 
+use Deliveries\Exceptions\MailException;
+
 /**
  * TestTrait trait.
  *
@@ -75,7 +77,7 @@ trait TestTrait {
     /**
      * Testing for connect to Mail Server
      *
-     * @throws \RuntimeException
+     * @throws \Deliveries\Exceptions\MailException
      * @return boolean
      */
     public function isMailConnectSuccess(array $config) {
@@ -86,19 +88,19 @@ trait TestTrait {
 
             if(true === class_exists($Mail)) {
 
-                $connect = (new $Mail())->connect($config);
+                try {
 
-                if($connect === false) {
-                    throw new \RuntimeException('Connection to mail server: '.$config["adapter"].' is not allow. Check configurations');
+                    $connect = (new $Mail())->connect($config);
+                    $this->mailInstance = $connect->getInstance();
+                    return $connect;
                 }
-
-                $this->mailInstance = $connect->getInstance();
-
-                return $connect;
+                catch(\RuntimeException $e) {
+                    throw new MailException('Connection to mail server: '.$config["adapter"].' is not allow. Check configurations');
+                }
             }
-            throw new \RuntimeException($config["adapter"]. ' mail adapter is not exist');
+            throw new MailException($config["adapter"]. ' mail adapter is not exist');
         }
-        throw new \RuntimeException('Mail config is not exist');
+        throw new MailException('Mail config is not exist');
     }
 
     /**

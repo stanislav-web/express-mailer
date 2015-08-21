@@ -99,19 +99,28 @@ class GMail implements MailProviderInterface {
         // save config
         $this->config = $config;
 
-        // Create the Transport
-        $this->connect = new \Swift_SmtpTransport($config['server'], $config['port'],
-            (count($config['socket']) > 0) ? $config['socket'] : null);
+        try {
 
-        $this->connect->setUsername($config['username']);
-        $this->connect->setPassword($config['password']);
-        $this->connect->start();
+            if (!$this->connect) {
 
-        if($this->connect->isStarted() === false) {
-            throw new MailException('Mail connection failed! Check configurations');
+                $this->connect = new \Swift_SmtpTransport(
+                    $config['server'], $config['port'], $config['socket']
+                );
+
+                $this->connect->setUsername($config['username']);
+                $this->connect->setPassword($config['password']);
+                $this->connect->start();
+            }
+
+            if ($this->connect->isStarted() === false) {
+                throw new MailException('Mail connection failed! Check configurations');
+            }
+
+            return  $this;
         }
-        return  $this;
-
+        catch(\Exception $e) {
+            throw new MailException($e->getMessage());
+        }
     }
 
     /**
