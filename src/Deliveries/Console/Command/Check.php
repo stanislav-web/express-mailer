@@ -120,16 +120,6 @@ class Check extends BaseCommandAware {
      */
     private function subscribersVerify(OutputInterface $output, \Deliveries\Service\AppServiceManager $serviceManager, array $request) {
 
-        $sm = new SharedMemory(5000); //allocate 5000 bytes
-        $sm['key1'] = 'value';
-
-        echo 'Total keys is' . count($sm) . PHP_EOL;
-        echo 'The key with name `key1` exists: ' . isset($sm['key1']) . PHP_EOL;
-        echo 'The value of key1 is ' . $sm['key1'] . PHP_EOL;
-
-        unset($sm['key1']);
-        echo 'The key with name `key1` after unset exists: ' . isset($sm['key1']) . PHP_EOL;
-        exit;
         // get subscribers
         $subscribers = $serviceManager->getUncheckedSubscribers($request['subscribers']);
 
