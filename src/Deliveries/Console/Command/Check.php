@@ -1,6 +1,8 @@
 <?php
 namespace Deliveries\Console\Command;
 
+use Deliveries\Exceptions\AppException;
+use Ko\SharedMemory;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -59,7 +61,7 @@ class Check extends BaseCommandAware {
     private $prompt = [
         'START_PROCESS'     =>  "Validate process for `%s` is started. Pid %d\n",
         'STATE_PROCESS'     => " \033[1;30mEmails check status:\033[1;30m \033[0;32m%s\033[0;32m / \033[5;31m%s\033[0;30m",
-        'DONE_PROCESS'      =>  "Checking complete",
+        'DONE_PROCESS'      =>  "Checking complete. Pid: %d",
     ];
 
     use ProgressTrait, FormatTrait;
@@ -118,17 +120,32 @@ class Check extends BaseCommandAware {
      */
     private function subscribersVerify(OutputInterface $output, \Deliveries\Service\AppServiceManager $serviceManager, array $request) {
 
+        $sm = new SharedMemory(5000); //allocate 5000 bytes
+        $sm['key1'] = 'value';
+
+        echo 'Total keys is' . count($sm) . PHP_EOL;
+        echo 'The key with name `key1` exists: ' . isset($sm['key1']) . PHP_EOL;
+        echo 'The value of key1 is ' . $sm['key1'] . PHP_EOL;
+
+        unset($sm['key1']);
+        echo 'The key with name `key1` after unset exists: ' . isset($sm['key1']) . PHP_EOL;
+        exit;
         // get subscribers
         $subscribers = $serviceManager->getUncheckedSubscribers($request['subscribers']);
+
+        // count number of processes forks
         $forks = count($subscribers);
         $manager = new ProcessManager();
-        $manager->demonize();
-        $manager->setProcessTitle('I_am_a_master!');
+
         // start process forks
         for ($f = 0; $f < $forks; $f++) {
-            $manager->fork(function(ForkProcess $p) use ($subscribers, $output, $f, $serviceManager) {
 
-                $this->logOutput($output, sprintf($this->prompt['START_PROCESS'], 'subscribers', $p->getPid()), '<bg=white;options=bold>%s</>');
+            $manager->spawn(function(ForkProcess $p) use ($subscribers, $output, $f, $serviceManager) {
+
+                // create process title
+                $processTitle = sprintf($this->prompt['START_PROCESS'], 'subscribers', $p->getPid());
+                $p->setProcessTitle($processTitle);
+                $this->logOutput($output, $processTitle, '<bg=white;options=bold>%s</>');
 
                 // create progress instance with total of subscribers
                 $count = count($subscribers[$f]);
@@ -136,9 +153,10 @@ class Check extends BaseCommandAware {
                 //$progress->start();
 
                 $i = 0;
-                while ($i < 10) {
+                while ($i < $count) {
 
                     print "Fork: $f Email:$i \n";
+
                     // verify subscriber email via SMTP
                     $serviceManager->verifyEmail($subscribers[$f][$i]['email'], true, true);
                     //$status = $serviceManager->verifyEmail($subscribers[$f][$i]['email'], true, true);
@@ -157,14 +175,17 @@ class Check extends BaseCommandAware {
                     $i++;
                     //if($i >= $count) break;
                 }
+
+                // destroy the process
+                $p->kill();
                 //$progress->finish();
-            })->onSuccess(function() use ($output) {
+            })->onSuccess(function(ForkProcess $p) use ($output) {
                 // process done
-                $this->logOutput($output, "\n".sprintf($this->prompt['DONE_PROCESS']), ' <bg=white;options=bold>%s</>');
+                $this->logOutput($output, sprintf($this->prompt['DONE_PROCESS'], $p->getPid()), ' <bg=white;options=bold>%s</>');
             })->wait();
-            $manager->onShutdown(function() use ($manager) {
-                echo 'Catch sigterm.Quiting...' . PHP_EOL;
-                exit();
+
+            $manager->onShutdown(function(ForkProcess $p) use ($manager) {
+                throw new AppException('Error process: '.$p->getPid());
             });
         }
     }

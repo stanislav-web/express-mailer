@@ -70,7 +70,7 @@ class AppCacheService {
      *
      * @return boolean - Returns true on success or false on failure.
      */
-    public static function store($key, $data, $ttl = 60*10, $overwrite = false)
+    public static function store($key, $data, $ttl = 600, $overwrite = false)
     {
         try {
             if ($overwrite) {
