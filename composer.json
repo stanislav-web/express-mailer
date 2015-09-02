@@ -28,7 +28,6 @@
         "php" : ">=5.5.0",
         "ext-pdo": "*",
         "ext-pcntl": "*",
-        "ext-apc"  : "*",
         "pda/pheanstalk" : "dev-master",
         "symfony/console": "dev-master",
         "swiftmailer/swiftmailer": "@stable",
