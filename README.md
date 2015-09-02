@@ -2,6 +2,7 @@
 ### _(currently under development)_
 
 This system is designed for large-scale mailings, which is activated on built-in web servers.
+Alpha prepare.
 
 ## ChangeLog
 
