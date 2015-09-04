@@ -75,10 +75,11 @@ class Run extends BaseCommandAware {
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @throws \RuntimeException
+     * @return null
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->logo();
+        $this->logo($output);
 
         // checking config
         if($this->isConfigExist() === false) {
@@ -120,6 +121,9 @@ class Run extends BaseCommandAware {
             else {
                 $output->writeln(sprintf($this->prompt['QUEUES_NOT_FOUND']));
             }
+            return null;
         });
+
+        return null;
     }
 }

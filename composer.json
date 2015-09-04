@@ -28,12 +28,12 @@
         "php" : ">=5.5.0",
         "ext-pdo": "*",
         "ext-pcntl": "*",
-        "pda/pheanstalk" : "dev-master",
-        "symfony/console": "dev-master",
+        "pda/pheanstalk" : "~3",
+        "symfony/console": "~2.8",
         "swiftmailer/swiftmailer": "@stable",
         "psr/log": "~1.0@dev",
         "symfony/event-dispatcher": "~3.0@dev",
-        "misterion/ko-process": "*",
+        "misterion/ko-process": "@stable",
         "symfony/process": "~3.0@dev"
     },
     "autoload": {

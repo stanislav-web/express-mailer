@@ -24,7 +24,7 @@ trait ProgressTrait {
      * @param string                                            $format
      * @return \Symfony\Component\Console\Helper\ProgressBar
      */
-    public function getProgress(\Symfony\Component\Console\Output\OutputInterface $output, $finish = 100, $format = 'normal') {
+    public function getProgress(OutputInterface $output, $finish = 100, $format = 'normal') {
 
         $progress = new ProgressBar($output, $finish);
         $progress->setProgressCharacter('ϟ');

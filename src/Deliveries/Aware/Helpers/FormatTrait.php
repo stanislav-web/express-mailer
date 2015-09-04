@@ -1,6 +1,8 @@
 <?php
 namespace Deliveries\Aware\Helpers;
+
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Output\OutputInterface;
 use Deliveries\Aware\Handlers\EmailValidator;
 
 /**
@@ -17,6 +19,13 @@ use Deliveries\Aware\Handlers\EmailValidator;
 trait FormatTrait {
 
     /**
+     * Table header format
+     *
+     * @var string $tableHeader
+     */
+    private $tableHeader = '<fg=yellow;options=bold>%s</fg=yellow;options=bold>';
+
+    /**
      * Email validator
      *
      * @var \Deliveries\Aware\Handlers\EmailValidator $validator
@@ -29,13 +38,13 @@ trait FormatTrait {
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param array                                             $content
      */
-    protected function tableLong(\Symfony\Component\Console\Output\OutputInterface $output, array $content) {
+    protected function tableLong(OutputInterface $output, array $content) {
 
         // write config table
         $title = key($content);
         $content = array_shift($content);
         $table = new Table($output);
-        $output->writeln("<fg=yellow;options=bold>" . $title . "</fg=yellow;options=bold>");
+        $output->writeln(sprintf($this->tableHeader, $title));
 
         if(empty($content)  === false) {
             $headers = array_keys($content[0]);
@@ -55,7 +64,7 @@ trait FormatTrait {
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @param array                                             $content
      */
-    protected function table(\Symfony\Component\Console\Output\OutputInterface $output, array $content) {
+    protected function table(OutputInterface $output, array $content) {
 
         // write config table
         $table = new Table($output);
@@ -64,7 +73,7 @@ trait FormatTrait {
 
             // multiple tables
             foreach($content as $header => $rows) {
-                $output->writeln("<fg=yellow;options=bold>" . $header . "</fg=yellow;options=bold>");
+                $output->writeln(sprintf($this->tableHeader, $header));
 
                 $table->setHeaders(array_keys($rows))
                     ->setRows([$rows])
@@ -135,6 +144,7 @@ trait FormatTrait {
      *
      * @param array $params
      * @param string $format
+     * @return array
      */
     protected function arrayKeysPlaceholders(array $params, $format = "{%s}") {
 

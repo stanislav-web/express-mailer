@@ -30,7 +30,7 @@ class AppException extends BaseException {
      * Constructor
      *
      * @param string $message
-     * @param int $code status code
+     * @param string $code status code
      */
     public function __construct($message, $code = 'critical') {
         parent::__construct($message, $code);

@@ -66,7 +66,8 @@ class AppCacheService {
      *
      * @param string $key - Store the variable using this name.
      * @param string $data - The variable to store.
-     * @param string $ttl - Time To Live; store var in the cache for ttl seconds.
+     * @param int $ttl - Time To Live; store var in the cache for ttl seconds.
+     * @param boolean $overwrite overwrite storage data flag
      *
      * @return boolean - Returns true on success or false on failure.
      */

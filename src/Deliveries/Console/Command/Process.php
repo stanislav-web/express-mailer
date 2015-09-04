@@ -69,6 +69,7 @@ class Process extends BaseCommandAware {
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @throws \RuntimeException
+     * @return null
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {

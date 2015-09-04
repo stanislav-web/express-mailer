@@ -82,10 +82,11 @@ class Statistics extends BaseCommandAware {
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @throws \RuntimeException
+     * @return null
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->logo();
+        $this->logo($output);
 
         // checking config
         if($this->isConfigExist() === false) {

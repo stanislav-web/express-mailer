@@ -93,10 +93,11 @@ class Init extends BaseCommandAware {
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @throws \RuntimeException
+     * @return null
      */
     public function execute(InputInterface $input, OutputInterface $output) {
 
-        $this->logo();
+        $this->logo($output);
 
         // checkout configuration file
         $configFile = $this->configFile($input, $output);
@@ -210,11 +211,10 @@ class Init extends BaseCommandAware {
      * @param string $configFile
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @param boolean $skip
      * @throws \InvalidArgumentException
      * @return int|null|void
      */
-    private function rebuildConfig($configFile, $input, $output) {
+    private function rebuildConfig($configFile, InputInterface $input, OutputInterface $output) {
 
         $helper = $this->getHelper('question');
 
@@ -239,7 +239,7 @@ class Init extends BaseCommandAware {
             }
                 return $this->execute($input, $output);
         }
-        return;
+        return null;
 
     }
 

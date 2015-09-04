@@ -5,7 +5,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Deliveries\Aware\Helpers\TestTrait;
 use Deliveries\Aware\Helpers\FileSysTrait;
@@ -44,11 +43,13 @@ class BaseCommandAware extends Command {
     /**
      * Command logo
      *
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @uses latest static bindings
-     * @return logo
+     * @return string
      */
-    protected function logo() {
-        echo (new ConsoleOutput())->writeln(
+    protected function logo(OutputInterface $output) {
+
+        echo $output->writeln(
             "<info>" . static::LOGO . "</info>"
         );
     }
@@ -57,7 +58,6 @@ class BaseCommandAware extends Command {
      * Configure bootstrap by default (assign -path to create config file)
      *
      * @uses latest static bindings
-     * @param string $command
      */
     protected function configure() {
 

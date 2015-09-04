@@ -165,6 +165,7 @@ class AppLoggerService extends LogLevel implements LoggerInterface {
      * @param string $level
      * @param string $message
      * @param array $context
+     * @return null
      */
     public function log($level, $message, array $context = []) {
         $this->addToLog($level, $message, $context);

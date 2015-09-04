@@ -108,7 +108,8 @@ class AppServiceManager {
      * Create queue mailing by status only
      *
      * @param array $options
-     * @throws \RuntimeException
+     * @throws \Deliveries\Exceptions\AppException
+     * @throws \Exception
      * @return int $pid created process id
      */
     public function createQueue(array $options) {
@@ -163,6 +164,7 @@ class AppServiceManager {
     /**
      * Get queue data by process id
      *
+     * @throws \Exception
      * @param int $pid process id
      * @param callable $callback
      */
@@ -186,7 +188,7 @@ class AppServiceManager {
      *
      * @param array $options input options
      * @param callable callback handler
-     * @throws \Deliveries\Exceptions\StorageException
+     * @throws \Exception
      * @return array
      */
     public function getQueues(array $options, callable $callback) {
@@ -227,7 +229,6 @@ class AppServiceManager {
      * Get unchecked subscribers by state
      *
      * @param string $state subscriber status
-     * @param int $chunks the number of parts to be staked out
      * @return array
      */
     public function getUncheckedSubscribers($state) {

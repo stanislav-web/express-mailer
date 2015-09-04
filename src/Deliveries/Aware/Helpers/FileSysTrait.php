@@ -103,6 +103,8 @@ trait FileSysTrait {
      * Get reserved adapters
      *
      * @params string $adapter
+     * @param $adapter
+     *
      * @return array
      */
     public function getReserved($adapter) {

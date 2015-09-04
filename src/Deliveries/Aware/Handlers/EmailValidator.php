@@ -144,6 +144,7 @@ class EmailValidator {
      * MX Record holds ip address of that mail server, just like a pointer.
      * So by checking MX Records we can make sure whether this domain can process emails or not.
      *
+     * @param string $domain checked domain
      * @return bool
      */
     private function isMxAvailable($domain) {
@@ -156,6 +157,7 @@ class EmailValidator {
      * SMTP Email Validation done by communicating mail server through SMTP commands such as HELO, RCPT To etc.
      * By checking reply code from mail server we can make sure whether given email exist or not.
      *
+     * @param string $domain checked domain
      * @return bool
      */
     private function isSmtpAvailable($domain) {

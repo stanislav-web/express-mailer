@@ -77,6 +77,7 @@ trait TestTrait {
     /**
      * Testing for connect to Mail Server
      *
+     * @param array $config
      * @throws \Deliveries\Exceptions\MailException
      * @return boolean
      */
@@ -106,6 +107,7 @@ trait TestTrait {
     /**
      * Testing for connect to Queue
      *
+     * @param array $config
      * @throws \RuntimeException
      * @return boolean
      */

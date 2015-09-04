@@ -99,10 +99,11 @@ class Migrations extends BaseCommandAware {
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @throws \RuntimeException
+     * @return null
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->logo();
+        $this->logo($output);
 
         // checking config
         if($this->isConfigExist() === false) {
@@ -134,7 +135,7 @@ class Migrations extends BaseCommandAware {
 
         // add to config
         $this->addToConfig(null, ['Storage' => ['prefix' => $prefix]]);
-        $this->import($output, $prefix);
+        $this->import($prefix);
 
         $message = sprintf($this->prompt['STORAGE_IMPORT_SUCCESS'], $this->getConfig()['adapter']);
         $this->logger()->info($message);
@@ -144,7 +145,6 @@ class Migrations extends BaseCommandAware {
     /**
      * Check tables if this already imported
      *
-     * @param string $prefix
      * @return array
      */
     private function checkImportTables() {
@@ -198,11 +198,10 @@ class Migrations extends BaseCommandAware {
     /**
      * Import tables to database
      *
-     * @param OutputInterface $output
      * @param string $prefix
      * @throws \RuntimeException
      */
-    private function import(OutputInterface $output, $prefix) {
+    private function import($prefix) {
 
         if(empty($this->migrationFiles) === false) {
 

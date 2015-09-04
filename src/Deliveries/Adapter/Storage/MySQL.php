@@ -293,7 +293,6 @@ class MySQL implements DataProviderInterface {
      * Get queues process from storage
      *
      * @param array $properties request properties
-     * @param int $limit limit records
      * @return array
      */
     public function getQueues(array $properties = []) {
@@ -393,7 +392,7 @@ class MySQL implements DataProviderInterface {
     /**
      * Escape value
      *
-     * @param string $query
+     * @param string $value
      * @return string
      */
     private function quoteValue($value) {

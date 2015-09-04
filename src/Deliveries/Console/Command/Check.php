@@ -2,13 +2,13 @@
 namespace Deliveries\Console\Command;
 
 use Deliveries\Exceptions\AppException;
-use Ko\SharedMemory;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Deliveries\Aware\Console\Command\BaseCommandAware;
 use Ko\ProcessManager;
 use Ko\Process as ForkProcess;
+use Deliveries\Aware\Console\Command\BaseCommandAware;
+use Deliveries\Service\AppServiceManager;
 use Deliveries\Aware\Helpers\ProgressTrait;
 use Deliveries\Aware\Helpers\FormatTrait;
 
@@ -88,10 +88,11 @@ class Check extends BaseCommandAware {
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @throws \RuntimeException
+     * @return null
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->logo();
+        $this->logo($output);
 
         // checking config
         if($this->isConfigExist() === false) {
@@ -118,7 +119,7 @@ class Check extends BaseCommandAware {
      * @param \Deliveries\Service\AppServiceManager $serviceManager
      * @param array                                 $request
      */
-    private function subscribersVerify(OutputInterface $output, \Deliveries\Service\AppServiceManager $serviceManager, array $request) {
+    private function subscribersVerify(OutputInterface $output, AppServiceManager $serviceManager, array $request) {
 
         // get subscribers
         $subscribers = $serviceManager->getUncheckedSubscribers($request['subscribers']);
