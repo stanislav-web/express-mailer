@@ -3,7 +3,7 @@ namespace Deliveries\Adapter\Mail;
 
 use Deliveries\Aware\Adapter\Mail\MailProviderInterface;
 use Deliveries\Exceptions\MailException;
-use Deliveries\Exceptions\MailSMTPExceptions;
+use Deliveries\Exceptions\MailSMTPException;
 
 /**
  * GMail class. Google Mail connection client
@@ -137,7 +137,7 @@ class GMail implements MailProviderInterface {
         $config = $this->getConfig();
 
         // add smtp exception plugin to resolve SMTP errors
-        $this->mailer->registerPlugin(new MailSMTPExceptions());
+        $this->mailer->registerPlugin(new MailSMTPException());
 
         // add decorator plugin to resolve messages placeholders
         $this->mailer->registerPlugin(new \Swift_Plugins_DecoratorPlugin($placeholders));

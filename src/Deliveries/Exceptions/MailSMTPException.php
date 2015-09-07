@@ -14,7 +14,7 @@ use Deliveries\Aware\Handlers\BaseException;
  * @copyright Stanislav WEB
  * @filesource /Deliveries/Exceptions/MailSMTPException.php
  */
-class MailSMTPExceptions extends BaseException
+class MailSMTPException extends BaseException
     implements \Swift_Events_TransportExceptionListener {
 
     /**
