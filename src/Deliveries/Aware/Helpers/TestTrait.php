@@ -91,7 +91,9 @@ trait TestTrait {
 
                 try {
 
+                    /** @noinspection PhpUndefinedMethodInspection */
                     $connect = (new $Mail())->connect($config);
+                    /** @noinspection PhpUndefinedMethodInspection */
                     $this->mailInstance = $connect->getInstance();
                     return $connect;
                 }
@@ -119,6 +121,7 @@ trait TestTrait {
 
             if(true === class_exists($Broker)) {
 
+                /** @noinspection PhpUndefinedMethodInspection */
                 $this->queueInstance = (new $Broker())->connect($config);
 
                 if($this->queueInstance === false) {

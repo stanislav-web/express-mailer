@@ -169,9 +169,11 @@ class EmailValidator {
         $timeout = self::MAX_CONNECTION_TIME / count($mxs);
 
         // try each host
+        /** @noinspection PhpAssignmentInConditionInspection */
         while(list($host) = each($mxs)) {
 
             // connect to SMTP server
+            /** @noinspection PhpAssignmentInConditionInspection */
             if($this->socket = fsockopen($host, self::SMTP_PORT, $errno, $errstr, (float)$timeout)){
                 stream_set_timeout($this->socket, self::MAX_READ_TIME);
                 break;

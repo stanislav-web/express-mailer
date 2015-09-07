@@ -148,6 +148,7 @@ class GMail implements MailProviderInterface {
         $this->message->setSubject($subject);
         $this->message->setBody($message, 'text/html');
         $this->message->setCharset('UTF-8');
+        $this->message->setReadReceiptTo($config['fromEmail']);
         $this->message->setPriority(1);
     }
 

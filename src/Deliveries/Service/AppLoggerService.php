@@ -54,6 +54,24 @@ class AppLoggerService extends LogLevel implements LoggerInterface {
     use FileSysTrait;
 
     /**
+     * Get default format of date
+     *
+     * @return string
+     */
+    public function getDefaultDateFormat() {
+        return self::DEFAULT_DATE_FORMAT;
+    }
+
+    /**
+     * Get default format of log record
+     *
+     * @return string
+     */
+    public function getDefaultLogFormat() {
+        return self::DEFAULT_LOG_FORMAT;
+    }
+
+    /**
      * System is unusable.
      *
      * @param string $message
@@ -61,7 +79,7 @@ class AppLoggerService extends LogLevel implements LoggerInterface {
      *
      * @return null
      */
-    public function emergency($message, array $context = array()) {
+    public function emergency($message, array $context = []) {
         $this->log(self::EMERGENCY, $message, $context);
     }
 
@@ -76,7 +94,7 @@ class AppLoggerService extends LogLevel implements LoggerInterface {
      *
      * @return null
      */
-    public function alert($message, array $context = array()) {
+    public function alert($message, array $context = []) {
         $this->log(self::ALERT, $message, $context);
     }
 
@@ -90,7 +108,7 @@ class AppLoggerService extends LogLevel implements LoggerInterface {
      *
      * @return null
      */
-    public function critical($message, array $context = array()) {
+    public function critical($message, array $context = []) {
         $this->log(self::CRITICAL, $message, $context);
     }
 
@@ -103,7 +121,7 @@ class AppLoggerService extends LogLevel implements LoggerInterface {
      *
      * @return null
      */
-    public function error($message, array $context = array()) {
+    public function error($message, array $context = []) {
         $this->log(self::ERROR, $message, $context);
     }
     /**
@@ -117,7 +135,7 @@ class AppLoggerService extends LogLevel implements LoggerInterface {
      *
      * @return null
      */
-    public function warning($message, array $context = array()) {
+    public function warning($message, array $context = []) {
         $this->log(self::WARNING, $message, $context);
     }
 
@@ -129,7 +147,7 @@ class AppLoggerService extends LogLevel implements LoggerInterface {
      *
      * @return null
      */
-    public function notice($message, array $context = array()) {
+    public function notice($message, array $context = []) {
         $this->log(self::NOTICE, $message, $context);
     }
 
@@ -143,7 +161,7 @@ class AppLoggerService extends LogLevel implements LoggerInterface {
      *
      * @return null
      */
-    public function info($message, array $context = array()) {
+    public function info($message, array $context = []) {
         $this->log(self::INFO, $message, $context);
     }
 
@@ -155,7 +173,7 @@ class AppLoggerService extends LogLevel implements LoggerInterface {
      *
      * @return null
      */
-    public function debug($message, array $context = array()) {
+    public function debug($message, array $context = []) {
         $this->log(self::DEBUG, $message, $context);
     }
 

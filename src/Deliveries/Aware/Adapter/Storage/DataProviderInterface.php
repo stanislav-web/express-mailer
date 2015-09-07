@@ -69,7 +69,7 @@ interface DataProviderInterface {
      *
      * @param int $pid
      * @param array $params additional insert params
-     * @param datetime $date_activation
+     * @param string $date_activation
      * @param int $priority
      * @return int
      */
@@ -130,4 +130,12 @@ interface DataProviderInterface {
      */
     public function getSubscribers($state = 'active', $checked = null, $limit = null);
 
+    /**
+     * Set subscriber state
+     *
+     * @param int $id subscriber id
+     * @param int $checked verification progress state
+     * @return int
+     */
+    public function setSubscriberState($id, $checked);
 }

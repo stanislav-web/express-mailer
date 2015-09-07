@@ -72,6 +72,7 @@ class Beanstalk implements QueueProviderInterface {
         $persistent = (empty($config['persistent']) === true) ? self::DEFAULT_IS_PERSISTENT : $config['persistent'];
 
         $this->broker = new QueueBroker($host, $port, $timeout, $persistent);
+        /** @noinspection PhpUndefinedMethodInspection */
         $isConnect = $this->broker->getConnection()->isServiceListening();
 
         if(!$isConnect) {

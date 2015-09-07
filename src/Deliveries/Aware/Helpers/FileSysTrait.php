@@ -109,6 +109,8 @@ trait FileSysTrait {
      */
     public function getReserved($adapter) {
 
+        $dir = '';
+
         switch($adapter) {
             case 'Storage' :
                 $dir = $this->storagesPath;

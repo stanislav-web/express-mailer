@@ -48,7 +48,7 @@ class Run extends BaseCommandAware {
      * @var array $prompt
      */
     private $prompt = [
-        'MAILINGS_PROCESSES'        =>  "<comment>Prepare process mailings: %d</comment>\n",
+        'MAILINGS_PROCESSES'        =>  "<comment>Prepare process mailings : %d</comment>\n",
         'MAILINGS_SUBSCRIBERS'      =>  "<comment>Prepare subscribers : %d</comment>\n",
         'MAILINGS_LETTERS'          =>  "<comment>Prepare letters to send : %d</comment>\n",
         'QUEUES_NOT_FOUND'          =>  "<comment>No active queues fond</comment>"

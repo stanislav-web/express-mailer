@@ -28,6 +28,7 @@ class BaseException extends \RuntimeException {
      */
     public function __construct($message = null, $code = null) {
 
+        /** @noinspection PhpUndefinedClassConstantInspection */
         $message = static::TYPE.self::DELIMITER.$message; // use as late state binding
         parent::__construct($message, AppLoggerService::$codeName[$code]);
     }

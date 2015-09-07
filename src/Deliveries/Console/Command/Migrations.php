@@ -65,7 +65,7 @@ class Migrations extends BaseCommandAware {
      */
     private $prompt = [
         'STORAGE_TABLE_PREFIX_TYPE' =>  "<info>Please type import %s tables prefix (default `%s`):</info> ",
-        'STORAGE_IMPORT_SUCCESS'    =>  "<fg=white;bg=magenta>Data imported successfully to %s</fg=white;bg=magenta>",
+        'STORAGE_IMPORT_SUCCESS'    =>  "<info>Data imported successfully to %s</info>",
         'STORAGE_DATA_WARNING'      =>  "<comment>Some of the data is already imported into your base.</comment>\n",
         'STORAGE_DATA_OVERWRITE'    =>  "<question>Do you want to continue? This action will overwrite the already previously imported table?:</question> [<comment>no/yes</comment>] ",
     ];
@@ -123,23 +123,26 @@ class Migrations extends BaseCommandAware {
                     }
                     return $answer;
             });
-        }
 
-        if(empty($this->checkImportTables()) === false) {
+            if(empty($this->checkImportTables()) === false) {
 
-            // ask for rewrite existing tables
-            if($this->cautionDialog($input, $output) === false) {
-                return ;
+                // ask for rewrite existing tables
+                if($this->cautionDialog($input, $output) === false) {
+                    return ;
+                }
             }
+
+            // add to config
+            $this->addToConfig(null, ['Storage' => ['prefix' => $prefix]]);
+            $this->import($prefix);
+
+            $message = sprintf($this->prompt['STORAGE_IMPORT_SUCCESS'], $this->getConfig()['adapter']);
+            $this->logger()->info($message);
+            $output->writeln($message);
+
+            return null;
         }
 
-        // add to config
-        $this->addToConfig(null, ['Storage' => ['prefix' => $prefix]]);
-        $this->import($prefix);
-
-        $message = sprintf($this->prompt['STORAGE_IMPORT_SUCCESS'], $this->getConfig()['adapter']);
-        $this->logger()->info($message);
-        $output->writeln($message);
     }
 
     /**
@@ -184,7 +187,7 @@ class Migrations extends BaseCommandAware {
         ]);
 
         $question->setValidator(function($typeInput) {
-            if (!in_array($typeInput, array('no', 'yes'))) {
+            if (!in_array($typeInput, ['no', 'yes'])) {
                 throw new \InvalidArgumentException('Invalid input type. Please [yes] or [no]');
             }
             return $typeInput;

@@ -49,6 +49,7 @@ class BaseCommandAware extends Command {
      */
     protected function logo(OutputInterface $output) {
 
+        /** @noinspection PhpUndefinedClassConstantInspection */
         echo $output->writeln(
             "<info>" . static::LOGO . "</info>"
         );
@@ -61,6 +62,7 @@ class BaseCommandAware extends Command {
      */
     protected function configure() {
 
+        /** @noinspection PhpUndefinedClassConstantInspection */
         $this->setName(static::NAME)
             ->setDescription($this->getDescription());
 
@@ -78,6 +80,7 @@ class BaseCommandAware extends Command {
      * @return string
      */
     public function getDescription() {
+        /** @noinspection PhpUndefinedClassConstantInspection */
         return static::DESCRIPTION;
     }
 

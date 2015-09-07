@@ -23,7 +23,7 @@ trait FormatTrait {
      *
      * @var string $tableHeader
      */
-    private $tableHeader = '<fg=yellow;options=bold>%s</fg=yellow;options=bold>';
+    private $tableHeader = '<comment>%s</comment>';
 
     /**
      * Email validator

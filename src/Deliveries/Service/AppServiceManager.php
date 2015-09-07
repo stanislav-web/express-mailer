@@ -81,7 +81,12 @@ class AppServiceManager {
      */
     public function getSubscribersReports() {
 
-        return $this->storageInstance->countSubscribers();
+        $key = md5(__FUNCTION__);
+
+        $data =  (Cache::exists($key) != false)
+            ? Cache::fetch($key) : $this->storageInstance->countSubscribers();
+
+        return $data;
     }
 
     /**
@@ -91,7 +96,12 @@ class AppServiceManager {
      */
     public function getMailingsReports() {
 
-        return $this->storageInstance->countMailings();
+        $key = md5(__FUNCTION__);
+
+        $data =  (Cache::exists($key) != false)
+            ? Cache::fetch($key) : $this->storageInstance->countMailings();
+
+        return $data;
     }
 
     /**
@@ -101,7 +111,12 @@ class AppServiceManager {
      */
     public function getActiveMailStatistics() {
 
-        return $this->storageInstance->activeMailsStat();
+        $key = md5(__FUNCTION__);
+
+        $data =  (Cache::exists($key) != false)
+            ? Cache::fetch($key) : $this->storageInstance->activeMailsStat();
+
+        return $data;
     }
 
     /**
@@ -159,6 +174,19 @@ class AppServiceManager {
     public function removeQueue($pid) {
 
         return $this->storageInstance->removeQueue($pid);
+    }
+
+    /**
+     * Set subscriber state
+     *
+     * @param int $id subscriber id
+     * @param int $checked verification progress state
+     * @throws \Deliveries\Exceptions\StorageException
+     * @return int
+     */
+    public function setSubscriberState($id, $checked) {
+
+        return $this->storageInstance->setSubscriberState($id, $checked);
     }
 
     /**
@@ -248,6 +276,7 @@ class AppServiceManager {
      * Get number of CPU
      *
      * @used It serves to perform threading
+     * @throws \Deliveries\Exceptions\AppException
      * @return int
      */
     public function cpuCoreCount() {
@@ -262,17 +291,19 @@ class AppServiceManager {
         }
         else {
 
-            $process = @popen('sysctl -a', 'rb');
-            if($process != false) {
+            $process = popen('sysctl -a', 'rb');
 
-                $output = stream_get_contents($process);
-                preg_match('/hw.ncpu: (\d+)/', $output, $matches);
-
-                if($matches) {
-                    $num = (int)$matches[1][0];
-                }
-                pclose($process);
+            if(is_resource($process) == false) {
+                throw new AppException('The command `sysctl` can not be executed', 'warning');
             }
+
+            $output = stream_get_contents($process);
+            preg_match('/hw.ncpu: (\d+)/', $output, $matches);
+
+            if($matches) {
+                $num = (int)$matches[1][0];
+            }
+            pclose($process);
         }
 
         return $num;

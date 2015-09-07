@@ -167,6 +167,26 @@ class MySQL implements DataProviderInterface {
     }
 
     /**
+     * Set subscriber state
+     *
+     * @param int $id subscriber id
+     * @param int $checked verification progress state
+     * @throws \Deliveries\Exceptions\StorageException
+     * @return int
+     */
+    public function setSubscriberState($id, $checked) {
+
+        $query = "UPDATE ".$this->subscribersTable."
+                    SET checked = :checked WHERE id = :id";
+
+        // prepare bind & execute query
+        return $this->exec($query, [
+            ':id'           =>  (int)$id,
+            ':checked'      =>  (int)$checked,
+        ]);
+    }
+
+    /**
      * Count all subscribers
      *
      * @return array
@@ -238,7 +258,7 @@ class MySQL implements DataProviderInterface {
      *
      * @param int $pid process id
      * @param array $params additional insert params
-     * @param datetime $date_activation
+     * @param string $date_activation
      * @param int $priority
      * @throws \Deliveries\Exceptions\StorageException
      * @return int

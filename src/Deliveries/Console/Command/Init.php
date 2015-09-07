@@ -10,7 +10,6 @@ use Deliveries\Aware\Console\Command\BaseCommandAware;
 use Deliveries\Aware\Helpers\FileSysTrait;
 use Deliveries\Aware\Helpers\FormatTrait;
 use Deliveries\Aware\Helpers\ProgressTrait;
-use Deliveries\Aware\Handlers\Logger;
 
 /**
  * Init class. Application Init command
@@ -125,7 +124,7 @@ class Init extends BaseCommandAware {
 
                         if($isCreate > 0) {
                             $this->logger()->info(sprintf($this->prompt['CONFIG_CREATED'], $configFile));
-                            $output->writeln("<fg=white;bg=magenta>".sprintf($this->prompt['CONFIG_CREATED'], $configFile)."</fg=white;bg=magenta>");
+                            $output->writeln("<info>".sprintf($this->prompt['CONFIG_CREATED'], $configFile)."</info>");
 
                             sleep(1);
 
@@ -303,10 +302,12 @@ class Init extends BaseCommandAware {
 
         if($config['Broker']['adapter'] != 'Native') {
 
+            /** @noinspection PhpUndefinedFieldInspection */
             $config['Broker']['host']       = $this->getPrompt(sprintf($this->prompt['QUEUE_HOST_TYPE'], $broker::DEFAULT_HOST), $input, $output,
                 function($answer) use ($config, $broker) {
 
                     if(empty($answer) === true) {
+                        /** @noinspection PhpUndefinedFieldInspection */
                         return $broker::DEFAULT_HOST;
                     }
 
@@ -318,10 +319,12 @@ class Init extends BaseCommandAware {
                     return $answer;
                 }
             );
+            /** @noinspection PhpUndefinedFieldInspection */
             $config['Broker']['port']       = $this->getPrompt(sprintf($this->prompt['QUEUE_PORT_TYPE'], $broker::DEFAULT_PORT), $input, $output,
                 function($answer) use ($config, $broker) {
 
                     if(empty($answer) === true) {
+                        /** @noinspection PhpUndefinedFieldInspection */
                         return $broker::DEFAULT_PORT;
                     }
 
@@ -333,10 +336,12 @@ class Init extends BaseCommandAware {
                     return (int)$answer;
                 }
             );
+            /** @noinspection PhpUndefinedFieldInspection */
             $config['Broker']['timeout']    = $this->getPrompt(sprintf($this->prompt['QUEUE_TIMEOUT_TYPE'], $broker::DEFAULT_TIMEOUT), $input, $output,
                 function($answer) use ($config, $broker) {
 
                     if(empty($answer) === true) {
+                        /** @noinspection PhpUndefinedFieldInspection */
                         return $broker::DEFAULT_TIMEOUT;
                     }
 
@@ -348,10 +353,12 @@ class Init extends BaseCommandAware {
                     return (int)$answer;
                 }
             );
+            /** @noinspection PhpUndefinedFieldInspection */
             $config['Broker']['persistent'] = $this->getPrompt(sprintf($this->prompt['QUEUE_IS_PERSISTENT'], $config['Broker']['adapter'], $broker::DEFAULT_IS_PERSISTENT), $input, $output,
                 function($answer) use ($config, $broker) {
 
                     if(empty($answer) === true) {
+                        /** @noinspection PhpUndefinedFieldInspection */
                         return $broker::DEFAULT_IS_PERSISTENT;
                     }
 
@@ -393,10 +400,12 @@ class Init extends BaseCommandAware {
 
         $storage = 'Deliveries\Adapter\Storage\\'.$config['Storage']['adapter'];
 
+        /** @noinspection PhpUndefinedFieldInspection */
         $config['Storage']['host']      = $this->getPrompt(sprintf($this->prompt['STORAGE_HOST_TYPE'], $config['Storage']['adapter'], $storage::DEFAULT_HOST), $input, $output,
             function($answer) use ($config, $storage) {
 
                 if(empty($answer) === true) {
+                    /** @noinspection PhpUndefinedFieldInspection */
                     return $storage::DEFAULT_HOST;
                 }
                 if(filter_var(gethostbyname($answer), FILTER_VALIDATE_IP) === false && $answer != 'localhost') {
@@ -406,10 +415,12 @@ class Init extends BaseCommandAware {
                 }
                 return $answer;
             });
+        /** @noinspection PhpUndefinedFieldInspection */
         $config['Storage']['port']      = $this->getPrompt(sprintf($this->prompt['STORAGE_PORT_TYPE'], $config['Storage']['adapter'], $storage::DEFAULT_PORT), $input, $output,
             function($answer) use ($config, $storage) {
 
                 if(empty($answer) === true) {
+                    /** @noinspection PhpUndefinedFieldInspection */
                     return $storage::DEFAULT_PORT;
                 }
 
@@ -451,10 +462,12 @@ class Init extends BaseCommandAware {
 
         $mail = 'Deliveries\Adapter\Mail\\'.$config['Mail']['adapter'];
 
+        /** @noinspection PhpUndefinedFieldInspection */
         $config['Mail']['server']       = $this->getPrompt(sprintf($this->prompt['MAIL_HOST_TYPE'], $config['Mail']['adapter'], $mail::DEFAULT_HOST), $input, $output,
             function($answer) use ($config, $mail) {
 
                 if(empty($answer) === true) {
+                    /** @noinspection PhpUndefinedFieldInspection */
                     return $mail::DEFAULT_HOST;
                 }
 
@@ -466,11 +479,13 @@ class Init extends BaseCommandAware {
                 return $answer;
             }
         );
+        /** @noinspection PhpUndefinedFieldInspection */
         $config['Mail']['port']         = $this->getPrompt(sprintf($this->prompt['MAIL_PORT_TYPE'], $config['Mail']['server'], $mail::DEFAULT_PORT), $input, $output,
 
             function($answer) use ($mail) {
 
                 if(empty($answer) === true) {
+                    /** @noinspection PhpUndefinedFieldInspection */
                     return $mail::DEFAULT_PORT;
                 }
 
@@ -482,11 +497,13 @@ class Init extends BaseCommandAware {
                 return (int)$answer;
             }
         );
+        /** @noinspection PhpUndefinedFieldInspection */
         $config['Mail']['socket']       = $this->getPrompt(sprintf($this->prompt['MAIL_SOCKET_TYPE'], $config['Mail']['adapter'], $mail::DEFAULT_SOCKET), $input, $output,
 
             function($answer) use ($mail) {
 
                 if(empty($answer) === true) {
+                    /** @noinspection PhpUndefinedFieldInspection */
                     return $mail::DEFAULT_PROTOCOL;
                 }
 
@@ -526,22 +543,22 @@ class Init extends BaseCommandAware {
     private function createLoggerConfigurations(&$config, $input, $output) {
 
         $config['Logger']['logFile'] = $this->getPrompt(sprintf($this->prompt['LOGGER_FILE_TYPE']), $input, $output, null);
-        $config['Logger']['logDateFormat'] = $this->getPrompt(sprintf($this->prompt['LOGGER_DATE_FORMAT_TYPE'], Logger::DEFAULT_DATE_FORMAT), $input, $output,
+        $config['Logger']['logDateFormat'] = $this->getPrompt(sprintf($this->prompt['LOGGER_DATE_FORMAT_TYPE'], $this->logger()->getDefaultDateFormat()), $input, $output,
 
             function($answer) {
 
                 if(empty($answer) === true) {
-                    return Logger::DEFAULT_DATE_FORMAT;
+                    return $this->logger()->getDefaultDateFormat();
                 }
                 return $answer;
             }
         );
-        $config['Logger']['LogFormat'] = $this->getPrompt(sprintf($this->prompt['LOGGER_RECORD_FORMAT_TYPE'], Logger::DEFAULT_LOG_FORMAT), $input, $output,
+        $config['Logger']['LogFormat'] = $this->getPrompt(sprintf($this->prompt['LOGGER_RECORD_FORMAT_TYPE'], $this->logger()->getDefaultLogFormat()), $input, $output,
 
             function($answer) {
 
                 if(empty($answer) === true) {
-                    return Logger::DEFAULT_LOG_FORMAT;
+                    return $this->logger()->getDefaultLogFormat();
                 }
                 return $answer;
             }

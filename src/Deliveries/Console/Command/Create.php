@@ -94,7 +94,7 @@ class Create extends BaseCommandAware {
         $this->logger()->info(sprintf($this->prompt['QUEUE_CREATE_SUCCESS'], $pid));
 
         $output->writeln(
-            "<fg=white;bg=magenta>".sprintf($this->prompt['QUEUE_CREATE_SUCCESS'], $pid)."</fg=white;bg=magenta>"
+            "<info>".sprintf($this->prompt['QUEUE_CREATE_SUCCESS'], $pid)."</info>"
         );
     }
 }
