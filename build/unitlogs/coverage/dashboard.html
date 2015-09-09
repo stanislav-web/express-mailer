@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /Users/stanislavmenshykh/Projects/express-mailer/src/Deliveries</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/nv.d3.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <!--[if lt IE 9]>
+  <script src="js/html5shiv.min.js"></script>
+  <script src="js/respond.min.js"></script>
+  <![endif]-->
+ </head>
+ <body>
+  <header>
+   <div class="container">
+    <div class="row">
+     <div class="col-md-12">
+      <ol class="breadcrumb">
+        <li><a href="index.html">/Users/stanislavmenshykh/Projects/express-mailer/src/Deliveries</a></li>
+        <li class="active">(Dashboard)</li>
+
+      </ol>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Exceptions/MailException.php.html#17">MailException</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/MailSMTPException.php.html#17">MailSMTPException</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/CacheException.php.html#17">CacheException</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/BrokerException.php.html#17">BrokerException</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Thread.php.html#21">Thread</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/AppException.php.html#17">AppException</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/StorageException.php.html#17">StorageException</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#16">AppCacheService</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/ProgressTrait.php.html#17">ProgressTrait</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#17">TestTrait</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#19">FormatTrait</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#15">FileSysTrait</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#19">AppLoggerService</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#22">AppServiceManager</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Statistics.php.html#21">Statistics</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Run.php.html#22">Run</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#25">BaseCommandAware</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/BaseException.php.html#16">BaseException</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#18">MySQL</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/LocalDomain.php.html#17">LocalDomain</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#22">Native</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/GMail.php.html#19">GMail</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#15">EmailValidator</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EventEmitter.php.html#22">EventEmitter</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#20">Migrations</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Process.php.html#21">Process</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#25">Init</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Create.php.html#21">Create</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Check.php.html#28">Check</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Beanstalk.php.html#20">Beanstalk</a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Console/Command/Init.php.html#25">Init</a></td><td class="text-right">2862</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#18">MySQL</a></td><td class="text-right">1260</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#22">AppServiceManager</a></td><td class="text-right">650</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#15">EmailValidator</a></td><td class="text-right">552</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#20">Migrations</a></td><td class="text-right">552</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#15">FileSysTrait</a></td><td class="text-right">380</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#19">FormatTrait</a></td><td class="text-right">380</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#17">TestTrait</a></td><td class="text-right">306</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#25">BaseCommandAware</a></td><td class="text-right">272</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#16">AppCacheService</a></td><td class="text-right">272</td></tr>
+       <tr><td><a href="Adapter/Broker/Beanstalk.php.html#20">Beanstalk</a></td><td class="text-right">240</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#22">Native</a></td><td class="text-right">210</td></tr>
+       <tr><td><a href="Console/Command/Check.php.html#28">Check</a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="Adapter/Mail/GMail.php.html#19">GMail</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Console/Command/Process.php.html#21">Process</a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Console/Command/Statistics.php.html#21">Statistics</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Console/Command/Run.php.html#22">Run</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Aware/Handlers/EventEmitter.php.html#22">EventEmitter</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Adapter/Mail/LocalDomain.php.html#17">LocalDomain</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Console/Command/Thread.php.html#21">Thread</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Console/Command/Create.php.html#21">Create</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Exceptions/MailSMTPException.php.html#17">MailSMTPException</a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Exceptions/MailException.php.html#35"><abbr title="MailException::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/MailSMTPException.php.html#26"><abbr title="MailSMTPException::exceptionThrown">exceptionThrown</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/StorageException.php.html#35"><abbr title="StorageException::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#21"><abbr title="AppCacheService::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/CacheException.php.html#35"><abbr title="CacheException::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/BrokerException.php.html#30"><abbr title="BrokerException::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Thread.php.html#42"><abbr title="Thread::getOptions">getOptions</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Thread.php.html#58"><abbr title="Thread::execute">execute</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Exceptions/AppException.php.html#35"><abbr title="AppException::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#37"><abbr title="AppCacheService::info">info</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#55"><abbr title="AppCacheService::exists">exists</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#70"><abbr title="AppLoggerService::getDefaultLogFormat">getDefaultLogFormat</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#82"><abbr title="AppLoggerService::emergency">emergency</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#97"><abbr title="AppLoggerService::alert">alert</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#61"><abbr title="AppLoggerService::getDefaultDateFormat">getDefaultDateFormat</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#132"><abbr title="AppCacheService::clear">clear</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#74"><abbr title="AppCacheService::store">store</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#95"><abbr title="AppCacheService::fetch">fetch</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#115"><abbr title="AppCacheService::delete">delete</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Statistics.php.html#87"><abbr title="Statistics::execute">execute</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Statistics.php.html#75"><abbr title="Statistics::getConfig">getConfig</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#104"><abbr title="Migrations::execute">execute</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#189"><abbr title="Migrations::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#153"><abbr title="Migrations::checkImportTables">checkImportTables</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#92"><abbr title="Migrations::getConfig">getConfig</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#543"><abbr title="Init::createLoggerConfigurations">createLoggerConfigurations</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#286"><abbr title="Init::createBrokerConfigurations">createBrokerConfigurations</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#388"><abbr title="Init::createStorageConfigurations">createStorageConfigurations</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#448"><abbr title="Init::createMailConfigurations">createMailConfigurations</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#180"><abbr title="Migrations::cautionDialog">cautionDialog</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#207"><abbr title="Migrations::import">import</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Run.php.html#80"><abbr title="Run::execute">execute</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Run.php.html#92"><abbr title="Run::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Statistics.php.html#61"><abbr title="Statistics::getOptions">getOptions</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Run.php.html#62"><abbr title="Run::getOptions">getOptions</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Process.php.html#92"><abbr title="Process::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#241"><abbr title="Migrations::parseFileToSingleQueries">parseFileToSingleQueries</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Process.php.html#55"><abbr title="Process::getOptions">getOptions</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Process.php.html#74"><abbr title="Process::execute">execute</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#111"><abbr title="AppLoggerService::critical">critical</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#124"><abbr title="AppLoggerService::error">error</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#41"><abbr title="FormatTrait::tableLong">tableLong</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#67"><abbr title="FormatTrait::table">table</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#98"><abbr title="FormatTrait::verifyDate">verifyDate</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#120"><abbr title="FormatTrait::verifyEmail">verifyEmail</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#173"><abbr title="FileSysTrait::createLogFile">createLogFile</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#145"><abbr title="FileSysTrait::addToLog">addToLog</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#77"><abbr title="FileSysTrait::createConfigFile">createConfigFile</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#90"><abbr title="FileSysTrait::addToConfig">addToConfig</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#110"><abbr title="FileSysTrait::getReserved">getReserved</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#149"><abbr title="FormatTrait::arrayKeysPlaceholders">arrayKeysPlaceholders</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#167"><abbr title="FormatTrait::arrayPartition">arrayPartition</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#84"><abbr title="TestTrait::isMailConnectSuccess">isMailConnectSuccess</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#116"><abbr title="TestTrait::isQueueConnectSuccess">isQueueConnectSuccess</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#144"><abbr title="TestTrait::isStorageConnectSuccess">isStorageConnectSuccess</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#71"><abbr title="TestTrait::getQueueInstance">getQueueInstance</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#59"><abbr title="TestTrait::getStorageInstance">getStorageInstance</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#189"><abbr title="FormatTrait::getClassName">getClassName</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/ProgressTrait.php.html#27"><abbr title="ProgressTrait::getProgress">getProgress</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#46"><abbr title="TestTrait::getMailInstance">getMailInstance</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#66"><abbr title="FileSysTrait::isConfigExist">isConfigExist</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#51"><abbr title="FileSysTrait::getConfig">getConfig</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#59"><abbr title="AppServiceManager::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#73"><abbr title="AppServiceManager::importTables">importTables</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#82"><abbr title="AppServiceManager::getSubscribersReports">getSubscribersReports</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#188"><abbr title="AppLoggerService::log">log</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#176"><abbr title="AppLoggerService::debug">debug</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#138"><abbr title="AppLoggerService::warning">warning</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#150"><abbr title="AppLoggerService::notice">notice</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppLoggerService.php.html#164"><abbr title="AppLoggerService::info">info</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#97"><abbr title="AppServiceManager::getMailingsReports">getMailingsReports</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#112"><abbr title="AppServiceManager::getActiveMailStatistics">getActiveMailStatistics</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#247"><abbr title="AppServiceManager::sendMessage">sendMessage</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#262"><abbr title="AppServiceManager::getUncheckedSubscribers">getUncheckedSubscribers</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#282"><abbr title="AppServiceManager::cpuCoreCount">cpuCoreCount</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#222"><abbr title="AppServiceManager::getQueues">getQueues</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#203"><abbr title="AppServiceManager::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#130"><abbr title="AppServiceManager::createQueue">createQueue</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#174"><abbr title="AppServiceManager::removeQueue">removeQueue</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#187"><abbr title="AppServiceManager::setSubscriberState">setSubscriberState</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#254"><abbr title="Init::isConfigOk">isConfigOk</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#558"><abbr title="Init::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#116"><abbr title="MySQL::getTablesList">getTablesList</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#129"><abbr title="MySQL::setTables">setTables</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#147"><abbr title="MySQL::getSubscribers">getSubscribers</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#177"><abbr title="MySQL::setSubscriberState">setSubscriberState</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#90"><abbr title="MySQL::connect">connect</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#79"><abbr title="MySQL::getInstance">getInstance</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/LocalDomain.php.html#85"><abbr title="LocalDomain::createMessage">createMessage</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/LocalDomain.php.html#97"><abbr title="LocalDomain::send">send</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#67"><abbr title="MySQL::isSupport">isSupport</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#194"><abbr title="MySQL::countSubscribers">countSubscribers</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#210"><abbr title="MySQL::countMailings">countMailings</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#318"><abbr title="MySQL::getQueues">getQueues</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#342"><abbr title="MySQL::importTables">importTables</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#354"><abbr title="MySQL::exec">exec</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#304"><abbr title="MySQL::getQueue">getQueue</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#287"><abbr title="MySQL::removeQueue">removeQueue</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#228"><abbr title="MySQL::activeMailsStat">activeMailsStat</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#246"><abbr title="MySQL::getLists">getLists</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#266"><abbr title="MySQL::saveQueue">saveQueue</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/LocalDomain.php.html#74"><abbr title="LocalDomain::getConfig">getConfig</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/LocalDomain.php.html#56"><abbr title="LocalDomain::connect">connect</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#62"><abbr title="Native::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#70"><abbr title="Native::getInstance">getInstance</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#80"><abbr title="Native::connect">connect</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Beanstalk.php.html#139"><abbr title="Beanstalk::delete">delete</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Beanstalk.php.html#121"><abbr title="Beanstalk::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Beanstalk.php.html#67"><abbr title="Beanstalk::connect">connect</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Beanstalk.php.html#91"><abbr title="Beanstalk::push">push</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Beanstalk.php.html#105"><abbr title="Beanstalk::read">read</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#91"><abbr title="Native::push">push</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#117"><abbr title="Native::read">read</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/GMail.php.html#134"><abbr title="GMail::createMessage">createMessage</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/GMail.php.html#164"><abbr title="GMail::send">send</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/LocalDomain.php.html#46"><abbr title="LocalDomain::getInstance">getInstance</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/GMail.php.html#97"><abbr title="GMail::connect">connect</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/GMail.php.html#84"><abbr title="GMail::getConfig">getConfig</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#147"><abbr title="Native::delete">delete</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#166"><abbr title="Native::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Mail/GMail.php.html#69"><abbr title="GMail::getInstance">getInstance</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#375"><abbr title="MySQL::fetchAll">fetchAll</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#397"><abbr title="MySQL::fetchOne">fetchOne</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Check.php.html#92"><abbr title="Check::getOptions">getOptions</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Check.php.html#111"><abbr title="Check::execute">execute</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Check.php.html#140"><abbr title="Check::subscribersVerify">subscribersVerify</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Check.php.html#183"><abbr title="Check::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EventEmitter.php.html#48"><abbr title="EventEmitter::afterExecuteCommand">afterExecuteCommand</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EventEmitter.php.html#68"><abbr title="EventEmitter::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#252"><abbr title="EmailValidator::isValid">isValid</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#259"><abbr title="EmailValidator::__destruct">__destruct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EventEmitter.php.html#29"><abbr title="EventEmitter::beforeExecuteCommand">beforeExecuteCommand</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Check.php.html#197"><abbr title="Check::createProcessTitle">createProcessTitle</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Check.php.html#214"><abbr title="Check::printProcess">printProcess</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#170"><abbr title="Init::getConfigContent">getConfigContent</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#196"><abbr title="Init::configFile">configFile</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#216"><abbr title="Init::rebuildConfig">rebuildConfig</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#149"><abbr title="Init::migrationRunner">migrationRunner</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#97"><abbr title="Init::execute">execute</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Check.php.html#225"><abbr title="Check::createProgress">createProgress</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Create.php.html#60"><abbr title="Create::getOptions">getOptions</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Console/Command/Create.php.html#80"><abbr title="Create::execute">execute</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#237"><abbr title="EmailValidator::getReplyCode">getReplyCode</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#218"><abbr title="EmailValidator::getMxRecords">getMxRecords</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#82"><abbr title="BaseCommandAware::getDescription">getDescription</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#99"><abbr title="BaseCommandAware::getPrompt">getPrompt</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#107"><abbr title="BaseCommandAware::anonymous function">anonymous function</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#63"><abbr title="BaseCommandAware::configure">configure</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#50"><abbr title="BaseCommandAware::logo">logo</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#418"><abbr title="MySQL::quoteValue">quoteValue</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#428"><abbr title="MySQL::quoteFiled">quoteFiled</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#438"><abbr title="MySQL::prepare">prepare</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#129"><abbr title="BaseCommandAware::getAppServiceManager">getAppServiceManager</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#147"><abbr title="BaseCommandAware::logger">logger</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#137"><abbr title="EmailValidator::getDomain">getDomain</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#150"><abbr title="EmailValidator::isMxAvailable">isMxAvailable</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#163"><abbr title="EmailValidator::isSmtpAvailable">isSmtpAvailable</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#97"><abbr title="EmailValidator::verifySmtp">verifySmtp</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#84"><abbr title="EmailValidator::verifySyntax">verifySyntax</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#162"><abbr title="BaseCommandAware::logOutput">logOutput</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/BaseException.php.html#29"><abbr title="BaseException::__construct">__construct</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#77"><abbr title="EmailValidator::addEmail">addEmail</a></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Adapter/Broker/Beanstalk.php.html#56"><abbr title="Beanstalk::getInstance">getInstance</a></a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Console/Command/Init.php.html#286"><abbr title="Init::createBrokerConfigurations">createBrokerConfigurations</abbr></a></td><td class="text-right">156</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#448"><abbr title="Init::createMailConfigurations">createMailConfigurations</abbr></a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#97"><abbr title="Init::execute">execute</abbr></a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#388"><abbr title="Init::createStorageConfigurations">createStorageConfigurations</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#97"><abbr title="EmailValidator::verifySmtp">verifySmtp</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#163"><abbr title="EmailValidator::isSmtpAvailable">isSmtpAvailable</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Adapter/Broker/Beanstalk.php.html#67"><abbr title="Beanstalk::connect">connect</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#104"><abbr title="Migrations::execute">execute</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#110"><abbr title="FileSysTrait::getReserved">getReserved</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Console/Command/Process.php.html#74"><abbr title="Process::execute">execute</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Console/Command/Statistics.php.html#87"><abbr title="Statistics::execute">execute</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Console/Command/Check.php.html#140"><abbr title="Check::subscribersVerify">subscribersVerify</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#216"><abbr title="Init::rebuildConfig">rebuildConfig</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#207"><abbr title="Migrations::import">import</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#241"><abbr title="Migrations::parseFileToSingleQueries">parseFileToSingleQueries</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#99"><abbr title="BaseCommandAware::getPrompt">getPrompt</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#120"><abbr title="FormatTrait::verifyEmail">verifyEmail</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#147"><abbr title="MySQL::getSubscribers">getSubscribers</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Adapter/Mail/GMail.php.html#97"><abbr title="GMail::connect">connect</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#282"><abbr title="AppServiceManager::cpuCoreCount">cpuCoreCount</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#84"><abbr title="TestTrait::isMailConnectSuccess">isMailConnectSuccess</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#116"><abbr title="TestTrait::isQueueConnectSuccess">isQueueConnectSuccess</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#98"><abbr title="FormatTrait::verifyDate">verifyDate</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#144"><abbr title="TestTrait::isStorageConnectSuccess">isStorageConnectSuccess</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#543"><abbr title="Init::createLoggerConfigurations">createLoggerConfigurations</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#167"><abbr title="FormatTrait::arrayPartition">arrayPartition</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#180"><abbr title="Migrations::cautionDialog">cautionDialog</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#41"><abbr title="FormatTrait::tableLong">tableLong</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Console/Command/Thread.php.html#58"><abbr title="Thread::execute">execute</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#130"><abbr title="AppServiceManager::createQueue">createQueue</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#74"><abbr title="AppCacheService::store">store</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Console/Command/Run.php.html#80"><abbr title="Run::execute">execute</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Console/Command/Process.php.html#92"><abbr title="Process::anonymous function">anonymous function</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#95"><abbr title="AppCacheService::fetch">fetch</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#173"><abbr title="FileSysTrait::createLogFile">createLogFile</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#90"><abbr title="FileSysTrait::addToConfig">addToConfig</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#67"><abbr title="FormatTrait::table">table</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#153"><abbr title="Migrations::checkImportTables">checkImportTables</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#354"><abbr title="MySQL::exec">exec</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#117"><abbr title="Native::read">read</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#147"><abbr title="Native::delete">delete</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#318"><abbr title="MySQL::getQueues">getQueues</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#67"><abbr title="MySQL::isSupport">isSupport</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#90"><abbr title="MySQL::connect">connect</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#237"><abbr title="EmailValidator::getReplyCode">getReplyCode</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Adapter/Broker/Beanstalk.php.html#139"><abbr title="Beanstalk::delete">delete</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Adapter/Broker/Beanstalk.php.html#105"><abbr title="Beanstalk::read">read</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#254"><abbr title="Init::isConfigOk">isConfigOk</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Adapter/Broker/Native.php.html#91"><abbr title="Native::push">push</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Console/Command/Check.php.html#111"><abbr title="Check::execute">execute</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#262"><abbr title="AppServiceManager::getUncheckedSubscribers">getUncheckedSubscribers</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#77"><abbr title="FileSysTrait::createConfigFile">createConfigFile</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#51"><abbr title="FileSysTrait::getConfig">getConfig</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#222"><abbr title="AppServiceManager::getQueues">getQueues</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Adapter/Mail/GMail.php.html#69"><abbr title="GMail::getInstance">getInstance</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#46"><abbr title="TestTrait::getMailInstance">getMailInstance</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#59"><abbr title="TestTrait::getStorageInstance">getStorageInstance</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Helpers/TestTrait.php.html#71"><abbr title="TestTrait::getQueueInstance">getQueueInstance</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Helpers/FormatTrait.php.html#149"><abbr title="FormatTrait::arrayKeysPlaceholders">arrayKeysPlaceholders</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#375"><abbr title="MySQL::fetchAll">fetchAll</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Adapter/Mail/LocalDomain.php.html#56"><abbr title="LocalDomain::connect">connect</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Adapter/Mail/GMail.php.html#164"><abbr title="GMail::send">send</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Helpers/FileSysTrait.php.html#145"><abbr title="FileSysTrait::addToLog">addToLog</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#97"><abbr title="AppServiceManager::getMailingsReports">getMailingsReports</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Handlers/EmailValidator.php.html#84"><abbr title="EmailValidator::verifySyntax">verifySyntax</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#162"><abbr title="BaseCommandAware::logOutput">logOutput</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#147"><abbr title="BaseCommandAware::logger">logger</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Console/Command/Run.php.html#92"><abbr title="Run::anonymous function">anonymous function</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Handlers/EventEmitter.php.html#68"><abbr title="EventEmitter::anonymous function">anonymous function</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Console/Command/Create.php.html#80"><abbr title="Create::execute">execute</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#558"><abbr title="Init::anonymous function">anonymous function</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Console/Command/Init.php.html#196"><abbr title="Init::configFile">configFile</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Console/Command/Migrations.php.html#189"><abbr title="Migrations::anonymous function">anonymous function</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#129"><abbr title="BaseCommandAware::getAppServiceManager">getAppServiceManager</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#107"><abbr title="BaseCommandAware::anonymous function">anonymous function</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Adapter/Storage/MySQL.php.html#397"><abbr title="MySQL::fetchOne">fetchOne</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#115"><abbr title="AppCacheService::delete">delete</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#132"><abbr title="AppCacheService::clear">clear</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#82"><abbr title="AppServiceManager::getSubscribersReports">getSubscribersReports</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Aware/Console/Command/BaseCommandAware.php.html#63"><abbr title="BaseCommandAware::configure">configure</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#55"><abbr title="AppCacheService::exists">exists</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Exceptions/MailSMTPException.php.html#26"><abbr title="MailSMTPException::exceptionThrown">exceptionThrown</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#21"><abbr title="AppCacheService::__construct">__construct</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/AppCacheService.php.html#37"><abbr title="AppCacheService::info">info</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Service/AppServiceManager.php.html#112"><abbr title="AppServiceManager::getActiveMailStatistics">getActiveMailStatistics</abbr></a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="http://github.com/sebastianbergmann/php-code-coverage" target="_top">PHP_CodeCoverage 2.0.13</a> using <a href="http://php.net/" target="_top">PHP 5.5.20</a> and <a href="http://phpunit.de/">PHPUnit 4.4.0</a> at Wed Sep 9 16:57:27 UTC 2015.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="js/jquery.min.js" type="text/javascript"></script>
+  <script src="js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="js/holder.js" type="text/javascript"></script>
+  <script src="js/d3.min.js" type="text/javascript"></script>
+  <script src="js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([30,0,0,0,0,0,0,0,0,0,0,1], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([163,0,0,0,0,0,0,0,0,0,0,3], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.scatter.onlyCircles(false);
+    chart.tooltipContent(function(key, y, e, graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,15,"<a href=\"Adapter\/Broker\/Beanstalk.php.html#20\">Beanstalk<\/a>"],[0,14,"<a href=\"Adapter\/Broker\/Native.php.html#22\">Native<\/a>"],[0,10,"<a href=\"Adapter\/Mail\/GMail.php.html#19\">GMail<\/a>"],[0,6,"<a href=\"Adapter\/Mail\/LocalDomain.php.html#17\">LocalDomain<\/a>"],[0,35,"<a href=\"Adapter\/Storage\/MySQL.php.html#18\">MySQL<\/a>"],[0,16,"<a href=\"Aware\/Console\/Command\/BaseCommandAware.php.html#25\">BaseCommandAware<\/a>"],[0,1,"<a href=\"Aware\/Handlers\/BaseException.php.html#16\">BaseException<\/a>"],[0,23,"<a href=\"Aware\/Handlers\/EmailValidator.php.html#15\">EmailValidator<\/a>"],[0,6,"<a href=\"Aware\/Handlers\/EventEmitter.php.html#22\">EventEmitter<\/a>"],[100,0,"<a href=\"Console\/Application.php.html#17\">Application<\/a>"],[0,13,"<a href=\"Console\/Command\/Check.php.html#28\">Check<\/a>"],[0,3,"<a href=\"Console\/Command\/Create.php.html#21\">Create<\/a>"],[0,53,"<a href=\"Console\/Command\/Init.php.html#25\">Init<\/a>"],[0,23,"<a href=\"Console\/Command\/Migrations.php.html#20\">Migrations<\/a>"],[0,9,"<a href=\"Console\/Command\/Process.php.html#21\">Process<\/a>"],[0,6,"<a href=\"Console\/Command\/Run.php.html#22\">Run<\/a>"],[0,7,"<a href=\"Console\/Command\/Statistics.php.html#21\">Statistics<\/a>"],[0,4,"<a href=\"Console\/Command\/Thread.php.html#21\">Thread<\/a>"],[0,1,"<a href=\"Exceptions\/AppException.php.html#17\">AppException<\/a>"],[0,1,"<a href=\"Exceptions\/BrokerException.php.html#17\">BrokerException<\/a>"],[0,1,"<a href=\"Exceptions\/CacheException.php.html#17\">CacheException<\/a>"],[0,1,"<a href=\"Exceptions\/MailException.php.html#17\">MailException<\/a>"],[0,2,"<a href=\"Exceptions\/MailSMTPException.php.html#17\">MailSMTPException<\/a>"],[0,1,"<a href=\"Exceptions\/StorageException.php.html#17\">StorageException<\/a>"],[0,16,"<a href=\"Service\/AppCacheService.php.html#16\">AppCacheService<\/a>"],[0,11,"<a href=\"Service\/AppLoggerService.php.html#19\">AppLoggerService<\/a>"],[0,25,"<a href=\"Service\/AppServiceManager.php.html#22\">AppServiceManager<\/a>"],[0,19,"<a href=\"Aware\/Helpers\/FileSysTrait.php.html#15\">FileSysTrait<\/a>"],[0,19,"<a href=\"Aware\/Helpers\/FormatTrait.php.html#19\">FormatTrait<\/a>"],[0,1,"<a href=\"Aware\/Helpers\/ProgressTrait.php.html#17\">ProgressTrait<\/a>"],[0,17,"<a href=\"Aware\/Helpers\/TestTrait.php.html#17\">TestTrait<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.scatter.onlyCircles(false);
+    chart.tooltipContent(function(key, y, e, graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"Adapter\/Broker\/Beanstalk.php.html#56\">Beanstalk::getInstance<\/a>"],[0,6,"<a href=\"Adapter\/Broker\/Beanstalk.php.html#67\">Beanstalk::connect<\/a>"],[0,1,"<a href=\"Adapter\/Broker\/Beanstalk.php.html#91\">Beanstalk::push<\/a>"],[0,3,"<a href=\"Adapter\/Broker\/Beanstalk.php.html#105\">Beanstalk::read<\/a>"],[0,1,"<a href=\"Adapter\/Broker\/Beanstalk.php.html#121\">Beanstalk::anonymous function<\/a>"],[0,3,"<a href=\"Adapter\/Broker\/Beanstalk.php.html#139\">Beanstalk::delete<\/a>"],[0,1,"<a href=\"Adapter\/Broker\/Native.php.html#62\">Native::__construct<\/a>"],[0,1,"<a href=\"Adapter\/Broker\/Native.php.html#70\">Native::getInstance<\/a>"],[0,1,"<a href=\"Adapter\/Broker\/Native.php.html#80\">Native::connect<\/a>"],[0,3,"<a href=\"Adapter\/Broker\/Native.php.html#91\">Native::push<\/a>"],[0,3,"<a href=\"Adapter\/Broker\/Native.php.html#117\">Native::read<\/a>"],[0,3,"<a href=\"Adapter\/Broker\/Native.php.html#147\">Native::delete<\/a>"],[100,1,"<a href=\"Adapter\/Broker\/Native.php.html#163\">Native::errorHandler<\/a>"],[0,1,"<a href=\"Adapter\/Broker\/Native.php.html#166\">Native::anonymous function<\/a>"],[0,2,"<a href=\"Adapter\/Mail\/GMail.php.html#69\">GMail::getInstance<\/a>"],[0,1,"<a href=\"Adapter\/Mail\/GMail.php.html#84\">GMail::getConfig<\/a>"],[0,4,"<a href=\"Adapter\/Mail\/GMail.php.html#97\">GMail::connect<\/a>"],[0,1,"<a href=\"Adapter\/Mail\/GMail.php.html#134\">GMail::createMessage<\/a>"],[0,2,"<a href=\"Adapter\/Mail\/GMail.php.html#164\">GMail::send<\/a>"],[0,1,"<a href=\"Adapter\/Mail\/LocalDomain.php.html#46\">LocalDomain::getInstance<\/a>"],[0,2,"<a href=\"Adapter\/Mail\/LocalDomain.php.html#56\">LocalDomain::connect<\/a>"],[0,1,"<a href=\"Adapter\/Mail\/LocalDomain.php.html#74\">LocalDomain::getConfig<\/a>"],[0,1,"<a href=\"Adapter\/Mail\/LocalDomain.php.html#85\">LocalDomain::createMessage<\/a>"],[0,1,"<a href=\"Adapter\/Mail\/LocalDomain.php.html#97\">LocalDomain::send<\/a>"],[0,3,"<a href=\"Adapter\/Storage\/MySQL.php.html#67\">MySQL::isSupport<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#79\">MySQL::getInstance<\/a>"],[0,3,"<a href=\"Adapter\/Storage\/MySQL.php.html#90\">MySQL::connect<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#116\">MySQL::getTablesList<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#129\">MySQL::setTables<\/a>"],[0,4,"<a href=\"Adapter\/Storage\/MySQL.php.html#147\">MySQL::getSubscribers<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#177\">MySQL::setSubscriberState<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#194\">MySQL::countSubscribers<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#210\">MySQL::countMailings<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#228\">MySQL::activeMailsStat<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#246\">MySQL::getLists<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#266\">MySQL::saveQueue<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#287\">MySQL::removeQueue<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#304\">MySQL::getQueue<\/a>"],[0,3,"<a href=\"Adapter\/Storage\/MySQL.php.html#318\">MySQL::getQueues<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#342\">MySQL::importTables<\/a>"],[0,3,"<a href=\"Adapter\/Storage\/MySQL.php.html#354\">MySQL::exec<\/a>"],[0,2,"<a href=\"Adapter\/Storage\/MySQL.php.html#375\">MySQL::fetchAll<\/a>"],[0,2,"<a href=\"Adapter\/Storage\/MySQL.php.html#397\">MySQL::fetchOne<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#418\">MySQL::quoteValue<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#428\">MySQL::quoteFiled<\/a>"],[0,1,"<a href=\"Adapter\/Storage\/MySQL.php.html#438\">MySQL::prepare<\/a>"],[0,1,"<a href=\"Aware\/Console\/Command\/BaseCommandAware.php.html#50\">BaseCommandAware::logo<\/a>"],[0,2,"<a href=\"Aware\/Console\/Command\/BaseCommandAware.php.html#63\">BaseCommandAware::configure<\/a>"],[0,1,"<a href=\"Aware\/Console\/Command\/BaseCommandAware.php.html#82\">BaseCommandAware::getDescription<\/a>"],[0,4,"<a href=\"Aware\/Console\/Command\/BaseCommandAware.php.html#99\">BaseCommandAware::getPrompt<\/a>"],[0,2,"<a href=\"Aware\/Console\/Command\/BaseCommandAware.php.html#107\">BaseCommandAware::anonymous function<\/a>"],[0,2,"<a href=\"Aware\/Console\/Command\/BaseCommandAware.php.html#129\">BaseCommandAware::getAppServiceManager<\/a>"],[0,2,"<a href=\"Aware\/Console\/Command\/BaseCommandAware.php.html#147\">BaseCommandAware::logger<\/a>"],[0,2,"<a href=\"Aware\/Console\/Command\/BaseCommandAware.php.html#162\">BaseCommandAware::logOutput<\/a>"],[0,1,"<a href=\"Aware\/Handlers\/BaseException.php.html#29\">BaseException::__construct<\/a>"],[0,1,"<a href=\"Aware\/Handlers\/EmailValidator.php.html#77\">EmailValidator::addEmail<\/a>"],[0,2,"<a href=\"Aware\/Handlers\/EmailValidator.php.html#84\">EmailValidator::verifySyntax<\/a>"],[0,6,"<a href=\"Aware\/Handlers\/EmailValidator.php.html#97\">EmailValidator::verifySmtp<\/a>"],[0,1,"<a href=\"Aware\/Handlers\/EmailValidator.php.html#137\">EmailValidator::getDomain<\/a>"],[0,1,"<a href=\"Aware\/Handlers\/EmailValidator.php.html#150\">EmailValidator::isMxAvailable<\/a>"],[0,6,"<a href=\"Aware\/Handlers\/EmailValidator.php.html#163\">EmailValidator::isSmtpAvailable<\/a>"],[0,1,"<a href=\"Aware\/Handlers\/EmailValidator.php.html#218\">EmailValidator::getMxRecords<\/a>"],[0,3,"<a href=\"Aware\/Handlers\/EmailValidator.php.html#237\">EmailValidator::getReplyCode<\/a>"],[0,1,"<a href=\"Aware\/Handlers\/EmailValidator.php.html#252\">EmailValidator::isValid<\/a>"],[0,1,"<a href=\"Aware\/Handlers\/EmailValidator.php.html#259\">EmailValidator::__destruct<\/a>"],[0,1,"<a href=\"Aware\/Handlers\/EventEmitter.php.html#29\">EventEmitter::beforeExecuteCommand<\/a>"],[0,2,"<a href=\"Aware\/Handlers\/EventEmitter.php.html#68\">EventEmitter::anonymous function<\/a>"],[0,1,"<a href=\"Aware\/Handlers\/EventEmitter.php.html#48\">EventEmitter::afterExecuteCommand<\/a>"],[100,2,"<a href=\"Aware\/Handlers\/EventEmitter.php.html#66\">EventEmitter::beforeException<\/a>"],[0,1,"<a href=\"Console\/Command\/Check.php.html#92\">Check::getOptions<\/a>"],[0,3,"<a href=\"Console\/Command\/Check.php.html#111\">Check::execute<\/a>"],[0,5,"<a href=\"Console\/Command\/Check.php.html#140\">Check::subscribersVerify<\/a>"],[0,1,"<a href=\"Console\/Command\/Check.php.html#183\">Check::anonymous function<\/a>"],[0,1,"<a href=\"Console\/Command\/Check.php.html#197\">Check::createProcessTitle<\/a>"],[0,1,"<a href=\"Console\/Command\/Check.php.html#214\">Check::printProcess<\/a>"],[0,1,"<a href=\"Console\/Command\/Check.php.html#225\">Check::createProgress<\/a>"],[0,1,"<a href=\"Console\/Command\/Create.php.html#60\">Create::getOptions<\/a>"],[0,2,"<a href=\"Console\/Command\/Create.php.html#80\">Create::execute<\/a>"],[0,8,"<a href=\"Console\/Command\/Init.php.html#97\">Init::execute<\/a>"],[0,1,"<a href=\"Console\/Command\/Init.php.html#149\">Init::migrationRunner<\/a>"],[0,1,"<a href=\"Console\/Command\/Init.php.html#170\">Init::getConfigContent<\/a>"],[0,2,"<a href=\"Console\/Command\/Init.php.html#196\">Init::configFile<\/a>"],[0,4,"<a href=\"Console\/Command\/Init.php.html#216\">Init::rebuildConfig<\/a>"],[0,2,"<a href=\"Console\/Command\/Init.php.html#558\">Init::anonymous function<\/a>"],[0,3,"<a href=\"Console\/Command\/Init.php.html#254\">Init::isConfigOk<\/a>"],[0,12,"<a href=\"Console\/Command\/Init.php.html#286\">Init::createBrokerConfigurations<\/a>"],[0,7,"<a href=\"Console\/Command\/Init.php.html#388\">Init::createStorageConfigurations<\/a>"],[0,10,"<a href=\"Console\/Command\/Init.php.html#448\">Init::createMailConfigurations<\/a>"],[0,3,"<a href=\"Console\/Command\/Init.php.html#543\">Init::createLoggerConfigurations<\/a>"],[0,1,"<a href=\"Console\/Command\/Migrations.php.html#92\">Migrations::getConfig<\/a>"],[0,6,"<a href=\"Console\/Command\/Migrations.php.html#104\">Migrations::execute<\/a>"],[0,2,"<a href=\"Console\/Command\/Migrations.php.html#189\">Migrations::anonymous function<\/a>"],[0,3,"<a href=\"Console\/Command\/Migrations.php.html#153\">Migrations::checkImportTables<\/a>"],[0,3,"<a href=\"Console\/Command\/Migrations.php.html#180\">Migrations::cautionDialog<\/a>"],[0,4,"<a href=\"Console\/Command\/Migrations.php.html#207\">Migrations::import<\/a>"],[0,4,"<a href=\"Console\/Command\/Migrations.php.html#241\">Migrations::parseFileToSingleQueries<\/a>"],[0,1,"<a href=\"Console\/Command\/Process.php.html#55\">Process::getOptions<\/a>"],[0,5,"<a href=\"Console\/Command\/Process.php.html#74\">Process::execute<\/a>"],[0,3,"<a href=\"Console\/Command\/Process.php.html#92\">Process::anonymous function<\/a>"],[0,1,"<a href=\"Console\/Command\/Run.php.html#62\">Run::getOptions<\/a>"],[0,3,"<a href=\"Console\/Command\/Run.php.html#80\">Run::execute<\/a>"],[0,2,"<a href=\"Console\/Command\/Run.php.html#92\">Run::anonymous function<\/a>"],[0,1,"<a href=\"Console\/Command\/Statistics.php.html#61\">Statistics::getOptions<\/a>"],[0,1,"<a href=\"Console\/Command\/Statistics.php.html#75\">Statistics::getConfig<\/a>"],[0,5,"<a href=\"Console\/Command\/Statistics.php.html#87\">Statistics::execute<\/a>"],[0,1,"<a href=\"Console\/Command\/Thread.php.html#42\">Thread::getOptions<\/a>"],[0,3,"<a href=\"Console\/Command\/Thread.php.html#58\">Thread::execute<\/a>"],[0,1,"<a href=\"Exceptions\/AppException.php.html#35\">AppException::__construct<\/a>"],[0,1,"<a href=\"Exceptions\/BrokerException.php.html#30\">BrokerException::__construct<\/a>"],[0,1,"<a href=\"Exceptions\/CacheException.php.html#35\">CacheException::__construct<\/a>"],[0,1,"<a href=\"Exceptions\/MailException.php.html#35\">MailException::__construct<\/a>"],[0,2,"<a href=\"Exceptions\/MailSMTPException.php.html#26\">MailSMTPException::exceptionThrown<\/a>"],[0,1,"<a href=\"Exceptions\/StorageException.php.html#35\">StorageException::__construct<\/a>"],[0,2,"<a href=\"Service\/AppCacheService.php.html#21\">AppCacheService::__construct<\/a>"],[0,2,"<a href=\"Service\/AppCacheService.php.html#37\">AppCacheService::info<\/a>"],[0,2,"<a href=\"Service\/AppCacheService.php.html#55\">AppCacheService::exists<\/a>"],[0,3,"<a href=\"Service\/AppCacheService.php.html#74\">AppCacheService::store<\/a>"],[0,3,"<a href=\"Service\/AppCacheService.php.html#95\">AppCacheService::fetch<\/a>"],[0,2,"<a href=\"Service\/AppCacheService.php.html#115\">AppCacheService::delete<\/a>"],[0,2,"<a href=\"Service\/AppCacheService.php.html#132\">AppCacheService::clear<\/a>"],[0,1,"<a href=\"Service\/AppLoggerService.php.html#61\">AppLoggerService::getDefaultDateFormat<\/a>"],[0,1,"<a href=\"Service\/AppLoggerService.php.html#70\">AppLoggerService::getDefaultLogFormat<\/a>"],[0,1,"<a href=\"Service\/AppLoggerService.php.html#82\">AppLoggerService::emergency<\/a>"],[0,1,"<a href=\"Service\/AppLoggerService.php.html#97\">AppLoggerService::alert<\/a>"],[0,1,"<a href=\"Service\/AppLoggerService.php.html#111\">AppLoggerService::critical<\/a>"],[0,1,"<a href=\"Service\/AppLoggerService.php.html#124\">AppLoggerService::error<\/a>"],[0,1,"<a href=\"Service\/AppLoggerService.php.html#138\">AppLoggerService::warning<\/a>"],[0,1,"<a href=\"Service\/AppLoggerService.php.html#150\">AppLoggerService::notice<\/a>"],[0,1,"<a href=\"Service\/AppLoggerService.php.html#164\">AppLoggerService::info<\/a>"],[0,1,"<a href=\"Service\/AppLoggerService.php.html#176\">AppLoggerService::debug<\/a>"],[0,1,"<a href=\"Service\/AppLoggerService.php.html#188\">AppLoggerService::log<\/a>"],[0,1,"<a href=\"Service\/AppServiceManager.php.html#59\">AppServiceManager::__construct<\/a>"],[0,1,"<a href=\"Service\/AppServiceManager.php.html#73\">AppServiceManager::importTables<\/a>"],[0,2,"<a href=\"Service\/AppServiceManager.php.html#82\">AppServiceManager::getSubscribersReports<\/a>"],[0,2,"<a href=\"Service\/AppServiceManager.php.html#97\">AppServiceManager::getMailingsReports<\/a>"],[0,2,"<a href=\"Service\/AppServiceManager.php.html#112\">AppServiceManager::getActiveMailStatistics<\/a>"],[0,3,"<a href=\"Service\/AppServiceManager.php.html#130\">AppServiceManager::createQueue<\/a>"],[0,1,"<a href=\"Service\/AppServiceManager.php.html#174\">AppServiceManager::removeQueue<\/a>"],[0,1,"<a href=\"Service\/AppServiceManager.php.html#187\">AppServiceManager::setSubscriberState<\/a>"],[100,2,"<a href=\"Service\/AppServiceManager.php.html#199\">AppServiceManager::getQueueData<\/a>"],[0,1,"<a href=\"Service\/AppServiceManager.php.html#203\">AppServiceManager::anonymous function<\/a>"],[0,2,"<a href=\"Service\/AppServiceManager.php.html#222\">AppServiceManager::getQueues<\/a>"],[0,1,"<a href=\"Service\/AppServiceManager.php.html#247\">AppServiceManager::sendMessage<\/a>"],[0,2,"<a href=\"Service\/AppServiceManager.php.html#262\">AppServiceManager::getUncheckedSubscribers<\/a>"],[0,4,"<a href=\"Service\/AppServiceManager.php.html#282\">AppServiceManager::cpuCoreCount<\/a>"],[0,2,"<a href=\"Aware\/Helpers\/FileSysTrait.php.html#51\">FileSysTrait::getConfig<\/a>"],[0,1,"<a href=\"Aware\/Helpers\/FileSysTrait.php.html#66\">FileSysTrait::isConfigExist<\/a>"],[0,2,"<a href=\"Aware\/Helpers\/FileSysTrait.php.html#77\">FileSysTrait::createConfigFile<\/a>"],[0,3,"<a href=\"Aware\/Helpers\/FileSysTrait.php.html#90\">FileSysTrait::addToConfig<\/a>"],[0,6,"<a href=\"Aware\/Helpers\/FileSysTrait.php.html#110\">FileSysTrait::getReserved<\/a>"],[0,2,"<a href=\"Aware\/Helpers\/FileSysTrait.php.html#145\">FileSysTrait::addToLog<\/a>"],[0,3,"<a href=\"Aware\/Helpers\/FileSysTrait.php.html#173\">FileSysTrait::createLogFile<\/a>"],[0,3,"<a href=\"Aware\/Helpers\/FormatTrait.php.html#41\">FormatTrait::tableLong<\/a>"],[0,3,"<a href=\"Aware\/Helpers\/FormatTrait.php.html#67\">FormatTrait::table<\/a>"],[0,3,"<a href=\"Aware\/Helpers\/FormatTrait.php.html#98\">FormatTrait::verifyDate<\/a>"],[0,4,"<a href=\"Aware\/Helpers\/FormatTrait.php.html#120\">FormatTrait::verifyEmail<\/a>"],[0,2,"<a href=\"Aware\/Helpers\/FormatTrait.php.html#149\">FormatTrait::arrayKeysPlaceholders<\/a>"],[0,3,"<a href=\"Aware\/Helpers\/FormatTrait.php.html#167\">FormatTrait::arrayPartition<\/a>"],[0,1,"<a href=\"Aware\/Helpers\/FormatTrait.php.html#189\">FormatTrait::getClassName<\/a>"],[0,1,"<a href=\"Aware\/Helpers\/ProgressTrait.php.html#27\">ProgressTrait::getProgress<\/a>"],[0,2,"<a href=\"Aware\/Helpers\/TestTrait.php.html#46\">TestTrait::getMailInstance<\/a>"],[0,2,"<a href=\"Aware\/Helpers\/TestTrait.php.html#59\">TestTrait::getStorageInstance<\/a>"],[0,2,"<a href=\"Aware\/Helpers\/TestTrait.php.html#71\">TestTrait::getQueueInstance<\/a>"],[0,4,"<a href=\"Aware\/Helpers\/TestTrait.php.html#84\">TestTrait::isMailConnectSuccess<\/a>"],[0,4,"<a href=\"Aware\/Helpers\/TestTrait.php.html#116\">TestTrait::isQueueConnectSuccess<\/a>"],[0,3,"<a href=\"Aware\/Helpers\/TestTrait.php.html#144\">TestTrait::isStorageConnectSuccess<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>
