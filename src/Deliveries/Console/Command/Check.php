@@ -50,7 +50,25 @@ class Check extends BaseCommandAware {
      */
     const DESCRIPTION = 'Check tools. Validate subscriber\'s list & process';
 
+    /**
+     * Checking iterator
+     *
+     * @var int $i
+     */
+    private $i = 0;
+
+    /**
+     * Count of valid emails
+     *
+     * @var int $valid
+     */
     private $valid = 0;
+
+    /**
+     * Count of invalid emails
+     *
+     * @var int $invalid
+     */
     private $invalid = 0;
 
     /**
@@ -61,7 +79,7 @@ class Check extends BaseCommandAware {
     private $prompt = [
         'START_PROCESS'     =>  "Validate process for `%s` is started. Pid %d",
         'STATE_PROCESS'     => " \033[1;30mEmails check status:\033[1;30m \033[0;32m%s\033[0;32m / \033[5;31m%s\033[0;30m",
-        'DONE_PROCESS'      =>  "Checking complete. Pid: %d",
+        'DONE_PROCESS'      =>  "Checking complete",
     ];
 
     use ProgressTrait, FormatTrait;
@@ -132,52 +150,58 @@ class Check extends BaseCommandAware {
         // start process forks
         for ($f = 0; $f < $forks; $f++) {
 
-            $manager->spawn(function(ForkProcess $p) use ($subscribers, $output, $f, $serviceManager) {
+            $manager->fork(function(ForkProcess $p) use ($subscribers, $output, $f, $serviceManager, $manager) {
 
                 // create process title
-                $processTitle = sprintf($this->prompt['START_PROCESS'], 'subscribers', $p->getPid());
-                $p->setProcessTitle($processTitle);
-                $this->logOutput($output, $processTitle, '<bg=white;options=bold>%s</>');
+                $this->createProcessTitle($output, $p, $manager);
 
                 // create progress instance with total of subscribers
-                $count = count($subscribers[$f]);
-                $progress = $this->getProgress($output, $count, 'very_verbose');
-                $progress->start();
+                $progress = $this->createProgress($output, $count = count($subscribers[$f]));
 
-                $i = 0;
-                while (++$i < $count) {
+                while (++$this->i < $count) {
 
                     // verify subscriber email via SMTP
-                    $subscriber = $serviceManager->verifyEmail($subscribers[$f][$i]['email'], true, true);
-
-                    if($subscriber->isValid() === true) {
-                        ++$this->valid;
-                    }
-                    else {
-                        ++$this->invalid;
-                    }
+                    $subscriber = $serviceManager->verifyEmail($subscribers[$f][$this->i]['email'], true, true);
+                    ($subscriber->isValid() === true) ? ++$this->valid : ++$this->invalid;
 
                     // update subscriber verify state
-                    $serviceManager->setSubscriberState($subscribers[$f][$i]['subscriber_id'], $subscriber->isValid());
+                    $serviceManager->setSubscriberState($subscribers[$f][$this->i]['subscriber_id'], $subscriber->isValid());
 
                     // print checkout process
                     $this->printProcess($progress);
 
-                    if($i >= $count) break;
+                    if($this->i >= $count) {
+                        $progress->finish();
+                        break;
+                    }
                 }
-
-                // destroy the process
-                //$p->kill();
-                $progress->finish();
-            })->onSuccess(function(ForkProcess $p) use ($output) {
+            })->onSuccess(function() use ($output) {
                 // process done
-                $this->logOutput($output, sprintf($this->prompt['DONE_PROCESS'], $p->getPid()), ' <bg=white;options=bold>%s</>');
-            })->wait();
+                $this->logOutput($output, $this->prompt['DONE_PROCESS'], ' <bg=white;options=bold>%s</>');
 
-            $manager->onShutdown(function(ForkProcess $p) use ($manager) {
+            })
+            ->onError(function(ForkProcess $p) {
                 throw new AppException('Error process: '.$p->getPid());
-            });
+            })->wait();
         }
+    }
+
+    /**
+     * Print process title
+     *
+     * @param OutputInterface $output
+     * @param ForkProcess $p
+     * @param ProcessManager $manager
+     * @return null
+     */
+    private function createProcessTitle(OutputInterface $output, ForkProcess $p, $manager) {
+
+        $processTitle = sprintf($this->prompt['START_PROCESS'], 'subscribers', $p->getPid());
+        $manager->demonize();
+        $p->setProcessTitle($processTitle);
+        $this->logOutput($output, $processTitle, '<bg=white;options=bold>%s</>');
+
+        return null;
     }
 
     /**
@@ -189,5 +213,20 @@ class Check extends BaseCommandAware {
      */
     private function printProcess($progress) {
         return $progress->advance().' '.printf($this->prompt['STATE_PROCESS'], (int)$this->valid, (int)$this->invalid);
+    }
+
+    /**
+     * Create progress
+     *
+     * @param OutputInterface $output
+     * @param int           $subscribers
+     * @return \Symfony\Component\Console\Helper\ProgressBar
+     */
+    private function createProgress(OutputInterface $output, $subscribers) {
+
+        $progress = $this->getProgress($output, $subscribers, 'very_verbose');
+        $progress->start();
+
+        return $progress;
     }
 }
