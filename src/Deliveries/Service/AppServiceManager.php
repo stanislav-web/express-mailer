@@ -21,6 +21,9 @@ use Deliveries\Service\AppCacheService as Cache;
  */
 class AppServiceManager {
 
+    /**
+     *
+     */
     const PENDING = 'pending';
     const ABORT = 'abort';
     const SENT = 'sent';
